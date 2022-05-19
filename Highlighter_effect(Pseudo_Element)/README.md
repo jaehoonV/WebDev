@@ -1,4 +1,4 @@
-<h1 align="center">Countdown Flip Timer</h1>
+<h1 align="center">Highlighter_effect(Pseudo_Element)</h1>
 
 <h3 align="center">스크린샷</h3>
 </br>
