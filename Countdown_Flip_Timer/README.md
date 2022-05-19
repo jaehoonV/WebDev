@@ -1,6 +1,6 @@
-# <center>Countdown Flip Timer</center>
+<h1 align="center">Countdown Flip Timer</h1>
 
-### <center>스크린샷</center>
+<h3 align="center">스크린샷</h3>
 </br>
 <p align="center"> 
 <img src="./screenshot_gif.gif" width="400" height="400" />
