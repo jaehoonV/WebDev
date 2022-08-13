@@ -3,5 +3,5 @@
 <h3 align="center">스크린샷</h3>
 </br>
 <p align="center"> 
-<img src="./screenshot_gif.gif" width="650" height="400" />
+<img src="./screenshot_gif.gif" width="600" height="320" />
 </p>
