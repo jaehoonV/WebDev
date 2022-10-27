@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login_Page</title>
+</head>
+<link rel="stylesheet" href="styles.css">
+
+<body>
+    <div class="fix-wrapper">
+        <div id="progress-read" class="basic"></div>
+    </div>
+    <div class="login-wrapper">
+        <div class="logo_div">
+            <div class="logo_name">Gansam</div>
+        </div>
+        <div class="login_div">
+            <div class="input_div">
+                <div class="icon_div"><ion-icon name="person"></ion-icon></div>
+                <input type="text" id="id" placeholder="Employee number">
+            </div>
+            <div class="input_div2">
+                <div class="icon_div"><ion-icon name="lock-closed-outline"></ion-icon></div>
+                <input type="password" id="password" placeholder="Password">
+            </div>
+            <div class="check_div">
+                <input type="checkbox" name="save_id" id="save_id">
+                <label for="save_id"></label>
+                <span class="check_span">save id</span>
+            </div>
+            <div class="login_btn_div">
+                <button type="button" id="login_btn">Log in</button>
+            </div>
+            <div class="footer_logo_div">
+                <div class="border_div1"></div>
+                <div class="border_div2"></div>
+                <div class="footer_logo">We<br>Design.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener("scroll", function (event) {
+            var scroll = this.scrollY;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const progress = scroll / height * 100 + "%";
+            document.getElementById('progress-read').style.width = progress;
+        });
+    </script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>
