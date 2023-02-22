@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Table Creator</title>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.3.slim.js" ></script>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .color-selector {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .color-option {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 10px;
+    cursor: pointer;
+  }
+
+  #container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+
+  #table-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  td {
+    width: 10px;
+    height: 10px;
+    border: 1px solid black;
+    transition: 0.8s;
+  }
+</style>
+
+<body>
+  <div class="color-selector">
+    <div onclick="changeColor('red')" class="color-option" style="background-color: red;"></div>
+    <div onclick="changeColor('blue')" class="color-option" style="background-color: blue;"></div>
+    <div onclick="changeColor('green')" class="color-option" style="background-color: green;"></div>
+    <div onclick="changeColor('yellow')" class="color-option" style="background-color: yellow;"></div>
+    <div onclick="changeColor('orange')" class="color-option" style="background-color: orange;"></div>
+    <div onclick="changeColor('purple')" class="color-option" style="background-color: purple;"></div>
+  </div>
+  <div id="table-container">
+    <table id="color-table">
+      <tbody></tbody>
+    </table>
+  </div>
+  <script>
+    const colorPicker = $(".color-picker");
+    const colorOptions = $(".color-option");
+
+    // Create a 50x50 table
+    for (let i = 0; i < 30; i++) {
+      let tr = $('<tr></tr>');
+      for (let j = 0; j < 30; j++) {
+        tr.append($('<td></td>'));
+      }
+      $("#color-table tbody").append(tr);
+    }
+
+    function changeColor(color){
+        let randomRow, randomCol;
+        do {
+          randomRow = Math.floor(Math.random() * 30);
+          randomCol = Math.floor(Math.random() * 30);
+        }while ($("#color-table tr").eq(randomRow).find('td').eq(randomCol).hasClass("color_"));
+        $("#color-table tr").eq(randomRow).find('td').eq(randomCol).css('background-color',color);
+        $("#color-table tr").eq(randomRow).find('td').eq(randomCol).addClass('color_');
+    };
+
+    let interval = setInterval(() => {
+        let randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+        let randomRow, randomCol;
+        let i = 0;
+        do {
+          randomRow = Math.floor(Math.random() * 30);
+          randomCol = Math.floor(Math.random() * 30);
+          i++;
+          if(i > 1000) clearInterval(interval);
+        } while ($("#color-table tr").eq(randomRow).find('td').eq(randomCol).hasClass("color_"));
+        $("#color-table tr").eq(randomRow).find('td').eq(randomCol).css('background-color',randomColor);
+        $("#color-table tr").eq(randomRow).find('td').eq(randomCol).addClass('color_');
+      }, 10);
+    
+    let interval2 = setInterval(() => {
+      let randomRow, randomCol;
+      do {
+        randomRow = Math.floor(Math.random() * 30);
+        randomCol = Math.floor(Math.random() * 30);
+      } while ($("#color-table tr").hasClass("color_"));
+      $("#color-table tr").eq(randomRow).find('td').eq(randomCol).css('background-color','');
+      $("#color-table tr").eq(randomRow).find('td').eq(randomCol).removeClass('color_');
+    }, 7);
+  </script>
+</body>
+
+</html>
