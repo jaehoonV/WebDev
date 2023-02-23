@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wave Effect</title>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.3.slim.js" ></script>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .color-selector {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .color-option {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 10px;
+    cursor: pointer;
+  }
+
+  #div-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 520px; /* 10 * 10 */
+    height: 520px; /* 10 * 10 */
+    margin: 100px auto;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  .wave_div {
+    position: relative;
+    box-sizing: border-box;
+    width: 25px;
+    height: 25px;
+    border: 1px solid #000000;
+    /* transition: 0.8s; */
+    transition: 0.4s;
+    margin: 0.5px;
+    border-radius: 2.5px;
+    opacity: 0.5;
+    background-color: #000000;
+  }
+</style>
+
+<body>
+  <div class="color-selector">
+    <div onclick="changeColor('#ff0000')" class="color-option" style="background-color: #ff0000;"></div>
+    <div onclick="changeColor('#0000ff')" class="color-option" style="background-color: #0000ff;"></div>
+    <div onclick="changeColor('#008000')" class="color-option" style="background-color: #008000;"></div>
+    <div onclick="changeColor('#ffff00')" class="color-option" style="background-color: #ffff00;"></div>
+    <div onclick="changeColor('#ffa500')" class="color-option" style="background-color: #ffa500;"></div>
+    <div onclick="changeColor('#800080')" class="color-option" style="background-color: #800080;"></div>
+  </div>
+  <input type="hidden" id="selected_color" value="">
+  <div id="div-container">
+  </div>
+  <script>
+    // Create a 10x10 div box
+    for (let i = 0; i < 400; i++) {
+        let div_ = '<div class="wave_div div_' + i % 20 +'"></div>';
+        $("#div-container").append(div_);
+    }
+
+    function changeColor(color){
+        $('.wave_div').css('background-color',color);
+        $('#selected_color').val(color);
+    };
+
+    async function func(){
+        for(let i = 0; i < 20; i++){
+            let a = ".div_" + i;
+            await up(a);
+            await wait(400);
+            await down(a);
+        }
+    }
+
+    function up(a){
+        /* $(a).css('transform','translate(10px, -50px)'); */
+        $(a).css('transform','translate(3px, -15px)');
+        $(a).css('opacity','0.9');
+    }
+
+    function down(a){
+        $(a).css('transform','translate(0px, 0px)');
+        $(a).css('opacity','0.5');
+    }
+
+    const wait = (timeToDelay) => new Promise((resolve) => setTimeout(resolve, timeToDelay))
+    
+    let interval1 = setInterval(() => {
+        func();
+    }, 5000);
+    
+  </script>
+</body>
+
+</html>
