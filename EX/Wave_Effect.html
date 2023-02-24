@@ -35,7 +35,15 @@
     flex-wrap: wrap;
     width: 520px; /* 10 * 10 */
     height: 520px; /* 10 * 10 */
-    margin: 100px auto;
+    margin: 100px auto 50px;
+  }
+
+  #loading_div_container{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 10px auto;
+    width: 380px; /* 10 * 10 */
+    height: 50px; /* 10 * 10 */
   }
 
   table {
@@ -55,6 +63,20 @@
     opacity: 0.5;
     background-color: #000000;
   }
+
+  .loading_div{
+    position: relative;
+    box-sizing: border-box;
+    width: 30px;
+    height: 25px;
+    border: 1px solid #000000;
+    transition: 0.8s;
+    margin: 3px;
+    border-radius: 20px;
+    opacity: 0.5;
+    background-color: #000000;
+    box-shadow:  2px 4px 0px rgb(0 0 0 / 15%);
+  }
 </style>
 
 <body>
@@ -67,17 +89,24 @@
     <div onclick="changeColor('#800080')" class="color-option" style="background-color: #800080;"></div>
   </div>
   <input type="hidden" id="selected_color" value="">
-  <div id="div-container">
-  </div>
+  <div id="div-container"></div>
+
+  <div id="loading_div_container"></div>
   <script>
     // Create a 10x10 div box
     for (let i = 0; i < 400; i++) {
-        let div_ = '<div class="wave_div div_' + i % 20 +'"></div>';
+        let div_ = '<div class="wave_div color_div div_' + i % 20 +'"></div>';
         $("#div-container").append(div_);
     }
 
+    // Create a loading div box
+    for (let i = 0; i < 10; i++) {
+        let div_ = '<div class="loading_div color_div loading_div_' + i % 20 +'"></div>';
+        $("#loading_div_container").append(div_);
+    }
+
     function changeColor(color){
-        $('.wave_div').css('background-color',color);
+        $('.color_div').css('background-color',color);
         $('#selected_color').val(color);
     };
 
@@ -90,22 +119,43 @@
         }
     }
 
+    async function loading_func(){
+        for(let i = 0; i < 10; i++){
+            let a = ".loading_div_" + i;
+            await loading_up(a);
+            await wait(400);
+            await loading_down(a);
+        }
+    }
+
+    const wait = (timeToDelay) => new Promise((resolve) => setTimeout(resolve, timeToDelay))
+
     function up(a){
         /* $(a).css('transform','translate(10px, -50px)'); */
         $(a).css('transform','translate(3px, -15px)');
         $(a).css('opacity','0.9');
     }
-
     function down(a){
         $(a).css('transform','translate(0px, 0px)');
         $(a).css('opacity','0.5');
     }
-
-    const wait = (timeToDelay) => new Promise((resolve) => setTimeout(resolve, timeToDelay))
     
+    func();
     let interval1 = setInterval(() => {
         func();
     }, 5000);
+
+    function loading_up(a){
+        $(a).css('transform','translate(2px, -5px)');
+        $(a).css('opacity','0.9');
+    }
+    function loading_down(a){
+        $(a).css('transform','translate(0px, 0px)');
+        $(a).css('opacity','0.5');
+    }
+
+    loading_func();
+    let interval2 = setInterval(() => {loading_func();}, 4000);
     
   </script>
 </body>
