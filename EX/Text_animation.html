@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Animation</title>
+</head>
+<style>
+    #div_box, #div_box2, #div_box3, #div_box4, #div_box5{
+        position: relative;
+        width: 400px;
+        height: 80px;
+        border-radius: 10px;
+        border: 1px solid black;
+        background: black;
+        color: white;
+        margin: 30px auto;
+        vertical-align: middle;
+        text-align: center;
+        font-size: 3rem;
+        line-height: 4.5rem;
+        font-weight: 700;
+    }
+
+    .text_span{
+        position: absolute;
+        top: 0;
+        left: 25px;
+        transition: 0.5s;
+    }
+    
+    #div_box:hover #span2{
+        transform: translate(3px, -3px);
+        color: rgb(58, 223, 25);
+    }
+
+    #div_box:hover #span3{
+        transform: translate(5px, -5px);
+        color: rgb(198, 240, 10);
+    }
+
+    #div_box2:hover #span4{
+        transform: translate(0px, 110px);
+    }
+
+    #span4{
+        z-index: 1;
+    }
+
+    #div_box2:hover #span4{
+        text-shadow: 1.5px 1.5px 1.5px #ee0808;
+    }
+
+    #div_box4:hover #span5{
+        animation: animate1 1s linear infinite;
+    }
+
+    @keyframes animate1{
+        0%{
+            color: #fff;
+        }
+        20%{
+            color: #dd6565;
+        }
+        40%{
+            color: #e22e2e;
+        }
+        50%{
+            color: #e00707;
+            scale: 1.05;
+        }
+        60%{
+            color: #e22e2e;
+        }
+        80%{
+            color: #dd6565;
+        }
+        100%{
+            color: #fff;
+        }
+    }
+</style>
+<body>
+    <div id="div_box">
+        <span class="text_span" id="span1">Text Animation</span>
+        <span class="text_span" id="span2">Text Animation</span>
+        <span class="text_span" id="span3">Text Animation</span>
+    </div>
+
+    <div id="div_box2">
+        <span class="text_span" id="span4">Text Animation</span>
+    </div>
+
+    <div id="div_box3">
+    </div>
+
+    <div id="div_box4">
+        <span class="text_span" id="span5">Text Animation</span>
+    </div>
+</body>
+</html>
