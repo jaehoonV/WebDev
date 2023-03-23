@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>View Transitions</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+	<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+	<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body>
+	<div id="page-1" class="page">
+		<h1>Page 1</h1>
+        <h3>Move pages with click and arrow keys</h3>
+        <div class="btn_big_box">
+            <div class="btn_box">
+                <ion-icon name="chevron-back-circle-outline" onclick="transitionToPage4()"></ion-icon>
+                <ion-icon name="chevron-forward-circle-outline" onclick="transitionToPage2()"></ion-icon>
+            </div>
+        </div>
+	</div>
+
+	<div id="page-2" class="page">
+		<h1>Page 2</h1>
+        <h3>Move pages with click and arrow keys</h3>
+        <div class="btn_big_box">
+            <div class="btn_box">
+                <ion-icon name="chevron-back-circle-outline" onclick="transitionToPage1()"></ion-icon>
+                <ion-icon name="chevron-forward-circle-outline" onclick="transitionToPage3()"></ion-icon>
+            </div>
+        </div>
+	</div>
+
+	<div id="page-3" class="page">
+		<h1>Page 3</h1>
+        <h3>Move pages with click and arrow keys</h3>
+        <div class="btn_big_box">
+            <div class="btn_box">
+                <ion-icon name="chevron-back-circle-outline" onclick="transitionToPage2()"></ion-icon>
+                <ion-icon name="chevron-forward-circle-outline" onclick="transitionToPage4()"></ion-icon>
+            </div>
+        </div>
+	</div>
+
+	<div id="page-4" class="page">
+		<h1>Page 4</h1>
+        <h3>Move pages with click and arrow keys</h3>
+        <div class="btn_big_box">
+            <div class="btn_box">
+                <ion-icon name="chevron-back-circle-outline" onclick="transitionToPage3()"></ion-icon>
+                <ion-icon name="chevron-forward-circle-outline" onclick="transitionToPage1()"></ion-icon>
+            </div>
+        </div>
+	</div>
+</body>
+
+</html>

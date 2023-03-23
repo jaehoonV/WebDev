@@ -1,0 +1,54 @@
+body {
+   overflow-x: hidden;
+}
+
+.page {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   transition: transform 0.7s ease-in-out;
+   z-index: 1;
+}
+
+#page-1 {
+   background-color: red;
+}
+
+#page-2 {
+   background-color: blue;
+   transform: translateX(100%);
+}
+
+#page-3 {
+   background-color: green;
+   transform: translateX(200%);
+}
+
+#page-4 {
+   background-color: yellow;
+   transform: translateX(300%);
+}
+
+ion-icon {
+   font-size: 30px;
+   cursor: pointer;
+}
+
+.btn_big_box {
+   position: absolute;
+   bottom: 10px;
+   left: calc(50% - 40px);
+}
+
+.btn_box {
+   gap: 20px;
+   display: flex;
+   justify-content: center;
+}
+
+.page h1,
+.page h3 {
+   text-align: center;
+}
