@@ -33,7 +33,7 @@ body {
 
 .btn_big_box {
    position: absolute;
-   bottom: 10px;
+   bottom: 15px;
    left: calc(50% - 60px);
    z-index: 2;
 }

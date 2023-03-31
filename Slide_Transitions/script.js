@@ -11,6 +11,8 @@ function transitionToPage1() {
    page2.style.transform = 'translateX(100%)';
    page3.style.transform = 'translateX(200%)';
    page4.style.transform = 'translateX(300%)';
+   clearInterval(interval);
+   start();
 }
 
 function transitionToPage2() {
@@ -19,6 +21,8 @@ function transitionToPage2() {
    page2.style.transform = 'translateX(0)';
    page3.style.transform = 'translateX(100%)';
    page4.style.transform = 'translateX(200%)';
+   clearInterval(interval);
+   start();
 }
 
 function transitionToPage3() {
@@ -27,6 +31,8 @@ function transitionToPage3() {
    page2.style.transform = 'translateX(-100%)';
    page3.style.transform = 'translateX(0)';
    page4.style.transform = 'translateX(100%)';
+   clearInterval(interval);
+   start();
 }
 
 function transitionToPage4() {
@@ -35,6 +41,8 @@ function transitionToPage4() {
    page2.style.transform = 'translateX(-200%)';
    page3.style.transform = 'translateX(-100%)';
    page4.style.transform = 'translateX(0)';
+   clearInterval(interval);
+   start();
 }
 
 function activeFunc(num){
@@ -97,7 +105,7 @@ function start() {
       } else if (getTranslateX(page4) == 0) {
          transitionToPage1();
       }
-   }, 2000);
+   }, 2500);
 }
 
 start()
