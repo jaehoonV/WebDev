@@ -1,6 +1,7 @@
-const items = document.querySelectorAll('.item');
+const zooms = document.querySelectorAll('.zoom');
 const modal = document.getElementById('myModal');
 const modalContent = document.querySelector('.modal-content');
+let select_page = '';
 
 window.addEventListener('load', function() {
     var allElements = document.getElementsByTagName('*');
@@ -19,21 +20,44 @@ window.addEventListener('load', function() {
     });
 });
 
-items.forEach(item => {
-    item.addEventListener('click', () => {
-        modal.style.display = 'block';
-        modalContent.appendChild(item.cloneNode(true));
-    })
+function zoom(data){
+    $('#myModal').css('display','block');
+    $(data).closest('.item').find('img').clone().addClass('zoom_img').appendTo('.modal-content');
+    let e = window.event;
+    e.stopPropagation();
+}
+
+$('.close').on('click', () => {
+    $('#myModal').css('display','none');
+    $('.modal-content').html('');
 });
 
-document.querySelector('.close').addEventListener('click', () => {
-    modal.style.display = 'none';
-    modalContent.innerHTML = '';
-});
-
-window.addEventListener('click', (event) => {
-    if (event.target === modal) {
-        modal.style.display = 'none';
-        modalContent.innerHTML = '';
+$(window).on('click', (e) => {
+    if(e.target.id === 'myModal'){
+        $('#myModal').css('display','none');
+        $('.modal-content').html('');
     }
+});
+
+function movePage_confirmed(url){
+    let label = url.substring(2, url.length - 1).replaceAll('_', ' ');
+    console.log(label);
+    $('#confirmed_label').text(label);
+    select_page = url;
+    $('#movePage_confirmed').css('display','block');
+}
+
+function movePage(url){
+    let index = url + 'index.html';
+    $(location).attr("href", index);
+    let e = window.event;
+    e.stopPropagation();
+}
+
+$('#cancel').on('click', () => {
+    $('#movePage_confirmed').css('display','none');
+});
+
+$('#confirm').on('click', () => {
+    movePage(select_page);
 });

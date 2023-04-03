@@ -7,13 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List Modal</title>
 </head>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <link rel="stylesheet" href="styles.css">
 <script src="script.js" defer></script>
 
 <body>
     <div class="container">
-        <div class="item list1"><img src="./Color_Switch_Page/screenshot_gif.gif" class="gif_img"></img></div>
-        <div class="item list2"><img src="./Animated_Circular_Progress_Bar/screenshot_gif.gif" class="gif_img"></img></div>
+        <div class="item list1" onclick="movePage_confirmed('./Color_Switch_Page/')"><span class="zoom" onclick="zoom(this)">zoom</span><img src="./Color_Switch_Page/screenshot_gif.gif" class="gif_img"></img></div>
+        <div class="item list2" onclick="movePage_confirmed('./Animated_Circular_Progress_Bar/')"><span class="zoom" onclick="zoom(this)">zoom</span><img src="./Animated_Circular_Progress_Bar/screenshot_gif.gif" class="gif_img"></img></div>
         <div class="item list3">3</div>
         <div class="item list4">4</div>
         <div class="item list5">5</div>
@@ -28,6 +29,14 @@
         <div class="modal-body">
             <span class="close">&times;</span>
             <div class="modal-content"></div>
+        </div>
+    </div>
+
+    <div id="movePage_confirmed">
+        '<span id="confirmed_label"></span>'<br>페이지로 이동하시겠습니까?
+        <div>
+            <button id="confirm">네</button>
+            <button id="cancel">아니오</button>
         </div>
     </div>
 </body>
