@@ -8,13 +8,27 @@
     <title>List Modal</title>
 </head>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <link rel="stylesheet" href="styles.css">
 <script src="script.js" defer></script>
 
 <body>
     <div class="container">
-        <div class="item list1" onclick="movePage_confirmed('./Color_Switch_Page/')"><span class="zoom" onclick="zoom(this)">zoom</span><img src="./Color_Switch_Page/screenshot_gif.gif" class="gif_img"></img></div>
-        <div class="item list2" onclick="movePage_confirmed('./Animated_Circular_Progress_Bar/')"><span class="zoom" onclick="zoom(this)">zoom</span><img src="./Animated_Circular_Progress_Bar/screenshot_gif.gif" class="gif_img"></img></div>
+        <div class="item list1" onclick="movePage_confirmed('./Color_Switch_Page/')">
+            <span class="zoom" onclick="zoom(this)">
+                <ion-icon name="expand-outline"></ion-icon>
+            </span>
+            <span class="list_name">Color Switch Page</span>
+            <img src="./Color_Switch_Page/screenshot_gif.gif" class="gif_img"></img>
+        </div>
+        <div class="item list2" onclick="movePage_confirmed('./Animated_Circular_Progress_Bar/')">
+            <span class="zoom" onclick="zoom(this)">
+                <ion-icon name="expand-outline"></ion-icon>
+            </span>
+            <span class="list_name">Animated Circular Progress Bar</span>
+            <img src="./Animated_Circular_Progress_Bar/screenshot_gif.gif" class="gif_img"></img>
+        </div>
         <div class="item list3">3</div>
         <div class="item list4">4</div>
         <div class="item list5">5</div>

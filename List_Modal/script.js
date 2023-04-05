@@ -41,10 +41,10 @@ $(window).on('click', (e) => {
 
 function movePage_confirmed(url){
     let label = url.substring(2, url.length - 1).replaceAll('_', ' ');
-    console.log(label);
     $('#confirmed_label').text(label);
     select_page = url;
     $('#movePage_confirmed').css('display','block');
+    $('#movePage_confirmed').css({opacity:0}).animate({opacity:1},500);
 }
 
 function movePage(url){
@@ -55,7 +55,10 @@ function movePage(url){
 }
 
 $('#cancel').on('click', () => {
-    $('#movePage_confirmed').css('display','none');
+    $('#movePage_confirmed').css({opacity:1}).animate({opacity:0},500);
+    setTimeout(() => {
+        $('#movePage_confirmed').css('display','none');
+    }, '500')
 });
 
 $('#confirm').on('click', () => {
