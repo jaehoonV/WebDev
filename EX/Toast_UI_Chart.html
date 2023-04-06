@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toast UI Chart</title>
+</head>
+<link rel="stylesheet" href="https://uicdn.toast.com/chart/latest/toastui-chart.min.css" />
+<script src="https://uicdn.toast.com/chart/latest/toastui-chart.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        /* const el = document.getElementById('chart');
+        const data = {
+            categories: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            series: [
+                {
+                    name: 'Budget',
+                    data: [5000, 3000, 5000, 7000, 6000, 4000, 1000],
+                },
+                {
+                    name: 'Income',
+                    data: [8000, 4000, 7000, 2000, 6000, 3000, 5000],
+                },
+            ],
+        };
+        const options = {
+            chart: { width: 700, height: 400 }
+        };
+
+        const chart = toastui.Chart.barChart({ el, data, options }); */
+
+        const el = document.getElementById('chart2');
+        const data = {
+            categories: ['Browser'],
+            series: [
+                {
+                    name: 'Chrome',
+                    data: 46.02,
+                },
+                {
+                    name: 'IE',
+                    data: 20.47,
+                },
+                {
+                    name: 'Firefox',
+                    data: 17.71,
+                },
+                {
+                    name: 'Safari',
+                    data: 5.45,
+                },
+                {
+                    name: 'Opera',
+                    data: 3.1,
+                },
+                {
+                    name: 'Etc',
+                    data: 7.25,
+                },
+            ],
+        };
+        const options = {
+            chart: { title: 'Usage share of web browsers', width: 600, height: 400 },
+            series: {
+                radiusRange: {
+                    inner: '40%',
+                    outer: '100%',
+                }, showLabel: true
+            },
+        };
+
+        const chart2 = toastui.Chart.pieChart({ el, data, options });
+    });
+</script>
+
+<body>
+    <div id="chart"></div>
+
+    <div id="chart2"></div>
+</body>
+
+
+</html>
