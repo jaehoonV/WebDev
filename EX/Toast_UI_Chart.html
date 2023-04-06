@@ -11,8 +11,8 @@
 <script src="https://uicdn.toast.com/chart/latest/toastui-chart.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        /* const el = document.getElementById('chart');
-        const data = {
+        let el = document.getElementById('chart');
+        let data = {
             categories: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             series: [
                 {
@@ -25,14 +25,14 @@
                 },
             ],
         };
-        const options = {
+        let options = {
             chart: { width: 700, height: 400 }
         };
 
-        const chart = toastui.Chart.barChart({ el, data, options }); */
+        const chart = toastui.Chart.barChart({ el, data, options });
 
-        const el = document.getElementById('chart2');
-        const data = {
+        el = document.getElementById('chart2');
+        data = {
             categories: ['Browser'],
             series: [
                 {
@@ -61,7 +61,7 @@
                 },
             ],
         };
-        const options = {
+        options = {
             chart: { title: 'Usage share of web browsers', width: 600, height: 400 },
             series: {
                 radiusRange: {
@@ -72,6 +72,32 @@
         };
 
         const chart2 = toastui.Chart.pieChart({ el, data, options });
+
+        el = document.getElementById('chart3');
+
+        data = {
+            categories: ['1월', '2월', '3월', '4월', '5월', '6월', '7월'],
+            series: [
+                {
+                    name: '예산',
+                    data: [5000, 3000, 5000, 7000, 6000, 4000, 1000]
+                },
+                {
+                    name: '수입',
+                    data: [8000, 4000, 7000, 2000, 6000, 3000, 5000]
+                },
+                {
+                    name: '지출',
+                    data: [4000, 4000, 6000, 3000, 4000, 5000, 7000]
+                },
+            ]
+        }
+
+        options = {
+            chart: { title: '월간 수입지출', width: 900, height: 400 },
+        };
+
+        const chart3 = toastui.Chart.columnChart({ el, data, options });
     });
 </script>
 
@@ -79,6 +105,8 @@
     <div id="chart"></div>
 
     <div id="chart2"></div>
+
+    <div id="chart3"></div>
 </body>
 
 
