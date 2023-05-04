@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Square Game</title>
+</head>
+<style>
+    #container {
+        width: 1000px;
+        height: 1000px;
+        border: 1px solid black;
+        position: relative;
+    }
+
+    .square {
+        width: 50px;
+        height: 50px;
+        background-color: red;
+        position: absolute;
+        cursor: grab;
+    }
+
+    #delete {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background-color: blue;
+        top: 50px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+
+<body>
+    <button id="createBtn">Create Square</button>
+    <div id="container">
+        <div id="delete"></div>
+    </div>
+    <script>
+        let container = document.getElementById('container');
+        let createBtn = document.getElementById('createBtn');
+        let deleteDiv = document.getElementById('delete');
+
+        createBtn.addEventListener('click', function () {
+            let square = document.createElement('div');
+            square.className = 'square';
+            square.style.top = Math.random() * (container.offsetHeight - 50) + 'px';
+            square.style.left = Math.random() * (container.offsetWidth - 50) + 'px';
+            container.appendChild(square);
+
+            square.addEventListener('mousedown', function (e) {
+                let startX = e.clientX;
+                let startY = e.clientY;
+                let startLeft = square.offsetLeft;
+                let startTop = square.offsetTop;
+                let maxX = container.offsetWidth - square.offsetWidth;
+                let maxY = container.offsetHeight - square.offsetHeight;
+
+                function moveSquare(e) {
+                    let deltaX = e.clientX - startX;
+                    let deltaY = e.clientY - startY;
+                    let newLeft = startLeft + deltaX;
+                    let newTop = startTop + deltaY;
+                    newLeft = Math.max(0, newLeft);
+                    newTop = Math.max(0, newTop);
+                    newLeft = Math.min(maxX, newLeft);
+                    newTop = Math.min(maxY, newTop);
+                    square.style.left = newLeft + 'px';
+                    square.style.top = newTop + 'px';
+                }
+
+                function stopMoving() {
+                    document.removeEventListener('mousemove', moveSquare);
+                    document.removeEventListener('mouseup', stopMoving);
+                    let deleteX = deleteDiv.offsetLeft;
+                    let deleteY = deleteDiv.offsetTop;
+                    let deleteWidth = deleteDiv.offsetWidth;
+                    let deleteHeight = deleteDiv.offsetHeight;
+                    let squareX = square.offsetLeft;
+                    let squareY = square.offsetTop;
+                    let squareWidth = square.offsetWidth;
+                    let squareHeight = square.offsetHeight;
+                    if (squareX - squareWidth >= deleteX - deleteWidth && squareX <= deleteX &&
+                        squareY - squareHeight >= deleteY - deleteHeight && squareY <= deleteY) {
+                        square.remove();
+                    }
+                }
+
+                document.addEventListener('mousemove', moveSquare);
+                document.addEventListener('mouseup', stopMoving);
+            });
+        });
+
+    </script>
+</body>
+
+</html>
