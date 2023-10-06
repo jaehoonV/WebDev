@@ -1,0 +1,6 @@
+[
+    {"pjt_name" : "프로젝트1", "pjt_img" : "project1.jpg", "pjt_desc" : "프로젝트 1 설명 Lorem ipsum dolor sit amet, consectetur adipiscing elit.", "pjt_rate" : 55.5},
+    {"pjt_name" : "프로젝트2", "pjt_img" : "project2.jpg", "pjt_desc" : "프로젝트 2 설명 Lorem ipsum dolor sit amet, consectetur adipiscing elit.", "pjt_rate" : 72.1},
+    {"pjt_name" : "프로젝트3", "pjt_img" : "project3.jpg", "pjt_desc" : "프로젝트 3 설명 Lorem ipsum dolor sit amet, consectetur adipiscing elit.", "pjt_rate" : 22.3},
+    {"pjt_name" : "프로젝트4", "pjt_img" : "project4.jpg", "pjt_desc" : "프로젝트 4 설명 Lorem ipsum dolor sit amet, consectetur adipiscing elit.", "pjt_rate" : 94.1}
+]
