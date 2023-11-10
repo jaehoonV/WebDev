@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Localization</title>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+<style>
+    .lang_btn{
+        width: 60px;
+        height: 25px;
+        padding: 1px;
+        margin: 2px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    h5{
+        font-size: 15px;
+        font-weight: 500;
+        margin: 5px;
+    }
+
+    .btn_selected{
+        background: #ebeaea;
+    }
+</style>
+<body>
+    <div id="wrap">
+        <h2 data-tagNum="0">자바스크립트 다국어 처리</h1>
+        <select class="lang_select">
+            <option value="ko"><span data-tagNum="8">한국어</span></option>
+            <option value="en"><span data-tagNum="9">English</span></option>
+            <option value="ja"><span data-tagNum="10">日本語</span></option>
+        </select>
+        <button class="lang_btn btn_selected" id="ko_lang_btn" data-lang="ko"><span data-tagNum="8">한국어</span></button>
+        <button class="lang_btn" id="en_lang_btn" data-lang="en"><span data-tagNum="9">English</span></button>
+        <button class="lang_btn" id="ja_lang_btn" data-lang="ja"><span data-tagNum="10">日本語</span></button>
+        <hr>
+        <h5 data-tagNum="1">안녕하세요.</h5>
+        <h5 data-tagNum="2">오늘</h5>
+        <h5 data-tagNum="3">금요일</h5>
+        <h5 data-tagNum="4">날씨</h5>
+        <h5 data-tagNum="5">검색</h5>
+        <h5 data-tagNum="6">저장</h5>
+        <h5 data-tagNum="7">내용</h5>
+        <h5><span data-tagNum="100">영</span> <span data-tagNum="101">하나</span> <span data-tagNum="102">둘</span></h5>
+        <h5><span data-tagNum="103">셋</span> <span data-tagNum="104">넷</span> <span data-tagNum="105">다섯</span></h5>
+        <h5><span data-tagNum="106">여섯</span> <span data-tagNum="107">일곱</span> <span data-tagNum="108">여덟</span></h5>
+        <h5><span data-tagNum="109">아홉</span> <span data-tagNum="110">열</span></h5>
+    </div>
+</body>
+
+<script>
+    $(function () {
+        let xmlhttp = new XMLHttpRequest();
+        let url = "lang_ko.json";
+        let json_data;
+        let json_length;
+
+        function lang_json_func(){
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    json_data = JSON.parse(xmlhttp.responseText);
+                    setLanguage(); 
+                }
+            }
+            
+            xmlhttp.open("GET", url, true);
+            xmlhttp.send();
+        }
+
+        $('.lang_btn').click(function() { 
+            var lang = $(this).data('lang'); 
+            $('.lang_btn').each(function () { 
+                $(this).removeClass("btn_selected");
+            });
+            $(this).addClass("btn_selected");
+
+            if(lang == 'ko'){
+                url = "lang_ko.json";
+                $(".lang_select").val("ko").attr("selected","selected");
+            }else if(lang == "en"){
+                url = "lang_en.json";
+                $(".lang_select").val("en").attr("selected","selected");
+            }else if(lang == "ja"){
+                url = "lang_ja.json";
+                $(".lang_select").val("ja").attr("selected","selected");
+            }
+            lang_json_func();
+        });
+
+        $('.lang_select').change(function() { 
+            var lang = $(this).val();
+            $('.lang_btn').each(function () { 
+                $(this).removeClass("btn_selected");
+            });  
+            if(lang == 'ko'){
+                url = "lang_ko.json";
+                $('#ko_lang_btn').addClass("btn_selected");
+            }else if(lang == "en"){
+                url = "lang_en.json";
+                $('#en_lang_btn').addClass("btn_selected");
+            }else if(lang == "ja"){
+                url = "lang_ja.json";
+                $('#ja_lang_btn').addClass("btn_selected");
+            }
+            lang_json_func();
+        });
+
+        function setLanguage() { 
+            console.log(json_data);
+            $('[data-tagNum]').each(function () { 
+                var $this = $(this); 
+                $this.html(json_data[$this.data('tagnum')]); 
+            }); 
+        }   
+        
+    })
+</script>
+
+</html>
