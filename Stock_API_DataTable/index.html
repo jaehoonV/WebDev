@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock API DataTable</title>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.13.7/sorting/formatted-numbers.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<script src="script.js" defer></script>
+<link rel="stylesheet" href="styles.css">
+
+<body>
+    <div class="search_container">
+        <div class="search_box_div">
+            <input type="text" id="serviceKey" placeholder="서비스키" style="display: none;">
+            <input type="text" id="numOfRows" placeholder="페이지 결과 수" style="display: none;">
+            <input type="text" id="pageNo" placeholder="페이지 번호" style="display: none;">
+            <input type="text" id="resultType" placeholder="resultType" style="display: none;">
+            <input type="text" id="basDt" placeholder="기준일자">
+            <input type="text" id="likeItmsNm" placeholder="종목명 검색">
+            <button type="button" id="select_btn">조회</button>
+        </div>
+        <div class="search_box_div">
+            <input type="text" id="serviceKey" placeholder="서비스키" style="display: none;">
+            <input type="text" id="numOfRows" placeholder="페이지 결과 수" style="display: none;">
+            <input type="text" id="pageNo" placeholder="페이지 번호" style="display: none;">
+            <input type="text" id="resultType" placeholder="resultType" style="display: none;">
+            <input type="text" id="beginBasDt" placeholder="beginBasDt">
+            <input type="text" id="endBasDt" placeholder="endBasDt">
+            <input type="text" id="itmsNm" placeholder="종목명 검색">
+            <button type="button" id="select_btn2">조회</button>
+        </div>
+    </div>
+    <div id="stock_table_div"></div>
+</body>
+
+</html>
