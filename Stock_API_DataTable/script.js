@@ -1,4 +1,5 @@
 const url = "https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo";
+let chart1;
 
 $('#likeItmsNm, #basDt').on("keydown", function(e){
     if(e.which==13){
@@ -15,6 +16,10 @@ $('#select_btn2').click(function () {
 });
 
 function stockSearch(){
+    if (chart1) {
+        chart1.destroy(); // 기존 차트 파기
+    }
+
     $('#stock_table_div').html('<div class="loader"><span><i></i></span></div>');
 
     let url_ = url;
@@ -45,7 +50,12 @@ function stockSearch(){
 }
 
 function stockSearch2(){
+    if (chart1) {
+        chart1.destroy(); // 기존 차트 파기
+    }
+
     $('#stock_table_div').html('<div class="loader"><span><i></i></span></div>');
+    $('#chart_div').prepend('<div class="loader"><span><i></i></span></div>');
 
     let url_ = url;
     const serviceKey = $("#serviceKey").val() == "" ? "abPiIAX9s%2BDHXRnUd1X%2BRSPn3gr429SocWtL%2BLhIW3gLaY%2BV8DuQ6ypRPmmeoyfysHbBV0hh1EUSNCqKQR%2F74A%3D%3D" : $("#serviceKey").val();
@@ -79,8 +89,8 @@ function stockSearch2(){
 
 function makeDataTable(data, format_basDt, weekend_yn) {
     let items = data.response.body.items.item;
-    console.log(items.length);
     let output = "";
+
     if(weekend_yn == "N" && items.length == 0){
         output = "<div class='load_text'>기준일자 " + format_basDt + "은 휴장일 입니다.</div>";
     }else{
@@ -102,6 +112,9 @@ function makeDataTable(data, format_basDt, weekend_yn) {
 
             let itmsNm = item.itmsNm; // 종목명
             let mrktCtg = item.mrktCtg; // 시장구분 (KOSPI/KOSDAQ/KONEX)
+            
+            if(mrktCtg == 'KONEX') continue; // KONEX 제외
+
             let mkp = item.mkp; // 시가
             let hipr = item.hipr; // 고가
             let lopr = item.lopr; // 저가
@@ -147,9 +160,19 @@ function makeDataTable(data, format_basDt, weekend_yn) {
 
 function makeDataTable2(data, format_beginBasDt, format_endBasDt) {
     let items = data.response.body.items.item;
-    console.log(items.length);
     let output = "";
-    
+
+    let date_list = []; // 일자 리스트
+    let mkp_list = []; // 시가 리스트
+    let hipr_list = []; // 고가 리스트
+    let lopr_list = []; // 저가 리스트
+    let clpr_list = []; // 종가 리스트
+    let bg_color_list = []; // 색상 리스트
+    let lo_hi_list = []; // 저가, 고가 리스트
+    let mkp_clpr_list = []; // 시가, 종가 리스트
+    let min_lopr = Number.MAX_SAFE_INTEGER; // 최저값
+    let max_hipr = 0; // 최대값
+
     output = "<div class='load_text'>기준일자 : " + format_beginBasDt + " ~ " + format_endBasDt + "</div>"
     + "<table id='stock_table' class='display'><thead><tr>"
     + "<th>종목명</th>"
@@ -164,20 +187,39 @@ function makeDataTable2(data, format_beginBasDt, format_endBasDt) {
     + "<th>기준일자</th>"
     + "</tr></thead>";
 
-    for (i in items) {
+    for (let i = items.length - 1; i >= 0; i--) {
         let item = items[i];
 
         let itmsNm = item.itmsNm; // 종목명
         let mrktCtg = item.mrktCtg; // 시장구분 (KOSPI/KOSDAQ/KONEX)
-        let mkp = item.mkp; // 시가
-        let hipr = item.hipr; // 고가
-        let lopr = item.lopr; // 저가
-        let clpr = item.clpr; // 종가
+        let mkp = Number(item.mkp); // 시가
+        let hipr = Number(item.hipr); // 고가
+        let lopr = Number(item.lopr); // 저가
+        let clpr = Number(item.clpr); // 종가
         let vs = item.vs; // 전일 대비 등락
         let fltRt = Number(item.fltRt); // 등락률
         let trqu = item.trqu; // 거래량
         let basDt = item.basDt; // 기준일자
         let srtnCd = item.srtnCd; // 종목코드
+        
+        date_list.push(basDt);
+        mkp_list.push(mkp);
+        hipr_list.push(hipr);
+        lopr_list.push(lopr);
+        clpr_list.push(clpr);
+
+        if(vs > 0){
+            bg_color_list.push('#e00400');
+        }else if(vs < 0){
+            bg_color_list.push('#003ace');
+        }else{
+            bg_color_list.push('#666');
+        }
+        lo_hi_list.push(new Array(lopr, hipr));
+        mkp_clpr_list.push(new Array(mkp, clpr));
+
+        min_lopr = Math.min(...lopr_list);
+        max_hipr = Math.max(...hipr_list);
 
         output += "<tr>"
             + "<td>" + "<a href='https://finance.naver.com/item/main.naver?code=" + srtnCd +"' target='_blank'>" + itmsNm + "</a>" + "</td>"
@@ -215,6 +257,10 @@ function makeDataTable2(data, format_beginBasDt, format_endBasDt) {
                         }, type: 'formatted-num'}
                     ]
     });
+
+    $(".loader").detach();
+    /* createChart */
+    createChart(date_list, mkp_list, hipr_list, lopr_list, clpr_list, bg_color_list, lo_hi_list, mkp_clpr_list, min_lopr, max_hipr);
 }
 
 function getDefualtDate(date) {
@@ -310,3 +356,79 @@ function make_color_td(val, num){
         return "<td class='tag_none'>" + num + "</td>";
     }
 }
+/* make color td function */
+
+/* createChart */
+function createChart(date_list, mkp_list, hipr_list, lopr_list, clpr_list, bg_color_list, lo_hi_list, mkp_clpr_list, min_lopr, max_hipr){
+    /* 최소값, 최대값 평균 */
+    let average = (min_lopr + max_hipr) /2;
+    let temp_val = 1;
+    
+    for(let a = 0; a < average.toString().length - 1; a++){
+        temp_val *= 10;
+    }
+
+    min_lopr -= temp_val;
+    max_hipr += temp_val;
+
+    let step_size = tick_cal(average);
+
+    const ctx = document.getElementById('chart1');
+    chart1 = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: date_list,
+            datasets: [{
+                label: 'data',
+                data: mkp_clpr_list,
+                backgroundColor: bg_color_list,
+                borderColor: bg_color_list,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false,
+                }
+            },
+            scales: {
+                y: {
+                    min: min_lopr, // Y 축의 최소값
+                    max: max_hipr, // Y 축의 최대값
+                    ticks: {
+                        stepSize: step_size
+                    }
+                }
+            }
+        }
+    });
+}
+/* createChart */
+
+/* 틱 계산 */
+function tick_cal(price){
+    let val = 1;
+    if(price < 2000){
+        val = 1;
+    }else if(price >= 2000 && price < 5000){
+        val = 5;
+    }else if(price >= 5000 && price < 10000){
+        val = 10;
+    }else if(price >= 10000 && price < 20000){
+        val = 10;
+    }else if(price >= 20000 && price < 50000){
+        val = 50;
+    }else if(price >= 50000 && price < 100000){
+        val = 100;
+    }else if(price >= 100000 && price < 200000){
+        val = 100;
+    }else if(price >= 200000 && price < 500000){
+        val = 500;
+    }else if(price >= 500000){
+        val = 1000;
+    }
+    return val;
+}
+/* 틱 계산 */

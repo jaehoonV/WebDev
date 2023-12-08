@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock API DataTable</title>
+    <title>Stock_api</title>
 </head>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
@@ -12,6 +12,8 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 <script src="script.js" defer></script>
 <link rel="stylesheet" href="styles.css">
+<!-- chart.js cdn -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <body>
     <div class="search_container">
@@ -35,7 +37,12 @@
             <button type="button" id="select_btn2">조회</button>
         </div>
     </div>
-    <div id="stock_table_div"></div>
+    <div id="data_screen">
+        <div id="chart_div">
+            <canvas id="chart1"></canvas>
+        </div>
+        <div id="stock_table_div"></div>
+    </div>
 </body>
 
 </html>
