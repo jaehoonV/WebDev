@@ -1,0 +1,31 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Financial | Chart.js</title>
+		<script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.1/dist/chart.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.0.0"></script>
+		<script src="https://www.chartjs.org/chartjs-chart-financial/chartjs-chart-financial.js"></script>
+		<link rel="stylesheet" type="text/css" href="styles.css">
+		<link rel="icon" href="./favicon.ico"/>
+        <script src="scripts.js" defer></script>
+	</head>
+	<body>
+		<h1>Chart.js - Financial chart</h1>
+		<h2>Sample Chart</h2>
+		<div style="width:1000px">
+			<canvas id="chart"></canvas>
+		</div>
+		<div>
+			Mixed:
+			<select id="mixed">
+				<option value="true">Yes</option>
+				<option value="false" selected>No</option>
+			</select>
+			<button id="update">Update</button>
+			<button id="randomizeData">Randomize Data</button>
+		</div>
+  <p>Forked from https://www.chartjs.org/chartjs-chart-financial/</p>
+	</body>
+</html>
