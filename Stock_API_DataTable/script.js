@@ -1,5 +1,5 @@
 const url = "https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo";
-let chart1;
+let chart1, chart2;
 
 $('#likeItmsNm, #basDt').on("keydown", function(e){
     if(e.which==13){
@@ -14,6 +14,12 @@ $('#select_btn').click(function () {
 $('#select_btn2').click(function () {
     stockSearch2();
 });
+
+$(document).on("click",".view_chart",function(){
+    monthChartSearch(this.dataset.itemnm, this.dataset.months);
+})
+
+/* stockSearch(); */
 
 function stockSearch(){
     if (chart1) {
@@ -87,6 +93,58 @@ function stockSearch2(){
         .then(data => makeDataTable2(data, format_beginBasDt, format_endBasDt));
 }
 
+function monthChartSearch(item_nm, months){
+    if (chart1) {
+        chart1.destroy(); // 기존 차트 파기
+    }
+    if (chart2) {
+        chart2.destroy(); // 기존 차트 파기
+    }
+
+    $('#chart_div').prepend('<div class="loader"><span><i></i></span></div>');
+
+    let url_ = url;
+    const serviceKey = $("#serviceKey").val() == "" ? "abPiIAX9s%2BDHXRnUd1X%2BRSPn3gr429SocWtL%2BLhIW3gLaY%2BV8DuQ6ypRPmmeoyfysHbBV0hh1EUSNCqKQR%2F74A%3D%3D" : $("#serviceKey").val();
+    const numOfRows = $("#numOfRows").val() == "" ? "3000" : $("#numOfRows").val(); // 3000이면 모두 조회됨
+    const pageNo = $("#pageNo").val() == "" ? "1" : $("#pageNo").val();
+    const resultType = $("#resultType").val() == "" ? "json" : $("#resultType").val();
+    
+    let today = new Date();   
+    const year = today.getFullYear(); // 년
+    const month = today.getMonth();   // 월
+    const day = today.getDate();      // 일
+    
+    let beginBasDt = "";
+    /* 이평선을 구하기 위해 - 3개월 */
+    let twoMonthAgo = new Date(year, month - 5, day);	// 2개월 전 
+    let oneYearAgo = new Date(year - 1, month - 3, day); // 1년 전
+    let twoYearAgo = new Date(year - 2, month - 3, day); // 2년 전
+    if(months == 2){
+        beginBasDt = beginBasDt.concat(twoMonthAgo.getFullYear(), pad(twoMonthAgo.getMonth() - 1, 2), pad(twoMonthAgo.getDate(), 2));
+    }else if(months == 12){
+        beginBasDt = beginBasDt.concat(oneYearAgo.getFullYear(), pad(oneYearAgo.getMonth() - 1, 2), pad(oneYearAgo.getDate(), 2));
+    }else if(months == 24){
+        beginBasDt = beginBasDt.concat(twoYearAgo.getFullYear(), pad(twoYearAgo.getMonth() - 1, 2), pad(twoYearAgo.getDate(), 2));
+    }
+    let endBasDt = "".concat(today.getFullYear(), pad(today.getMonth() + 1, 2), pad(today.getDate(), 2));
+    
+    const itmsNm = item_nm;
+
+    url_ += "?serviceKey=" + serviceKey;
+    url_ += "&numOfRows=" + numOfRows;
+    url_ += "&pageNo=" + pageNo;
+    url_ += "&resultType=" + resultType;
+    url_ += "&beginBasDt=" + beginBasDt;
+    url_ += "&endBasDt=" + endBasDt;
+    if (itmsNm != "") url_ += "&itmsNm=" + itmsNm;
+
+    console.log(url_);
+
+    fetch(url_)
+        .then(res => res.json())
+        .then(data => makeMonthChart(data));
+}
+
 function makeDataTable(data, format_basDt, weekend_yn) {
     let items = data.response.body.items.item;
     let output = "";
@@ -105,6 +163,7 @@ function makeDataTable(data, format_basDt, weekend_yn) {
         + "<th>대비</th>"
         + "<th>등락률</th>"
         + "<th>거래량</th>"
+        + "<th>차트</th>"
         + "</tr></thead>";
 
         for (i in items) {
@@ -134,7 +193,10 @@ function makeDataTable(data, format_basDt, weekend_yn) {
             output += make_color_td(vs, clpr);
             output += make_color_td(vs, vs);
             output += make_color_td(fltRt, fltRt);
-            output += "<td>" + trqu + "</td>"
+            output += "<td>" + trqu + "</td>";
+            output += "<td><button class='view_chart' data-months='2' data-itemnm='" + itmsNm +"'>2개월</button>"
+                + "<button class='view_chart' data-months='12' data-itemnm='" + itmsNm +"'>1년</button>"
+                + "<button class='view_chart' data-months='24' data-itemnm='" + itmsNm +"'>2년</button></td>";
                 + "</tr>";
         }
         output += "</table>";
@@ -161,17 +223,21 @@ function makeDataTable(data, format_basDt, weekend_yn) {
 function makeDataTable2(data, format_beginBasDt, format_endBasDt) {
     let items = data.response.body.items.item;
     let output = "";
+    let title = ""; // 종목명
+    if(items.length > 0){
+        title = items[0].itmsNm;
+    }
 
     let date_list = []; // 일자 리스트
     let mkp_list = []; // 시가 리스트
     let hipr_list = []; // 고가 리스트
     let lopr_list = []; // 저가 리스트
     let clpr_list = []; // 종가 리스트
-    let bg_color_list = []; // 색상 리스트
     let lo_hi_list = []; // 저가, 고가 리스트
     let mkp_clpr_list = []; // 시가, 종가 리스트
     let min_lopr = Number.MAX_SAFE_INTEGER; // 최저값
     let max_hipr = 0; // 최대값
+    let candle_list = []; // 캔들차트 리스트
 
     output = "<div class='load_text'>기준일자 : " + format_beginBasDt + " ~ " + format_endBasDt + "</div>"
     + "<table id='stock_table' class='display'><thead><tr>"
@@ -208,18 +274,9 @@ function makeDataTable2(data, format_beginBasDt, format_endBasDt) {
         lopr_list.push(lopr);
         clpr_list.push(clpr);
 
-        if(vs > 0){
-            bg_color_list.push('#e00400');
-        }else if(vs < 0){
-            bg_color_list.push('#003ace');
-        }else{
-            bg_color_list.push('#666');
-        }
         lo_hi_list.push(new Array(lopr, hipr));
         mkp_clpr_list.push(new Array(mkp, clpr));
-
-        min_lopr = Math.min(...lopr_list);
-        max_hipr = Math.max(...hipr_list);
+        candle_list.push({x: Date.parse(basDt.substring(0, 4) + '-' + basDt.substring(4, 6) + '-' + basDt.substring(6, 8)), o: mkp, h: hipr, l: lopr, c: clpr});
 
         output += "<tr>"
             + "<td>" + "<a href='https://finance.naver.com/item/main.naver?code=" + srtnCd +"' target='_blank'>" + itmsNm + "</a>" + "</td>"
@@ -232,11 +289,13 @@ function makeDataTable2(data, format_beginBasDt, format_endBasDt) {
         output += make_color_td(vs, vs);
         output += make_color_td(fltRt, fltRt);
         output += "<td>" + trqu + "</td>"
-            +"<td>" + basDt+ "</td>"
+            + "<td>" + basDt+ "</td>"
             + "</tr>";
     }
     output += "</table>";
-    
+
+    min_lopr = Math.min(...lopr_list);
+    max_hipr = Math.max(...hipr_list);
 
     $('#stock_table_div').html(output);
     $('#stock_table').DataTable({
@@ -260,7 +319,125 @@ function makeDataTable2(data, format_beginBasDt, format_endBasDt) {
 
     $(".loader").detach();
     /* createChart */
-    createChart(date_list, mkp_list, hipr_list, lopr_list, clpr_list, bg_color_list, lo_hi_list, mkp_clpr_list, min_lopr, max_hipr);
+    createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list, lo_hi_list, mkp_clpr_list, min_lopr, max_hipr, candle_list);
+}
+
+function makeMonthChart(data) {
+    let items = data.response.body.items.item;
+    let leng = items.length;
+    let title = ""; // 종목명
+    if(items.length > 0){
+        title = items[0].itmsNm;
+    }
+    let date_list = []; // 일자 리스트
+    let mkp_list = []; // 시가 리스트
+    let hipr_list = []; // 고가 리스트
+    let lopr_list = []; // 저가 리스트
+    let clpr_list = []; // 종가 리스트
+    let lo_hi_list = []; // 저가, 고가 리스트
+    let mkp_clpr_list = []; // 시가, 종가 리스트
+    let min_lopr = Number.MAX_SAFE_INTEGER; // 최저값
+    let max_hipr = 0; // 최대값
+    let candle_list = []; // 캔들차트 리스트
+
+    let date_for_ave_list = []; // 이평선을 구하기 위한 날짜 리스트
+    let clpr_for_ave_list = []; // 이평선을 구하기 위한 종가 리스트
+    let average_5 = []; // 5일 이평선 리스트
+    let average_20 = []; // 20일 이평선 리스트
+    let average_60 = []; // 60일 이평선 리스트
+
+    for (let i = leng - 1; i >= 0; i--) {
+        let item = items[i];
+        let itmsNm = item.itmsNm; // 종목명
+        let mrktCtg = item.mrktCtg; // 시장구분 (KOSPI/KOSDAQ/KONEX)
+        let mkp = Number(item.mkp); // 시가
+        let hipr = Number(item.hipr); // 고가
+        let lopr = Number(item.lopr); // 저가
+        let clpr = Number(item.clpr); // 종가
+        let vs = item.vs; // 전일 대비 등락
+        let fltRt = Number(item.fltRt); // 등락률
+        let trqu = item.trqu; // 거래량
+        let basDt = item.basDt; // 기준일자
+        let srtnCd = item.srtnCd; // 종목코드
+
+        if(i < leng - 59){
+            console.log("basDt = " + basDt + " / clpr = " + clpr);
+            date_list.push(basDt);
+            mkp_list.push(mkp);
+            hipr_list.push(hipr);
+            lopr_list.push(lopr);
+            clpr_list.push(clpr);
+
+            lo_hi_list.push(new Array(lopr, hipr));
+            mkp_clpr_list.push(new Array(mkp, clpr));
+            candle_list.push({x: Date.parse(basDt.substring(0, 4) + '-' + basDt.substring(4, 6) + '-' + basDt.substring(6, 8)), o: mkp, h: hipr, l: lopr, c: clpr});
+        }
+        
+        date_for_ave_list.push(basDt);
+        clpr_for_ave_list.push(clpr);
+    }
+    min_lopr = Math.min(...lopr_list);
+    max_hipr = Math.max(...hipr_list);
+
+    let clpr_ave_leng = clpr_for_ave_list.length;
+    /* 5일 이평선 리스트 생성*/
+    let sum5 = 0;
+    for (let i = 0; i < 5; i++){
+        sum5 += clpr_for_ave_list[i];
+        if(i != 4){
+            average_5.push(NaN);
+        }
+    }
+    average_5.push(Math.floor(sum5 / 5));
+    for (let i = 5; i < clpr_ave_leng; i++) {
+        sum5 += (clpr_for_ave_list[i] - clpr_for_ave_list[i - 5]);
+        average_5.push(Math.floor(sum5 / 5));
+    }
+    /* 5일 이평선 리스트 생성*/
+
+    /* 20일 이평선 리스트 생성*/
+    let sum20 = 0;
+    for (let i = 0; i < 20; i++){
+        sum20 += clpr_for_ave_list[i];
+        if(i != 19){
+            average_20.push(NaN);
+        }
+    }
+    average_20.push(Math.floor(sum20 / 20));
+    for (let i = 20; i < clpr_ave_leng; i++) {
+        sum20 += (clpr_for_ave_list[i] - clpr_for_ave_list[i - 20]);
+        average_20.push(Math.floor(sum20 / 20));
+    }
+    /* 20일 이평선 리스트 생성*/
+
+    /* 60일 이평선 리스트 생성*/
+    let sum60 = 0;
+    for (let i = 0; i < 60; i++){
+        sum60 += clpr_for_ave_list[i];
+        if(i != 59){
+            average_60.push(NaN);
+        }
+    }
+    average_60.push(Math.floor(sum60 / 60));
+    for (let i = 60; i < clpr_ave_leng; i++) {
+        sum60 += (clpr_for_ave_list[i] - clpr_for_ave_list[i - 60]);
+        average_60.push(Math.floor(sum60 / 60));
+    }
+    /* 60일 이평선 리스트 생성*/
+
+    $(".loader").detach();
+    /* createChart */
+    createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list, lo_hi_list, mkp_clpr_list, min_lopr, max_hipr, candle_list);
+
+    /* searchGoldenCross */
+    let goldenCross_list = searchGoldenCross(date_for_ave_list.slice(59), average_5.slice(59), average_20.slice(59), average_60.slice(59));
+
+    /* searchDeadCross */
+    let deadCross_list = searchDeadCross(date_for_ave_list.slice(59), average_5.slice(59), average_20.slice(59), average_60.slice(59));
+    
+    /* createChart 이평선 */
+    createChart_average(title, date_for_ave_list.slice(59), average_5.slice(59), average_20.slice(59), average_60.slice(59), goldenCross_list, deadCross_list);
+    
 }
 
 function getDefualtDate(date) {
@@ -359,12 +536,45 @@ function make_color_td(val, num){
 /* make color td function */
 
 /* createChart */
-function createChart(date_list, mkp_list, hipr_list, lopr_list, clpr_list, bg_color_list, lo_hi_list, mkp_clpr_list, min_lopr, max_hipr){
+function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list, lo_hi_list, mkp_clpr_list, min_lopr, max_hipr, candle_list){
+    const ctx = document.getElementById('chart1');
+
+    const totalDuration = 2000;
+    const delayBetweenPoints = totalDuration / candle_list.length;
+    const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+    const animation = {
+    x: {
+        type: 'number',
+        easing: 'linear',
+        duration: delayBetweenPoints,
+        from: NaN, // the point is initially skipped
+        delay(ctx) {
+        if (ctx.type !== 'data' || ctx.xStarted) {
+            return 0;
+        }
+        ctx.xStarted = true;
+        return ctx.index * delayBetweenPoints;
+        }
+    },
+    y: {
+        type: 'number',
+        easing: 'linear',
+        duration: delayBetweenPoints,
+        from: previousY,
+        delay(ctx) {
+        if (ctx.type !== 'data' || ctx.yStarted) {
+            return 0;
+        }
+        ctx.yStarted = true;
+        return ctx.index * delayBetweenPoints;
+        }
+    }
+    };
+    
     /* 최소값, 최대값 평균 */
     let average = (min_lopr + max_hipr) /2;
     let temp_val = 1;
-    
-    for(let a = 0; a < average.toString().length - 1; a++){
+    for(let a = 0; a < average.toString().length - 2; a++){
         temp_val *= 10;
     }
 
@@ -373,22 +583,34 @@ function createChart(date_list, mkp_list, hipr_list, lopr_list, clpr_list, bg_co
 
     let step_size = tick_cal(average);
 
-    const ctx = document.getElementById('chart1');
     chart1 = new Chart(ctx, {
-        type: 'bar',
+        type: 'candlestick',
         data: {
             labels: date_list,
-            datasets: [{
-                label: 'data',
-                data: mkp_clpr_list,
-                backgroundColor: bg_color_list,
-                borderColor: bg_color_list,
-                borderWidth: 1
-            }]
+            datasets: [
+                {
+                    label: 'candle chart',
+                    data: candle_list,
+                    color: {up: "#e00400", down: "#003ace", unchanged: "#666"}
+                },
+                {
+                    label: '종가',
+                    type: 'line',
+                    data: lineData(candle_list)
+                }	
+            ]
         },
         options: {
+            animation,
+            interaction: {
+            intersect: false
+            },
             responsive: true,
             plugins: {
+                title: {
+                    display: true,
+                    text: title
+                },
                 legend: {
                     display: false,
                 }
@@ -406,6 +628,194 @@ function createChart(date_list, mkp_list, hipr_list, lopr_list, clpr_list, bg_co
     });
 }
 /* createChart */
+
+/* createChart_average */
+function createChart_average(title, date_list, average_5, average_20, average_60, goldenCross_list, deadCross_list){
+    const ctx = document.getElementById('chart2');
+    const totalDuration = 2000;
+    const delayBetweenPoints = totalDuration / date_list.length;
+    const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+    const animation = {
+    x: {
+        type: 'number',
+        easing: 'linear',
+        duration: delayBetweenPoints,
+        from: NaN, // the point is initially skipped
+        delay(ctx) {
+        if (ctx.type !== 'data' || ctx.xStarted) {
+            return 0;
+        }
+        ctx.xStarted = true;
+        return ctx.index * delayBetweenPoints;
+        }
+    },
+    y: {
+        type: 'number',
+        easing: 'linear',
+        duration: delayBetweenPoints,
+        from: previousY,
+        delay(ctx) {
+        if (ctx.type !== 'data' || ctx.yStarted) {
+            return 0;
+        }
+        ctx.yStarted = true;
+        return ctx.index * delayBetweenPoints;
+        }
+    }
+    };
+
+    chart2 = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: date_list,
+            datasets: [
+                {
+                    label: '5Days MA',
+                    data: average_5,
+                    borderColor: "#25c930",
+                    backgroundColor: "#25c930",
+                    borderWidth: 1,
+                    pointRadius:0,
+                    radius:0,
+                    hoverRadius:1,
+                    fill: false,
+                    cubicInterpolationMode: 'monotone',
+                    tension: 0.9
+                },
+                {
+                    label: '20Days MA',
+                    data: average_20,
+                    borderColor: "#c46a6d",
+                    backgroundColor: "#c46a6d",
+                    borderWidth: 1,
+                    pointRadius:0,
+                    radius:0,
+                    hoverRadius:1,
+                    fill: false,
+                    cubicInterpolationMode: 'monotone',
+                    tension: 0.9
+                },
+                {
+                    label: '60Days MA',
+                    data: average_60,
+                    borderColor: "#c29569",
+                    backgroundColor: "#c29569",
+                    borderWidth: 1,
+                    pointRadius:0,
+                    radius:0,
+                    hoverRadius:1,
+                    fill: false,
+                    cubicInterpolationMode: 'monotone',
+                    tension: 0.9
+                },
+                {
+                    label: 'GoldenCross',
+                    data: goldenCross_list,
+                    borderColor: "#e6e607",
+                    backgroundColor: "#e6e607",
+                    pointStyle: 'triangle',
+                    borderWidth: 1,
+                    pointRadius:10,
+                    fill: false,
+                    cubicInterpolationMode: 'monotone',
+                    tension: 0.9
+                },
+                {
+                    label: 'DeadCross',
+                    data: deadCross_list,
+                    borderColor: "#5c5c5b",
+                    backgroundColor: "#5c5c5b",
+                    pointStyle: 'crossRot',
+                    borderWidth: 3,
+                    pointRadius:10,
+                    fill: false,
+                    cubicInterpolationMode: 'monotone',
+                    tension: 0.9
+                }		
+            ]
+        },
+        options: {
+            animation,
+            interaction: {
+            intersect: false
+            },
+            responsive: true,
+            plugins: {
+                title: {
+                    display: false,
+                    text: title
+                },
+                legend: {
+                    display: true,
+                }
+            },
+            scales: {
+                y: {
+                    /* min: min_lopr, // Y 축의 최소값
+                    max: max_hipr, // Y 축의 최대값
+                    ticks: {
+                        stepSize: step_size
+                    } */
+                }
+            }
+        }
+    });
+}
+/* createChart_average */
+
+/* searchGoldenCross */
+function searchGoldenCross(date_list, average_5, average_20, average_60){
+    let goldenCrossList = [];
+    let goldenCrossDate = [];
+    goldenCrossList.push(NaN);
+    for(let i = 1; i < date_list.length - 2; i++){
+        let push_check = false;
+        if(average_5[i] > average_20[i] && average_5[i - 1] < average_20[i - 1]){ // 5일선이 20일선 돌파
+            if(average_5[i + 1] > average_20[i + 1] && average_5[i + 2] > average_20[i + 2]){ // 다음날, 다다음날까지 돌파
+                if(average_5[i] > average_60[i] && average_20[i] > average_60[i]){ // 60일선 위
+                    goldenCrossDate.push(date_list[i]);
+                    goldenCrossList.push(average_5[i]);
+                    push_check = true;
+                }
+            }
+        }
+
+        if(!push_check){
+            goldenCrossList.push(NaN);
+        }
+    }
+    console.log("골든크로스 발생일 = " + goldenCrossDate);
+    return goldenCrossList
+}
+/* searchGoldenCross */
+
+/* searchDeadCross */
+function searchDeadCross(date_list, average_5, average_20, average_60){
+    let deadCrossList = [];
+    let deadCrossDate = [];
+    deadCrossList.push(NaN);
+    for(let i = 1; i < date_list.length - 1; i++){
+        let push_check = false;
+        if(average_5[i] < average_20[i] && average_5[i - 1] > average_20[i - 1]){ // 5일선이 20일선 아래로
+            if(average_5[i + 1] < average_20[i + 1]){ // 다음날까지
+                deadCrossDate.push(date_list[i]);
+                deadCrossList.push(average_5[i]);
+                push_check = true;
+            }
+        }
+
+        if(!push_check){
+            deadCrossList.push(NaN);
+        }
+    }
+    console.log("데드크로스 발생일 = " + deadCrossDate);
+    return deadCrossList
+}
+/* searchDeadCross */
+
+/* lineData */
+function lineData(candle_list) { return candle_list.map(d => { return { x: d.x, y: d.c} }) };
+/* lineData */
 
 /* 틱 계산 */
 function tick_cal(price){

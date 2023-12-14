@@ -22,7 +22,7 @@
 }
 
 #stock_table_div{
-    width: 900px;
+    width: 1000px;
     margin: 10px auto;
     padding: 0 20px;
     border: 1px solid #dddddd;
@@ -30,13 +30,14 @@
 
 #stock_table_div table{
     width: 100%;
+    font-size: 12px;
 }
 
 #stock_table_div td {
     padding: 5px; 
     text-align: right;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 #stock_table_div td a{
@@ -116,8 +117,17 @@
 
 #chart_div {
     width: 900px;
-    height: 460px;
     margin: 10px auto;
     border: 1px solid #ddd;
     padding: 0 20px;
+}
+
+.view_chart{
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+    text-align: center;
+    margin: 0 3px;
+    padding: 1px;
+    font-size: 11px;
 }

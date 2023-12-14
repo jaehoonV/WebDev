@@ -13,24 +13,24 @@
 <script src="script.js" defer></script>
 <link rel="stylesheet" href="styles.css">
 <!-- chart.js cdn -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.1/dist/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.0.0"></script>
+<script src="https://www.chartjs.org/chartjs-chart-financial/chartjs-chart-financial.js"></script>
+<!-- chart.js cdn -->
 
 <body>
     <div class="search_container">
+        <input type="text" id="serviceKey" placeholder="서비스키" style="display: none;">
+        <input type="text" id="numOfRows" placeholder="페이지 결과 수" style="display: none;">
+        <input type="text" id="pageNo" placeholder="페이지 번호" style="display: none;">
+        <input type="text" id="resultType" placeholder="resultType" style="display: none;">
         <div class="search_box_div">
-            <input type="text" id="serviceKey" placeholder="서비스키" style="display: none;">
-            <input type="text" id="numOfRows" placeholder="페이지 결과 수" style="display: none;">
-            <input type="text" id="pageNo" placeholder="페이지 번호" style="display: none;">
-            <input type="text" id="resultType" placeholder="resultType" style="display: none;">
             <input type="text" id="basDt" placeholder="기준일자">
             <input type="text" id="likeItmsNm" placeholder="종목명 검색">
             <button type="button" id="select_btn">조회</button>
         </div>
         <div class="search_box_div">
-            <input type="text" id="serviceKey" placeholder="서비스키" style="display: none;">
-            <input type="text" id="numOfRows" placeholder="페이지 결과 수" style="display: none;">
-            <input type="text" id="pageNo" placeholder="페이지 번호" style="display: none;">
-            <input type="text" id="resultType" placeholder="resultType" style="display: none;">
             <input type="text" id="beginBasDt" placeholder="beginBasDt">
             <input type="text" id="endBasDt" placeholder="endBasDt">
             <input type="text" id="itmsNm" placeholder="종목명 검색">
@@ -40,6 +40,7 @@
     <div id="data_screen">
         <div id="chart_div">
             <canvas id="chart1"></canvas>
+            <canvas id="chart2"></canvas>
         </div>
         <div id="stock_table_div"></div>
     </div>
