@@ -1,46 +1,72 @@
+body{
+    margin: 0;
+    background-color: #ffffff;
+}
+
+input{
+    border: 1px solid #dddddd;
+}
+
 .search_container{
-    width: 800px;
-    margin: 20px auto;
+    width: 1000px;
+    margin: 10px auto;
 }
 
 .search_box_div{
     display: inline-block;
     width: 250px;
     margin: 10px;
-    border: 1px solid #666;
+    border: 1px solid #dddddd;
     border-radius: 10px;
     padding: 10px;
 }
 
-.search_box_div input{
+.search_box_div2{
+    display: inline-block;
+    width: 650px;
+    margin: 10px;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.search_box_div input, .search_box_div2 input{
     margin: 5px;
 }
 
 #data_screen{
     display: flex;
-    gap: 10px;
+    gap: 3px;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
-#stock_table_div{
-    width: 1000px;
+table.dataTable tbody th, table.dataTable tbody td {
+    padding: 3px;
+}
+
+.stock_table_div{
+    width: 850px;
+    min-height: 700px;
     margin: 10px auto;
     padding: 0 20px;
     border: 1px solid #dddddd;
+    border-radius: 10px;
 }
 
-#stock_table_div table{
+.stock_table_div table{
     width: 100%;
-    font-size: 12px;
+    font-size: 11px;
 }
 
-#stock_table_div td {
+.stock_table_div td {
     padding: 5px; 
     text-align: right;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 13px;
 }
 
-#stock_table_div td a{
+.stock_table_div td a{
     all: unset;
     cursor: pointer;
     text-decoration: underline;
@@ -48,7 +74,7 @@
     text-decoration-color: #acabab;
 }
 
-#stock_table_div tr td:nth-child(1), #stock_table_div tr td:nth-child(2) {
+.stock_table_div tr td:nth-child(1), #stock_table_div tr td:nth-child(2) {
     text-align: left;
 }
 
@@ -115,16 +141,25 @@
 }
 /* red, blue */
 
-#chart_div {
-    width: 900px;
+#chart_div1 {
+    width: 1500px;
+    height: 420px;
     margin: 10px auto;
     border: 1px solid #ddd;
-    padding: 0 20px;
+    padding: 0 10px;
+}
+
+#chart_div2 {
+    width: 1500px;
+    height: 420px;
+    margin: 10px auto;
+    border: 1px solid #ddd;
+    padding: 0 10px;
 }
 
 .view_chart{
     display: inline-block;
-    width: 40px;
+    width: 36px;
     height: 20px;
     text-align: center;
     margin: 0 3px;

@@ -10,16 +10,18 @@
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/plug-ins/1.13.7/sorting/formatted-numbers.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
-<script src="script.js" defer></script>
-<link rel="stylesheet" href="styles.css">
 <!-- chart.js cdn -->
 <script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.1/dist/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.0.0"></script>
 <script src="https://www.chartjs.org/chartjs-chart-financial/chartjs-chart-financial.js"></script>
 <!-- chart.js cdn -->
+<script src="script.js" type="module" defer></script>
+<link rel="stylesheet" href="styles.css">
 
 <body>
+    <input type="text" id="pop_data_itemnm" style="display: none;">
+    <input type="text" id="pop_data_months" style="display: none;">
     <div class="search_container">
         <input type="text" id="serviceKey" placeholder="서비스키" style="display: none;">
         <input type="text" id="numOfRows" placeholder="페이지 결과 수" style="display: none;">
@@ -30,7 +32,7 @@
             <input type="text" id="likeItmsNm" placeholder="종목명 검색">
             <button type="button" id="select_btn">조회</button>
         </div>
-        <div class="search_box_div">
+        <div class="search_box_div2">
             <input type="text" id="beginBasDt" placeholder="beginBasDt">
             <input type="text" id="endBasDt" placeholder="endBasDt">
             <input type="text" id="itmsNm" placeholder="종목명 검색">
@@ -38,11 +40,8 @@
         </div>
     </div>
     <div id="data_screen">
-        <div id="chart_div">
-            <canvas id="chart1"></canvas>
-            <canvas id="chart2"></canvas>
-        </div>
-        <div id="stock_table_div"></div>
+        <div class="stock_table_div" id="stock_table_div1"></div>
+        <div class="stock_table_div" id="stock_table_div2"></div>
     </div>
 </body>
 
