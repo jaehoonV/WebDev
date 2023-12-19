@@ -142,7 +142,7 @@ table.dataTable tbody th, table.dataTable tbody td {
 /* red, blue */
 
 #chart_div1 {
-    width: 1500px;
+    width: 1650px;
     height: 420px;
     margin: 10px auto;
     border: 1px solid #ddd;
@@ -150,7 +150,7 @@ table.dataTable tbody th, table.dataTable tbody td {
 }
 
 #chart_div2 {
-    width: 1500px;
+    width: 1650px;
     height: 420px;
     margin: 10px auto;
     border: 1px solid #ddd;

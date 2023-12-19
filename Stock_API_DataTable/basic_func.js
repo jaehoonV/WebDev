@@ -243,6 +243,30 @@ export function searchDisparityGoldenCross(date_list, average_5, average_20, ave
 }
 /* searchDisparityGoldenCross */
 
+/* searchDisparityDeadCross */
+export function searchDisparityDeadCross(date_list, average_5, average_20, average_60, average_120){
+    let deadCrossList = [];
+    let deadCrossDate = [];
+    deadCrossList.push(NaN);
+    for(let i = 1; i < date_list.length - 1; i++){
+        let push_check = false;
+        let pre_disparity = (average_5[i - 1] / average_20[i - 1]) * 100; // 전날 5일선 20일선 이격도
+        let disparity = (average_5[i] / average_20[i]) * 100; // 5일선 20일선 이격도
+        if(disparity < 102 && pre_disparity >= 102){
+            deadCrossDate.push(date_list[i]);
+            deadCrossList.push(average_5[i]);
+            push_check = true;
+        }
+
+        if(!push_check){
+            deadCrossList.push(NaN);
+        }
+    }
+    console.log("이격도데드크로스 발생일 = " + deadCrossDate);
+    return deadCrossList;
+}
+/* searchDisparityDeadCross */
+
 /* lineData */
 export function lineData(candle_list) { return candle_list.map(d => { return { x: d.x, y: d.c} }) }
 /* lineData */

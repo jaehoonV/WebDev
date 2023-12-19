@@ -24,7 +24,7 @@ $(document).on("click",".view_chart",function(){
 
     var url = "popup_chart.html";
     var name = "popup test";
-    var option = "width = 1600, height = 900, top = 100, left = 100, location = no"
+    var option = "width = 1800, height = 900, top = 100, left = 100, location = no"
     popup_chart = window.open(url, name, option);
 })
 

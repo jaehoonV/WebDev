@@ -8,13 +8,15 @@ $(function () {
     var pop_data_itemnm = opener.$("#pop_data_itemnm").val();
     var pop_data_months = opener.$("#pop_data_months").val();
 
-    $("#itemnm").val(pop_data_itemnm);
-    $("#months").val(pop_data_months);
+    if (pop_data_itemnm.length > 0 && pop_data_months.length > 0) {
+        $("#itemnm").val(pop_data_itemnm);
+        $("#months").val(pop_data_months);
 
-    monthChartSearch(pop_data_itemnm, pop_data_months);
+        monthChartSearch(pop_data_itemnm, pop_data_months);
+    }
 });
 
-function monthChartSearch(item_nm, months){
+function monthChartSearch(item_nm, months) {
     if (chart1) {
         chart1.destroy(); // 기존 차트 파기
     }
@@ -22,33 +24,34 @@ function monthChartSearch(item_nm, months){
         chart2.destroy(); // 기존 차트 파기
     }
 
-    $('#chart_div').prepend('<div class="loader"><span><i></i></span></div>');
+    $('#chart_div1').prepend('<div class="loader"><span><i></i></span></div>');
+    $('#chart_div2').prepend('<div class="loader"><span><i></i></span></div>');
 
     let url_ = url;
     const serviceKey = $("#serviceKey").val() == "" ? "abPiIAX9s%2BDHXRnUd1X%2BRSPn3gr429SocWtL%2BLhIW3gLaY%2BV8DuQ6ypRPmmeoyfysHbBV0hh1EUSNCqKQR%2F74A%3D%3D" : $("#serviceKey").val();
     const numOfRows = $("#numOfRows").val() == "" ? "3000" : $("#numOfRows").val(); // 3000이면 모두 조회됨
     const pageNo = $("#pageNo").val() == "" ? "1" : $("#pageNo").val();
     const resultType = $("#resultType").val() == "" ? "json" : $("#resultType").val();
-    
-    let today = new Date();   
+
+    let today = new Date();
     const year = today.getFullYear(); // 년
     const month = today.getMonth();   // 월
     const day = today.getDate();      // 일
-    
+
     let beginBasDt = "";
     /* 이평선을 구하기 위해 - 6개월 */
     let twoMonthAgo = new Date(year, month - 6, day);	// 2개월 전 
     let oneYearAgo = new Date(year - 1, month - 4, day); // 1년 전
     let twoYearAgo = new Date(year - 2, month - 4, day); // 2년 전
-    if(months == 2){
+    if (months == 2) {
         beginBasDt = beginBasDt.concat(twoMonthAgo.getFullYear(), func.pad(twoMonthAgo.getMonth() - 1, 2), func.pad(twoMonthAgo.getDate(), 2));
-    }else if(months == 12){
+    } else if (months == 12) {
         beginBasDt = beginBasDt.concat(oneYearAgo.getFullYear(), func.pad(oneYearAgo.getMonth() - 1, 2), func.pad(oneYearAgo.getDate(), 2));
-    }else if(months == 24){
+    } else if (months == 24) {
         beginBasDt = beginBasDt.concat(twoYearAgo.getFullYear(), func.pad(twoYearAgo.getMonth() - 1, 2), func.pad(twoYearAgo.getDate(), 2));
     }
     let endBasDt = "".concat(today.getFullYear(), func.pad(today.getMonth() + 1, 2), func.pad(today.getDate(), 2));
-    
+
     const itmsNm = item_nm;
 
     url_ += "?serviceKey=" + serviceKey;
@@ -70,7 +73,7 @@ function makeMonthChart(data) {
     let items = data.response.body.items.item;
     let leng = items.length;
     let title = ""; // 종목명
-    if(items.length > 0){
+    if (items.length > 0) {
         title = items[0].itmsNm;
     }
     let date_list = []; // 일자 리스트
@@ -110,7 +113,7 @@ function makeMonthChart(data) {
         let basDt = item.basDt; // 기준일자
         let srtnCd = item.srtnCd; // 종목코드
 
-        if(i < leng - 119){
+        if (i < leng - 119) {
             date_list.push(basDt);
             mkp_list.push(mkp);
             hipr_list.push(hipr);
@@ -119,9 +122,9 @@ function makeMonthChart(data) {
 
             lo_hi_list.push(new Array(lopr, hipr));
             mkp_clpr_list.push(new Array(mkp, clpr));
-            candle_list.push({x: Date.parse(basDt.substring(0, 4) + '-' + basDt.substring(4, 6) + '-' + basDt.substring(6, 8)), o: mkp, h: hipr, l: lopr, c: clpr});
+            candle_list.push({ x: Date.parse(basDt.substring(0, 4) + '-' + basDt.substring(4, 6) + '-' + basDt.substring(6, 8)), o: mkp, h: hipr, l: lopr, c: clpr });
         }
-        
+
         date_for_ave_list.push(basDt);
         clpr_for_ave_list.push(clpr);
     }
@@ -132,9 +135,9 @@ function makeMonthChart(data) {
     let clpr_ave_leng = clpr_for_ave_list.length;
     /* 5일 이평선 리스트 생성*/
     let sum5 = 0;
-    for (let i = 0; i < 5; i++){
+    for (let i = 0; i < 5; i++) {
         sum5 += clpr_for_ave_list[i];
-        if(i != 4){
+        if (i != 4) {
             average_5.push(NaN);
         }
     }
@@ -150,10 +153,10 @@ function makeMonthChart(data) {
     let bb_up_list = [];
     let bb_down_list = [];
     let sum20 = 0;
-    for (let i = 0; i < 20; i++){
+    for (let i = 0; i < 20; i++) {
         sum20 += clpr_for_ave_list[i];
         temp_20_list.enqueue(clpr_for_ave_list[i]);
-        if(i != 19){
+        if (i != 19) {
             average_20.push(NaN);
             bb_up_list.push(NaN);
             bb_down_list.push(NaN);
@@ -177,9 +180,9 @@ function makeMonthChart(data) {
 
     /* 60일 이평선 리스트 생성*/
     let sum60 = 0;
-    for (let i = 0; i < 60; i++){
+    for (let i = 0; i < 60; i++) {
         sum60 += clpr_for_ave_list[i];
-        if(i != 59){
+        if (i != 59) {
             average_60.push(NaN);
         }
     }
@@ -192,9 +195,9 @@ function makeMonthChart(data) {
 
     /* 120일 이평선 리스트 생성*/
     let sum120 = 0;
-    for (let i = 0; i < 120; i++){
+    for (let i = 0; i < 120; i++) {
         sum120 += clpr_for_ave_list[i];
-        if(i != 119){
+        if (i != 119) {
             average_120.push(NaN);
         }
     }
@@ -206,33 +209,33 @@ function makeMonthChart(data) {
     /* 120일 이평선 리스트 생성*/
 
     /* 기준선 리스트 생성 */
-    for (let i = 0; i < 26; i++){ // 26일 기준 high clpr, low clpr의 평균
+    for (let i = 0; i < 26; i++) { // 26일 기준 high clpr, low clpr의 평균
         bl_list.enqueue(clpr_for_ave_list[i]);
-        if(i != 25){
+        if (i != 25) {
             baseLine.push(NaN);
         }
     }
-    baseLine.push(Math.floor((bl_list.max() + bl_list.min())/ 2));
+    baseLine.push(Math.floor((bl_list.max() + bl_list.min()) / 2));
 
     for (let i = 26; i < clpr_ave_leng; i++) {
         bl_list.enqueue(clpr_for_ave_list[i]);
         bl_list.dequeue();
-        baseLine.push(Math.floor((bl_list.max() + bl_list.min())/ 2));
+        baseLine.push(Math.floor((bl_list.max() + bl_list.min()) / 2));
     }
     /* 기준선 리스트 생성 */
 
     /* 전환선 리스트 생성 */
-    for (let i = 0; i < 9; i++){ // 9일 기준 high clpr, low clpr의 평균
+    for (let i = 0; i < 9; i++) { // 9일 기준 high clpr, low clpr의 평균
         ts_list.enqueue(clpr_for_ave_list[i]);
-        if(i != 8){
+        if (i != 8) {
             transitionLine.push(NaN);
         }
     }
-    transitionLine.push(Math.floor((ts_list.max() + ts_list.min())/ 2));
+    transitionLine.push(Math.floor((ts_list.max() + ts_list.min()) / 2));
     for (let i = 9; i < clpr_ave_leng; i++) {
         ts_list.enqueue(clpr_for_ave_list[i]);
         ts_list.dequeue();
-        transitionLine.push(Math.floor((ts_list.max() + ts_list.min())/ 2));
+        transitionLine.push(Math.floor((ts_list.max() + ts_list.min()) / 2));
     }
     /* 전환선 리스트 생성 */
 
@@ -254,52 +257,55 @@ function makeMonthChart(data) {
 
     /* searchDisparityGoldenCross */
     let disparityGoldenCross_list = func.searchDisparityGoldenCross(date_for_ave_list.slice(119), average_5.slice(119), average_20.slice(119), average_60.slice(119), average_120.slice(119));
-    
+
+    /* searchDisparityDeadCross */
+    let disparityDeadCross_list = func.searchDisparityDeadCross(date_for_ave_list.slice(119), average_5.slice(119), average_20.slice(119), average_60.slice(119), average_120.slice(119));
+
     /* createChart 이평선, 기준선, 전환선 */
-    createChart_average(title, date_for_ave_list.slice(119), average_5.slice(119), average_20.slice(119), average_60.slice(119), average_120.slice(119), baseLine.slice(119), transitionLine.slice(119), goldenCross_list, deadCross_list, bt_goldenCross_list, bt_deadCross_list, min_lopr, max_hipr, bb_up_list.slice(119), bb_down_list.slice(119), disparityGoldenCross_list);
-    
+    createChart_average(title, date_for_ave_list.slice(119), average_5.slice(119), average_20.slice(119), average_60.slice(119), average_120.slice(119), baseLine.slice(119), transitionLine.slice(119), goldenCross_list, deadCross_list, bt_goldenCross_list, bt_deadCross_list, min_lopr, max_hipr, bb_up_list.slice(119), bb_down_list.slice(119), disparityGoldenCross_list, disparityDeadCross_list);
+
 }
 
 /* createChart */
-function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list, lo_hi_list, mkp_clpr_list, min_lopr, max_hipr, candle_list, bb_up_list, bb_down_list){
+function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list, lo_hi_list, mkp_clpr_list, min_lopr, max_hipr, candle_list, bb_up_list, bb_down_list) {
     const ctx = document.getElementById('chart1');
 
     const totalDuration = 2000;
     const delayBetweenPoints = totalDuration / candle_list.length;
     const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
     const animation = {
-    x: {
-        type: 'number',
-        easing: 'linear',
-        duration: delayBetweenPoints,
-        from: NaN, // the point is initially skipped
-        delay(ctx) {
-        if (ctx.type !== 'data' || ctx.xStarted) {
-            return 0;
+        x: {
+            type: 'number',
+            easing: 'linear',
+            duration: delayBetweenPoints,
+            from: NaN, // the point is initially skipped
+            delay(ctx) {
+                if (ctx.type !== 'data' || ctx.xStarted) {
+                    return 0;
+                }
+                ctx.xStarted = true;
+                return ctx.index * delayBetweenPoints;
+            }
+        },
+        y: {
+            type: 'number',
+            easing: 'linear',
+            duration: delayBetweenPoints,
+            from: previousY,
+            delay(ctx) {
+                if (ctx.type !== 'data' || ctx.yStarted) {
+                    return 0;
+                }
+                ctx.yStarted = true;
+                return ctx.index * delayBetweenPoints;
+            }
         }
-        ctx.xStarted = true;
-        return ctx.index * delayBetweenPoints;
-        }
-    },
-    y: {
-        type: 'number',
-        easing: 'linear',
-        duration: delayBetweenPoints,
-        from: previousY,
-        delay(ctx) {
-        if (ctx.type !== 'data' || ctx.yStarted) {
-            return 0;
-        }
-        ctx.yStarted = true;
-        return ctx.index * delayBetweenPoints;
-        }
-    }
     };
-    
+
     /* 최소값, 최대값 평균 */
-    let average = (min_lopr + max_hipr) /2;
+    let average = (min_lopr + max_hipr) / 2;
     let temp_val = 1;
-    for(let a = 0; a < average.toString().length - 2; a++){
+    for (let a = 0; a < average.toString().length - 2; a++) {
         temp_val *= 10;
     }
 
@@ -307,10 +313,29 @@ function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list
     max_hipr += temp_val;
 
     /* 차트 Y축 최대값, 최소값 설정 */
-    let max_bb_up = Math.max(...bb_up_list) + (temp_val * 2); 
+    let max_bb_up = Math.max(...bb_up_list) + (temp_val * 2);
     let min_bb_dwon = Math.min(...bb_down_list) - (temp_val * 2);
 
     let step_size = func.tick_cal(average);
+
+    let zoomOptions1 = {
+        limits: {
+            y: { min: min_bb_dwon, max: max_bb_up, minRange: 50 }
+        },
+        zoom: {
+            wheel: {
+                enabled: true,
+            },
+            pinch: {
+                enabled: true,
+            },
+            mode: 'xy',
+        },
+        pan: {
+            enabled: true,
+            mode: 'xy',
+        }
+    };
 
     chart1 = new Chart(ctx, {
         type: 'candlestick',
@@ -320,7 +345,7 @@ function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list
                 {
                     label: 'candle chart',
                     data: candle_list,
-                    color: {up: "#e00400", down: "#003ace", unchanged: "#666"}
+                    color: { up: "#e00400", down: "#003ace", unchanged: "#666" }
                 },
                 {
                     label: '종가',
@@ -334,9 +359,9 @@ function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list
                     borderColor: "#E3BAB6",
                     backgroundColor: "#E3BAB6",
                     borderWidth: 1,
-                    pointRadius:0,
-                    radius:0,
-                    hoverRadius:1,
+                    pointRadius: 0,
+                    radius: 0,
+                    hoverRadius: 1,
                     fill: false,
                     cubicInterpolationMode: 'monotone',
                     tension: 0.9
@@ -348,20 +373,20 @@ function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list
                     borderColor: "#C4E2E6",
                     backgroundColor: "#C4E2E6",
                     borderWidth: 1,
-                    pointRadius:0,
-                    radius:0,
-                    hoverRadius:1,
+                    pointRadius: 0,
+                    radius: 0,
+                    hoverRadius: 1,
                     fill: false,
                     cubicInterpolationMode: 'monotone',
                     tension: 0.9
-                }	
+                }
             ]
         },
         options: {
             animation,
-            maintainAspectRatio :false,
+            maintainAspectRatio: false,
             interaction: {
-            intersect: false
+                intersect: false
             },
             responsive: true,
             plugins: {
@@ -374,12 +399,11 @@ function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list
                 },
                 legend: {
                     display: false,
-                }
+                },
+                zoom: zoomOptions1
             },
             scales: {
                 y: {
-                    /* min: min_lopr, // Y 축의 최소값
-                    max: max_hipr, // Y 축의 최대값 */
                     min: min_bb_dwon, // Y 축의 최소값
                     max: max_bb_up, // Y 축의 최대값
                     ticks: {
@@ -393,44 +417,44 @@ function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list
 /* createChart */
 
 /* createChart_average */
-function createChart_average(title, date_list, average_5, average_20, average_60, average_120, baseLine, transitionLine, goldenCross_list, deadCross_list, bt_goldenCross_list, bt_deadCross_list, min_lopr, max_hipr, bb_up_list, bb_down_list, disparityGoldenCross_list){
+function createChart_average(title, date_list, average_5, average_20, average_60, average_120, baseLine, transitionLine, goldenCross_list, deadCross_list, bt_goldenCross_list, bt_deadCross_list, min_lopr, max_hipr, bb_up_list, bb_down_list, disparityGoldenCross_list, disparityDeadCross_list) {
     const ctx = document.getElementById('chart2');
     const totalDuration = 2000;
     const delayBetweenPoints = totalDuration / date_list.length;
     const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
     const animation = {
-    x: {
-        type: 'number',
-        easing: 'linear',
-        duration: delayBetweenPoints,
-        from: NaN, // the point is initially skipped
-        delay(ctx) {
-        if (ctx.type !== 'data' || ctx.xStarted) {
-            return 0;
+        x: {
+            type: 'number',
+            easing: 'linear',
+            duration: delayBetweenPoints,
+            from: NaN, // the point is initially skipped
+            delay(ctx) {
+                if (ctx.type !== 'data' || ctx.xStarted) {
+                    return 0;
+                }
+                ctx.xStarted = true;
+                return ctx.index * delayBetweenPoints;
+            }
+        },
+        y: {
+            type: 'number',
+            easing: 'linear',
+            duration: delayBetweenPoints,
+            from: previousY,
+            delay(ctx) {
+                if (ctx.type !== 'data' || ctx.yStarted) {
+                    return 0;
+                }
+                ctx.yStarted = true;
+                return ctx.index * delayBetweenPoints;
+            }
         }
-        ctx.xStarted = true;
-        return ctx.index * delayBetweenPoints;
-        }
-    },
-    y: {
-        type: 'number',
-        easing: 'linear',
-        duration: delayBetweenPoints,
-        from: previousY,
-        delay(ctx) {
-        if (ctx.type !== 'data' || ctx.yStarted) {
-            return 0;
-        }
-        ctx.yStarted = true;
-        return ctx.index * delayBetweenPoints;
-        }
-    }
     };
 
     /* 최소값, 최대값 평균 */
-    let average = (min_lopr + max_hipr) /2;
+    let average = (min_lopr + max_hipr) / 2;
     let temp_val = 1;
-    for(let a = 0; a < average.toString().length - 2; a++){
+    for (let a = 0; a < average.toString().length - 2; a++) {
         temp_val *= 10;
     }
 
@@ -438,10 +462,29 @@ function createChart_average(title, date_list, average_5, average_20, average_60
     max_hipr += temp_val;
 
     /* 차트 Y축 최대값, 최소값 설정 */
-    let max_bb_up = Math.max(...bb_up_list) + (temp_val * 2); 
+    let max_bb_up = Math.max(...bb_up_list) + (temp_val * 2);
     let min_bb_dwon = Math.min(...bb_down_list) - (temp_val * 2);
 
     let step_size = func.tick_cal(average);
+    
+    let zoomOptions2 = {
+        limits: {
+            y: { min: min_bb_dwon, max: max_bb_up, minRange: 50 }
+        },
+        zoom: {
+            wheel: {
+                enabled: true,
+            },
+            pinch: {
+                enabled: true,
+            },
+            mode: 'xy',
+        },
+        pan: {
+            enabled: true,
+            mode: 'xy',
+        }
+    };
 
     chart2 = new Chart(ctx, {
         type: 'line',
@@ -454,9 +497,9 @@ function createChart_average(title, date_list, average_5, average_20, average_60
                     borderColor: "#25c930",
                     backgroundColor: "#25c930",
                     borderWidth: 1,
-                    pointRadius:0,
-                    radius:0,
-                    hoverRadius:1,
+                    pointRadius: 0,
+                    radius: 0,
+                    hoverRadius: 1,
                     fill: false,
                     cubicInterpolationMode: 'monotone',
                     tension: 0.9
@@ -467,9 +510,9 @@ function createChart_average(title, date_list, average_5, average_20, average_60
                     borderColor: "#c46a6d",
                     backgroundColor: "#c46a6d",
                     borderWidth: 1,
-                    pointRadius:0,
-                    radius:0,
-                    hoverRadius:1,
+                    pointRadius: 0,
+                    radius: 0,
+                    hoverRadius: 1,
                     fill: false,
                     cubicInterpolationMode: 'monotone',
                     tension: 0.9
@@ -480,9 +523,9 @@ function createChart_average(title, date_list, average_5, average_20, average_60
                     borderColor: "#c29569",
                     backgroundColor: "#c29569",
                     borderWidth: 1,
-                    pointRadius:0,
-                    radius:0,
-                    hoverRadius:1,
+                    pointRadius: 0,
+                    radius: 0,
+                    hoverRadius: 1,
                     fill: false,
                     cubicInterpolationMode: 'monotone',
                     tension: 0.9
@@ -493,9 +536,9 @@ function createChart_average(title, date_list, average_5, average_20, average_60
                     borderColor: "#C08FFF",
                     backgroundColor: "#C08FFF",
                     borderWidth: 1,
-                    pointRadius:0,
-                    radius:0,
-                    hoverRadius:1,
+                    pointRadius: 0,
+                    radius: 0,
+                    hoverRadius: 1,
                     fill: false,
                     cubicInterpolationMode: 'monotone',
                     tension: 0.9
@@ -506,9 +549,9 @@ function createChart_average(title, date_list, average_5, average_20, average_60
                     borderColor: "#8E8E8E",
                     backgroundColor: "#8E8E8E",
                     borderWidth: 1,
-                    pointRadius:0,
-                    radius:0,
-                    hoverRadius:1,
+                    pointRadius: 0,
+                    radius: 0,
+                    hoverRadius: 1,
                     fill: false,
                     cubicInterpolationMode: 'monotone',
                     tension: 0.9
@@ -519,9 +562,9 @@ function createChart_average(title, date_list, average_5, average_20, average_60
                     borderColor: "#658F89",
                     backgroundColor: "#658F89",
                     borderWidth: 1,
-                    pointRadius:0,
-                    radius:0,
-                    hoverRadius:1,
+                    pointRadius: 0,
+                    radius: 0,
+                    hoverRadius: 1,
                     fill: false,
                     cubicInterpolationMode: 'monotone',
                     tension: 0.9
@@ -529,23 +572,12 @@ function createChart_average(title, date_list, average_5, average_20, average_60
                 {
                     label: 'GoldenCross',
                     data: goldenCross_list,
-                    borderColor: "#e6e607",
-                    backgroundColor: "#e6e607",
+                    borderColor: "#808000",
+                    backgroundColor: "#808000",
                     pointStyle: 'triangle',
                     borderWidth: 1,
-                    pointRadius:10,
-                    fill: false,
-                    cubicInterpolationMode: 'monotone',
-                    tension: 0.9
-                },
-                {
-                    label: 'DeadCross',
-                    data: deadCross_list,
-                    borderColor: "#5c5c5b",
-                    backgroundColor: "#5c5c5b",
-                    pointStyle: 'crossRot',
-                    borderWidth: 3,
-                    pointRadius:10,
+                    pointRadius: 8,
+                    hoverRadius: 9,
                     fill: false,
                     cubicInterpolationMode: 'monotone',
                     tension: 0.9
@@ -553,11 +585,39 @@ function createChart_average(title, date_list, average_5, average_20, average_60
                 {
                     label: 'BT-GoldenCross',
                     data: bt_goldenCross_list,
-                    borderColor: "#979705",
-                    backgroundColor: "#979705",
+                    borderColor: "#adad00",
+                    backgroundColor: "#adad00",
                     pointStyle: 'triangle',
                     borderWidth: 1,
-                    pointRadius:10,
+                    pointRadius: 8,
+                    hoverRadius: 9,
+                    fill: false,
+                    cubicInterpolationMode: 'monotone',
+                    tension: 0.9
+                },
+                {
+                    label: 'DisparityGoldenCross',
+                    data: disparityGoldenCross_list,
+                    borderColor: "#ffff00",
+                    backgroundColor: "#ffff00",
+                    pointStyle: 'triangle',
+                    borderWidth: 1,
+                    pointRadius: 8,
+                    hoverRadius: 9,
+                    fill: false,
+                    cubicInterpolationMode: 'monotone',
+                    tension: 0.9
+                },
+                {
+                    label: 'DeadCross',
+                    data: deadCross_list,
+                    borderColor: "#a5a5a5",
+                    backgroundColor: "#a5a5a5",
+                    pointStyle: 'crossRot',
+                    borderWidth: 3,
+                    pointRadius: 8,
+                    hoverRadius: 9,
+                    hoverBorderWidth: 4,
                     fill: false,
                     cubicInterpolationMode: 'monotone',
                     tension: 0.9
@@ -565,34 +625,38 @@ function createChart_average(title, date_list, average_5, average_20, average_60
                 {
                     label: 'BT-DeadCross',
                     data: bt_deadCross_list,
-                    borderColor: "#3d3d3d",
-                    backgroundColor: "#3d3d3d",
+                    borderColor: "#585858",
+                    backgroundColor: "#585858",
                     pointStyle: 'crossRot',
                     borderWidth: 3,
-                    pointRadius:10,
+                    pointRadius: 8,
+                    hoverRadius: 9,
+                    hoverBorderWidth: 4,
                     fill: false,
                     cubicInterpolationMode: 'monotone',
                     tension: 0.9
                 },
                 {
-                    label: 'disparityGoldenCross',
-                    data: disparityGoldenCross_list,
-                    borderColor: "#ffff00",
-                    backgroundColor: "#ffff00",
-                    pointStyle: 'triangle',
-                    borderWidth: 1,
-                    pointRadius:10,
+                    label: 'DisparityDeadCross',
+                    data: disparityDeadCross_list,
+                    borderColor: "#1d1d1d",
+                    backgroundColor: "#1d1d1d",
+                    pointStyle: 'crossRot',
+                    borderWidth: 3,
+                    pointRadius: 8,
+                    hoverRadius: 9,
+                    hoverBorderWidth: 4,
                     fill: false,
                     cubicInterpolationMode: 'monotone',
                     tension: 0.9
-                },		
+                },
             ]
         },
         options: {
             animation,
-            maintainAspectRatio :false,
+            maintainAspectRatio: false,
             interaction: {
-            intersect: false
+                intersect: false
             },
             responsive: true,
             plugins: {
@@ -602,12 +666,11 @@ function createChart_average(title, date_list, average_5, average_20, average_60
                 },
                 legend: {
                     display: true,
-                }
+                },
+                zoom: zoomOptions2,
             },
             scales: {
                 y: {
-                    /* min: min_lopr, // Y 축의 최소값
-                    max: max_hipr, // Y 축의 최대값 */
                     min: min_bb_dwon, // Y 축의 최소값
                     max: max_bb_up, // Y 축의 최대값
                     ticks: {
