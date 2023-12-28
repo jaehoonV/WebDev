@@ -26,7 +26,7 @@ export default class Queue {
 
     // 제곱한 값들의 평균의 제곱근 계산
     const standardDeviation = Math.sqrt(meanOfSquaredDifferences);
-
+    
     return standardDeviation;
   }
 }

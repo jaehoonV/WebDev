@@ -47,14 +47,26 @@ export function tick_cal(price){
 /* yyyymmdd => yyyy년 mm월 dd일 */
 export function dateForamt(date_str)
 {
-    var yyyyMMdd = String(date_str);
-    var year = yyyyMMdd.substring(0,4);
-    var month = Number(yyyyMMdd.substring(4,6));
-    var day = Number(yyyyMMdd.substring(6,8));
+    let yyyyMMdd = String(date_str);
+    let year = yyyyMMdd.substring(0,4);
+    let month = Number(yyyyMMdd.substring(4,6));
+    let day = Number(yyyyMMdd.substring(6,8));
 
     return year + '년 ' + month + '월 ' + day + '일';
 }
 /* yyyymmdd => yyyy년 mm월 dd일 */
+
+/* Date type => yyyy년 mm월 dd일 */
+export function dateForamt2(date_)
+{
+    let new_date = new Date(date_);
+    let year = new_date.getFullYear();
+    let month = new_date.getMonth() + 1;
+    let date = new_date.getDate();
+
+    return year + '년 ' + pad(month, 2) + '월 ' + pad(date, 2) + '일';
+}
+/* Date type => yyyy년 mm월 dd일 */
 
 /* getDefualtDate */
 export function getDefualtDate(date) {
@@ -136,21 +148,14 @@ export function getDefualtDate(date) {
 export function searchGoldenCross(date_list, average_5, average_20, average_60, average_120){
     let goldenCrossList = [];
     let goldenCrossDate = [];
-    goldenCrossList.push(NaN);
     for(let i = 1; i < date_list.length - 2; i++){
-        let push_check = false;
         if(average_5[i] > average_20[i] && average_5[i - 1] < average_20[i - 1]){ // 5일선이 20일선 돌파
             if(average_5[i + 1] > average_20[i + 1] && average_5[i + 2] > average_20[i + 2]){ // 다음날, 다다음날까지 돌파
                 if(average_5[i] > average_60[i] && average_20[i] > average_60[i]){ // 60일선 위
                     goldenCrossDate.push(date_list[i]);
-                    goldenCrossList.push(average_5[i]);
-                    push_check = true;
+                    goldenCrossList.push([date_list[i],average_5[i]]);
                 }
             }
-        }
-
-        if(!push_check){
-            goldenCrossList.push(NaN);
         }
     }
     console.log("골든크로스 발생일 = " + goldenCrossDate);
@@ -281,3 +286,26 @@ export function lineData2(candle_list, bb_list) {
     return output_list;
 }
 /* lineData2 */
+
+/* lineData3 */
+export function lineData3(candle_list, bb_list) { 
+    let output_list = [];
+    
+    for(let i = 0; i < candle_list.length; i++){
+        output_list.push([candle_list[i][0], bb_list[i]]);
+    }
+    return output_list;
+}
+/* lineData3 */
+
+/* areaData */
+export function areaData(candle_list, bb_up_list, bb_down_list) { 
+    let output_list = [];
+    
+    for(let i = 0; i < candle_list.length; i++){
+        output_list.push([candle_list[i][0], bb_down_list[i], bb_up_list[i]]);
+    }
+    return output_list;
+}
+/* areaData */
+

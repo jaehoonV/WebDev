@@ -8,13 +8,13 @@ input{
 }
 
 .search_container{
-    width: 1000px;
+    width: 1400px;
     margin: 10px auto;
 }
 
 .search_box_div{
     display: inline-block;
-    width: 250px;
+    width: 450px;
     margin: 10px;
     border: 1px solid #dddddd;
     border-radius: 10px;
@@ -143,15 +143,15 @@ table.dataTable tbody th, table.dataTable tbody td {
 
 #chart_div1 {
     width: 1650px;
-    height: 420px;
+    height: 870px;
     margin: 10px auto;
     border: 1px solid #ddd;
     padding: 0 10px;
 }
 
 #chart_div2 {
-    width: 1650px;
-    height: 420px;
+    width: 9000px;
+    height: 370px;
     margin: 10px auto;
     border: 1px solid #ddd;
     padding: 0 10px;

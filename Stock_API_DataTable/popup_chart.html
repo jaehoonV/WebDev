@@ -19,6 +19,14 @@
 <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/2.0.1/chartjs-plugin-zoom.min.js"></script>
 <!-- chart.js zoom plugin cdn -->
+<!-- highcharts cdn -->
+<!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/stock/modules/drag-panes.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/stock/modules/accessibility.js"></script>
+<!-- highcharts cdn -->
 <script src="script_popup.js" type="module" defer></script>
 <link rel="stylesheet" href="styles.css">
 
@@ -31,11 +39,12 @@
     <input type="text" id="resultType" placeholder="resultType" style="display: none;">
     <div id="data_screen">
         <div id="chart_div1">
-            <canvas id="chart1"></canvas>
+            <!-- <canvas id="chart1"></canvas> -->
+            <div id="chart-candlestick"></div>
         </div>
-        <div id="chart_div2">
+        <!-- <div id="chart_div2">
             <canvas id="chart2"></canvas>
-        </div>
+        </div> -->
     </div>
 </body>
 </html>

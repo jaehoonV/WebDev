@@ -86,7 +86,6 @@ function makeMonthChart(data) {
     let min_lopr = Number.MAX_SAFE_INTEGER; // 최저값
     let max_hipr = 0; // 최대값
     let candle_list = []; // 캔들차트 리스트
-    let candle_list_volume = []; // 캔들차트 거래량 리스트
 
     let date_for_ave_list = []; // 이평선을 구하기 위한 날짜 리스트
     let clpr_for_ave_list = []; // 이평선을 구하기 위한 종가 리스트
@@ -110,12 +109,13 @@ function makeMonthChart(data) {
         let clpr = Number(item.clpr); // 종가
         let vs = item.vs; // 전일 대비 등락
         let fltRt = Number(item.fltRt); // 등락률
-        let trqu = Number(item.trqu); // 거래량
+        let trqu = item.trqu; // 거래량
         let basDt = item.basDt; // 기준일자
         let srtnCd = item.srtnCd; // 종목코드
 
         if (i < leng - 119) {
-            date_list.push(basDt);
+            /* date_list.push(basDt); */
+            date_list.push(new Date(basDt.substring(0, 4) + '-' + basDt.substring(4, 6) + '-' + basDt.substring(6, 8)).setHours(0, 0, 0, 0));
             mkp_list.push(mkp);
             hipr_list.push(hipr);
             lopr_list.push(lopr);
@@ -123,11 +123,10 @@ function makeMonthChart(data) {
 
             lo_hi_list.push(new Array(lopr, hipr));
             mkp_clpr_list.push(new Array(mkp, clpr));
-            candle_list.push([new Date(basDt.substring(0, 4) + '-' + basDt.substring(4, 6) + '-' + basDt.substring(6, 8)).setHours(0, 0, 0, 0), mkp, hipr, lopr, clpr]);
-            candle_list_volume.push([new Date(basDt.substring(0, 4) + '-' + basDt.substring(4, 6) + '-' + basDt.substring(6, 8)).setHours(0, 0, 0, 0), trqu]);
+            candle_list.push({ x: new Date(basDt.substring(0, 4) + '-' + basDt.substring(4, 6) + '-' + basDt.substring(6, 8)).setHours(0, 0, 0, 0), o: mkp, h: hipr, l: lopr, c: clpr });
         }
 
-        date_for_ave_list.push(new Date(basDt.substring(0, 4) + '-' + basDt.substring(4, 6) + '-' + basDt.substring(6, 8)).setHours(0, 0, 0, 0));
+        date_for_ave_list.push(basDt);
         clpr_for_ave_list.push(clpr);
     }
 
@@ -242,7 +241,9 @@ function makeMonthChart(data) {
     /* 전환선 리스트 생성 */
 
     $(".loader").detach();
-    
+    /* createChart */
+    createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list, lo_hi_list, mkp_clpr_list, min_lopr, max_hipr, candle_list, bb_up_list.slice(119), bb_down_list.slice(119));
+
     /* searchGoldenCross */
     let goldenCross_list = func.searchGoldenCross(date_for_ave_list.slice(119), average_5.slice(119), average_20.slice(119), average_60.slice(119), average_120.slice(119));
 
@@ -260,404 +261,157 @@ function makeMonthChart(data) {
 
     /* searchDisparityDeadCross */
     let disparityDeadCross_list = func.searchDisparityDeadCross(date_for_ave_list.slice(119), average_5.slice(119), average_20.slice(119), average_60.slice(119), average_120.slice(119));
-    
-    /* createChart */
-    createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list, lo_hi_list, mkp_clpr_list, min_lopr, max_hipr, candle_list, candle_list_volume, bb_up_list.slice(119), bb_down_list.slice(119), average_5.slice(119), average_20.slice(119), average_60.slice(119), average_120.slice(119), baseLine.slice(119), transitionLine.slice(119), goldenCross_list);
 
     /* createChart 이평선, 기준선, 전환선 */
-    //createChart_average(title, date_for_ave_list.slice(119), average_5.slice(119), average_20.slice(119), average_60.slice(119), average_120.slice(119), baseLine.slice(119), transitionLine.slice(119), goldenCross_list, deadCross_list, bt_goldenCross_list, bt_deadCross_list, min_lopr, max_hipr, bb_up_list.slice(119), bb_down_list.slice(119), disparityGoldenCross_list, disparityDeadCross_list);
+    createChart_average(title, date_for_ave_list.slice(119), average_5.slice(119), average_20.slice(119), average_60.slice(119), average_120.slice(119), baseLine.slice(119), transitionLine.slice(119), goldenCross_list, deadCross_list, bt_goldenCross_list, bt_deadCross_list, min_lopr, max_hipr, bb_up_list.slice(119), bb_down_list.slice(119), disparityGoldenCross_list, disparityDeadCross_list);
 
 }
 
 /* createChart */
-function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list, lo_hi_list, mkp_clpr_list, min_lopr, max_hipr, candle_list, candle_list_volume, bb_up_list, bb_down_list, average_5, average_20, average_60, average_120, baseLine, transitionLine, goldenCross_list) {
-    const groupingUnits = [[
-        'week',                         // unit name
-        [1]                             // allowed multiples
-    ], [
-        'month',
-        [1, 2, 3, 4, 6]
-    ]];
+function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list, lo_hi_list, mkp_clpr_list, min_lopr, max_hipr, candle_list, bb_up_list, bb_down_list) {
+    const ctx = document.getElementById('chart1');
 
-    console.log(candle_list_volume);
-    console.log(goldenCross_list);
-
-    // create the chart
-    Highcharts.stockChart('chart-candlestick', {
-        chart: {
-            alignThresholds: true,
-            height: 850,
-        },
-        rangeSelector: {
-            selected: 4
-        },
-
-        title: {
-            text: title
-        },
-
-        yAxis: [{
-            labels: {
-                align: 'left',
-                x: 10
-            },
-            title: {
-                text: 'OHLC'
-            },
-            opposite: false,
-            height: '40%',
-            offset: 10,
-            lineWidth: 2,
-            resize: {
-                enabled: true
-            }
-        }, {
-            labels: {
-                align: 'left',
-                x: 10
-            },
-            title: {
-                text: '거래량'
-            },
-            opposite: false,
-            top: '42%',
-            height: '20%',
-            offset: 10,
-            lineWidth: 2,
-            resize: {
-                enabled: true
-            }
-        }, {
-            labels: {
-                align: 'left',
-                x: 10
-            },
-            title: {
-                text: 'Analysis'
-            },
-            opposite: false,
-            top: '64%',
-            height: '39%',
-            offset: 10,
-            lineWidth: 2
-        }],
-
-        tooltip: {
-            style: {
-                fontWeight: 'bold'
+    const totalDuration = 2000;
+    const delayBetweenPoints = totalDuration / candle_list.length;
+    const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+    const animation = {
+        x: {
+            type: 'number',
+            easing: 'linear',
+            duration: delayBetweenPoints,
+            from: NaN, // the point is initially skipped
+            delay(ctx) {
+                if (ctx.type !== 'data' || ctx.xStarted) {
+                    return 0;
+                }
+                ctx.xStarted = true;
+                return ctx.index * delayBetweenPoints;
             }
         },
-
-        series: [{
-            type: 'candlestick',
-            name: title,
-            data: candle_list,
-            upColor: '#e00400', // 하락 색상
-            color: '#003ace', // 상승 색상
-            yAxis: 0,
-            dataGrouping: {
-                units: groupingUnits
-            },
-            tooltip: {
-                pointFormatter: function() {
-                    let s = '';
-                    if(this.y !== 0){
-                        if(this.series.name == title){
-                            s += '<span>' + func.dateForamt2(this.x) + '</span>';
-                            s += '<br><span style="color:' + this.color + '"> \u25CF</span> 종가 : ' + this.y;
-                        }else{
-
-                        }
-                    }
-                    return s;
-                },
-            },
-        }, {
-            type: 'column',
-            name: 'Volume',
-            data: candle_list_volume,
-            yAxis: 1,
-            dataGrouping: {
-                units: groupingUnits
-            },
-            tooltip: {
-                pointFormatter: function() {
-                    let s = '';
-                    if(this.y !== 0){
-                        if(this.series.name == 'Volume'){
-                            s += '<span style="color:' + this.color + '"> \u25CF</span> 거래량 : ' + this.y;
-                        }else{
-
-                        }
-                    }
-                    return s;
-                },
-            },
-        }, {
-            type: 'line',
-            name: 'Line_bb20',
-            data: func.lineData3(candle_list, average_20),
-            yAxis: 0,
-            dataGrouping: {
-                units: groupingUnits
-            },
-            marker: {
-                width: 2,
-                height: 2,
-                enabled: false,
-                symbol: 'circle',
-                radius: 1,
-                states: {
-                    hover: {
-                    }
+        y: {
+            type: 'number',
+            easing: 'linear',
+            duration: delayBetweenPoints,
+            from: previousY,
+            delay(ctx) {
+                if (ctx.type !== 'data' || ctx.yStarted) {
+                    return 0;
                 }
-            },
-            color: '#FFE264',
-            lineWidth: 0.5,
-            tooltip: {
-                pointFormatter: function() {
-                    return false;
-                },
-            },
-        }, {
-            type: 'arearange',
-            name: 'Line_bb',
-            data: func.areaData(candle_list, bb_up_list, bb_down_list),
-            yAxis: 0,
-            dataGrouping: {
-                units: groupingUnits
-            },
-            lineWidth: 0,
-            color: '#f8ebb180',
-            tooltip: {
-                pointFormatter: function() {
-                    return false;
-                },
-            },
-        }, {
-            type: 'spline',
-            name: '5Days MA',
-            data: func.lineData3(candle_list, average_5),
-            yAxis: 2,
-            dataGrouping: {
-                units: groupingUnits
-            },
-            marker: {
-                width: 2,
-                height: 2,
-                enabled: false,
-                symbol: 'circle',
-                radius: 1,
-                states: {
-                    hover: {
-                        enabled: false,
-                    }
-                }
-            },
-            color: '#25c930',
-            lineWidth: 1,
-            tooltip: {
-                pointFormatter: function() {
-                    return false;
-                },
-            },
-        }, {
-            type: 'spline',
-            name: '20Days MA',
-            data: func.lineData3(candle_list, average_20),
-            yAxis: 2,
-            dataGrouping: {
-                units: groupingUnits
-            },
-            marker: {
-                width: 2,
-                height: 2,
-                enabled: false,
-                symbol: 'circle',
-                radius: 1,
-                states: {
-                    hover: {
-                        enabled: false,
-                    }
-                }
-            },
-            color: '#c46a6d',
-            lineWidth: 1,
-            tooltip: {
-                pointFormatter: function() {
-                    return false;
-                },
-            },
-        }, {
-            type: 'spline',
-            name: '60Days MA',
-            data: func.lineData3(candle_list, average_60),
-            yAxis: 2,
-            dataGrouping: {
-                units: groupingUnits
-            },
-            marker: {
-                width: 2,
-                height: 2,
-                enabled: false,
-                symbol: 'circle',
-                radius: 1,
-                states: {
-                    hover: {
-                        enabled: false,
-                    }
-                }
-            },
-            color: '#c29569',
-            lineWidth: 1,
-            tooltip: {
-                pointFormatter: function() {
-                    return false;
-                },
-            },
-        }, {
-            type: 'spline',
-            name: '120Days MA',
-            data: func.lineData3(candle_list, average_120),
-            yAxis: 2,
-            dataGrouping: {
-                units: groupingUnits
-            },
-            marker: {
-                width: 2,
-                height: 2,
-                enabled: false,
-                symbol: 'circle',
-                radius: 1,
-                states: {
-                    hover: {
-                        enabled: false,
-                    }
-                }
-            },
-            color: '#C08FFF',
-            lineWidth: 1,
-            tooltip: {
-                pointFormatter: function() {
-                    return false;
-                },
-            },
-        }, {
-            type: 'spline',
-            name: 'Base Line',
-            data: func.lineData3(candle_list, baseLine),
-            yAxis: 2,
-            dataGrouping: {
-                units: groupingUnits
-            },
-            marker: {
-                width: 2,
-                height: 2,
-                enabled: false,
-                symbol: 'circle',
-                radius: 1,
-                states: {
-                    hover: {
-                        enabled: false,
-                    }
-                }
-            },
-            color: '#8E8E8E',
-            lineWidth: 1,
-            tooltip: {
-                pointFormatter: function() {
-                    return false;
-                },
-            },
-        }, {
-            type: 'spline',
-            name: 'Transition Line',
-            data: func.lineData3(candle_list, transitionLine),
-            yAxis: 2,
-            dataGrouping: {
-                units: groupingUnits
-            },
-            marker: {
-                width: 2,
-                height: 2,
-                enabled: false,
-                symbol: 'circle',
-                radius: 1,
-                states: {
-                    hover: {
-                        enabled: false,
-                    }
-                }
-            },
-            color: '#658F89',
-            lineWidth: 1,
-            tooltip: {
-                pointFormatter: function() {
-                    return false;
-                },
-            },
-        }, {
-            type: 'scatter',
-            name: 'GoldenCross',
-            data: goldenCross_list,
-            yAxis: 2,
-            dataGrouping: {
-                units: groupingUnits
-            },
-            marker: {
-                symbol: 'triangle',
-                fillColor: '#808000',
-                radius: 7,
-            },
-            color: '#808000',
-            tooltip: {
-                pointFormatter: function() {
-                    let s = '';
-                    if(this.y !== 0){
-                        s += '<span style="color:' + this.color + '"> \u25CF</span> GoldenCross : ' + func.dateForamt2(this.x);
-                    }
-                    return s;
-                },
-            },
-            states: {
-                inactive: {
-                  opacity: 1
-              }
-            },
-        },
-        ],
-        
-        plotOptions: {
-            candlestick: {
-                // lineColor: 'black', // 캔들스틱의 윤곽선 색상 설정
-                // 상승과 하락 시 색상 설정
-                colors: {
-                    upward: '#e00400', // 상승할 때의 색상
-                    downward: '#003ace' // 하락할 때의 색상
-                }
-            },
-            line: {
-                states: {
-                  hover: {
-                    halo: {
-                      size: 1
-                    }
-                  }
-                },
-            },
-            spline: {
-                states: {
-                  hover: {
-                    halo: {
-                      size: 1
-                    }
-                  }
-                },
+                ctx.yStarted = true;
+                return ctx.index * delayBetweenPoints;
             }
+        }
+    };
+
+    /* 최소값, 최대값 평균 */
+    let average = (min_lopr + max_hipr) / 2;
+    let temp_val = 1;
+    for (let a = 0; a < average.toString().length - 2; a++) {
+        temp_val *= 10;
+    }
+
+    min_lopr -= temp_val;
+    max_hipr += temp_val;
+
+    /* 차트 Y축 최대값, 최소값 설정 */
+    let max_bb_up = Math.max(...bb_up_list) + (temp_val * 2);
+    let min_bb_dwon = Math.min(...bb_down_list) - (temp_val * 2);
+
+    let step_size = func.tick_cal(average);
+
+    let zoomOptions1 = {
+        limits: {
+            y: { min: min_bb_dwon, max: max_bb_up, minRange: 50 }
         },
-        credits: {
-            enabled: false
+        pan: {
+            enabled: true,
+            mode: 'x',
+            modifierKey: 'ctrl',
         },
+        zoom: {
+            drag: {
+                enabled    : true
+            },
+          mode: 'x',
+        },
+    };
+
+    chart1 = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: date_list,
+            datasets: [
+                {
+                    label: 'candle chart',
+                    type: 'candlestick',
+                    data: candle_list,
+                    color: { up: "#e00400", down: "#003ace", unchanged: "#666" }
+                },
+                {
+                    label: '종가',
+                    type: 'line',
+                    data: func.lineData(candle_list)
+                },
+                {
+                    label: 'bb_up',
+                    type: 'line',
+                    data: func.lineData2(candle_list, bb_up_list),
+                    borderColor: "#E3BAB6",
+                    backgroundColor: "#E3BAB6",
+                    borderWidth: 1,
+                    pointRadius: 0,
+                    radius: 0,
+                    hoverRadius: 1,
+                    fill: false,
+                    cubicInterpolationMode: 'monotone',
+                    tension: 0.9
+                },
+                {
+                    label: 'bb_down',
+                    type: 'line',
+                    data: func.lineData2(candle_list, bb_down_list),
+                    borderColor: "#C4E2E6",
+                    backgroundColor: "#C4E2E6",
+                    borderWidth: 1,
+                    pointRadius: 0,
+                    radius: 0,
+                    hoverRadius: 1,
+                    fill: false,
+                    cubicInterpolationMode: 'monotone',
+                    tension: 0.9
+                }
+            ]
+        },
+        options: {
+            animation,
+            maintainAspectRatio: false,
+            interaction: {
+                intersect: false
+            },
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: title,
+                    font: {
+                        size: 16
+                    }
+                },
+                legend: {
+                    display: false,
+                },
+                zoom: zoomOptions1
+            },
+            scales: {
+                y: {
+                    min: min_bb_dwon, // Y 축의 최소값
+                    max: max_bb_up, // Y 축의 최대값
+                    ticks: {
+                        stepSize: step_size
+                    }
+                }
+            }
+        }
     });
 }
 /* createChart */
