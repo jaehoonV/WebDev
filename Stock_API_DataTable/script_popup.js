@@ -262,7 +262,7 @@ function makeMonthChart(data) {
     let disparityDeadCross_list = func.searchDisparityDeadCross(date_for_ave_list.slice(119), average_5.slice(119), average_20.slice(119), average_60.slice(119), average_120.slice(119));
     
     /* createChart */
-    createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list, lo_hi_list, mkp_clpr_list, min_lopr, max_hipr, candle_list, candle_list_volume, bb_up_list.slice(119), bb_down_list.slice(119), average_5.slice(119), average_20.slice(119), average_60.slice(119), average_120.slice(119), baseLine.slice(119), transitionLine.slice(119), goldenCross_list);
+    createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list, lo_hi_list, mkp_clpr_list, min_lopr, max_hipr, candle_list, candle_list_volume, bb_up_list.slice(119), bb_down_list.slice(119), average_5.slice(119), average_20.slice(119), average_60.slice(119), average_120.slice(119), baseLine.slice(119), transitionLine.slice(119), goldenCross_list, deadCross_list, bt_goldenCross_list, bt_deadCross_list, disparityGoldenCross_list, disparityDeadCross_list);
 
     /* createChart 이평선, 기준선, 전환선 */
     //createChart_average(title, date_for_ave_list.slice(119), average_5.slice(119), average_20.slice(119), average_60.slice(119), average_120.slice(119), baseLine.slice(119), transitionLine.slice(119), goldenCross_list, deadCross_list, bt_goldenCross_list, bt_deadCross_list, min_lopr, max_hipr, bb_up_list.slice(119), bb_down_list.slice(119), disparityGoldenCross_list, disparityDeadCross_list);
@@ -270,7 +270,7 @@ function makeMonthChart(data) {
 }
 
 /* createChart */
-function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list, lo_hi_list, mkp_clpr_list, min_lopr, max_hipr, candle_list, candle_list_volume, bb_up_list, bb_down_list, average_5, average_20, average_60, average_120, baseLine, transitionLine, goldenCross_list) {
+function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list, lo_hi_list, mkp_clpr_list, min_lopr, max_hipr, candle_list, candle_list_volume, bb_up_list, bb_down_list, average_5, average_20, average_60, average_120, baseLine, transitionLine, goldenCross_list, deadCross_list, bt_goldenCross_list, bt_deadCross_list, disparityGoldenCross_list, disparityDeadCross_list) {
     const groupingUnits = [[
         'week',                         // unit name
         [1]                             // allowed multiples
@@ -278,9 +278,6 @@ function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list
         'month',
         [1, 2, 3, 4, 6]
     ]];
-
-    console.log(candle_list_volume);
-    console.log(goldenCross_list);
 
     // create the chart
     Highcharts.stockChart('chart-candlestick', {
@@ -291,11 +288,12 @@ function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list
         rangeSelector: {
             selected: 4
         },
-
         title: {
             text: title
         },
-
+        legend: {
+            enabled: true
+        },
         yAxis: [{
             labels: {
                 align: 'left',
@@ -321,7 +319,7 @@ function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list
             },
             opposite: false,
             top: '42%',
-            height: '20%',
+            height: '15%',
             offset: 10,
             lineWidth: 2,
             resize: {
@@ -336,7 +334,7 @@ function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list
                 text: 'Analysis'
             },
             opposite: false,
-            top: '64%',
+            top: '59%',
             height: '39%',
             offset: 10,
             lineWidth: 2
@@ -352,6 +350,7 @@ function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list
             type: 'candlestick',
             name: title,
             data: candle_list,
+            showInLegend: false,
             upColor: '#e00400', // 하락 색상
             color: '#003ace', // 상승 색상
             yAxis: 0,
@@ -364,7 +363,7 @@ function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list
                     if(this.y !== 0){
                         if(this.series.name == title){
                             s += '<span>' + func.dateForamt2(this.x) + '</span>';
-                            s += '<br><span style="color:' + this.color + '"> \u25CF</span> 종가 : ' + this.y;
+                            s += '<br><span style="color:' + this.color + '"> \u25CF</span> 종가 : ' + func.addCommas(this.y);
                         }else{
 
                         }
@@ -376,6 +375,7 @@ function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list
             type: 'column',
             name: 'Volume',
             data: candle_list_volume,
+            showInLegend: false,
             yAxis: 1,
             dataGrouping: {
                 units: groupingUnits
@@ -385,7 +385,7 @@ function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list
                     let s = '';
                     if(this.y !== 0){
                         if(this.series.name == 'Volume'){
-                            s += '<span style="color:' + this.color + '"> \u25CF</span> 거래량 : ' + this.y;
+                            s += '<span style="color:' + this.color + '"> \u25CF</span> 거래량 : ' + func.addCommas(this.y);
                         }else{
 
                         }
@@ -397,6 +397,7 @@ function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list
             type: 'line',
             name: 'Line_bb20',
             data: func.lineData3(candle_list, average_20),
+            showInLegend: false,
             yAxis: 0,
             dataGrouping: {
                 units: groupingUnits
@@ -423,6 +424,7 @@ function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list
             type: 'arearange',
             name: 'Line_bb',
             data: func.areaData(candle_list, bb_up_list, bb_down_list),
+            showInLegend: false,
             yAxis: 0,
             dataGrouping: {
                 units: groupingUnits
@@ -615,6 +617,146 @@ function createChart(title, date_list, mkp_list, hipr_list, lopr_list, clpr_list
                     let s = '';
                     if(this.y !== 0){
                         s += '<span style="color:' + this.color + '"> \u25CF</span> GoldenCross : ' + func.dateForamt2(this.x);
+                    }
+                    return s;
+                },
+            },
+            states: {
+                inactive: {
+                  opacity: 1
+              }
+            },
+        }, {
+            type: 'scatter',
+            name: 'BT-GoldenCross',
+            data: bt_goldenCross_list,
+            yAxis: 2,
+            dataGrouping: {
+                units: groupingUnits
+            },
+            marker: {
+                symbol: 'triangle',
+                fillColor: '#adad00',
+                radius: 7,
+            },
+            color: '#adad00',
+            tooltip: {
+                pointFormatter: function() {
+                    let s = '';
+                    if(this.y !== 0){
+                        s += '<span style="color:' + this.color + '"> \u25CF</span> BT-GoldenCross : ' + func.dateForamt2(this.x);
+                    }
+                    return s;
+                },
+            },
+            states: {
+                inactive: {
+                  opacity: 1
+              }
+            },
+        }, {
+            type: 'scatter',
+            name: 'DisparityGoldenCross',
+            data: disparityGoldenCross_list,
+            yAxis: 2,
+            dataGrouping: {
+                units: groupingUnits
+            },
+            marker: {
+                symbol: 'triangle',
+                fillColor: '#ffff00',
+                radius: 7,
+            },
+            color: '#ffff00',
+            tooltip: {
+                pointFormatter: function() {
+                    let s = '';
+                    if(this.y !== 0){
+                        s += '<span style="color:' + this.color + '"> \u25CF</span> DisparityGoldenCross : ' + func.dateForamt2(this.x);
+                    }
+                    return s;
+                },
+            },
+            states: {
+                inactive: {
+                  opacity: 1
+              }
+            },
+        }, {
+            type: 'scatter',
+            name: 'DeadCross',
+            data: deadCross_list,
+            yAxis: 2,
+            dataGrouping: {
+                units: groupingUnits
+            },
+            marker: {
+                symbol: 'triangle-down',
+                fillColor: '#a5a5a5',
+                radius: 7,
+            },
+            color: '#a5a5a5',
+            tooltip: {
+                pointFormatter: function() {
+                    let s = '';
+                    if(this.y !== 0){
+                        s += '<span style="color:' + this.color + '"> \u25CF</span> DeadCross : ' + func.dateForamt2(this.x);
+                    }
+                    return s;
+                },
+            },
+            states: {
+                inactive: {
+                  opacity: 1
+              }
+            },
+        }, {
+            type: 'scatter',
+            name: 'BT-DeadCross',
+            data: bt_deadCross_list,
+            yAxis: 2,
+            dataGrouping: {
+                units: groupingUnits
+            },
+            marker: {
+                symbol: 'triangle-down',
+                fillColor: '#585858',
+                radius: 7,
+            },
+            color: '#585858',
+            tooltip: {
+                pointFormatter: function() {
+                    let s = '';
+                    if(this.y !== 0){
+                        s += '<span style="color:' + this.color + '"> \u25CF</span> BT-DeadCross : ' + func.dateForamt2(this.x);
+                    }
+                    return s;
+                },
+            },
+            states: {
+                inactive: {
+                  opacity: 1
+              }
+            },
+        }, {
+            type: 'scatter',
+            name: 'DisparityDeadCross',
+            data: disparityDeadCross_list,
+            yAxis: 2,
+            dataGrouping: {
+                units: groupingUnits
+            },
+            marker: {
+                symbol: 'triangle-down',
+                fillColor: '#1d1d1d',
+                radius: 7,
+            },
+            color: '#1d1d1d',
+            tooltip: {
+                pointFormatter: function() {
+                    let s = '';
+                    if(this.y !== 0){
+                        s += '<span style="color:' + this.color + '"> \u25CF</span> DisparityDeadCross : ' + func.dateForamt2(this.x);
                     }
                     return s;
                 },

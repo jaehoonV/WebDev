@@ -167,19 +167,12 @@ export function searchGoldenCross(date_list, average_5, average_20, average_60, 
 export function searchDeadCross(date_list, average_5, average_20, average_60, average_120){
     let deadCrossList = [];
     let deadCrossDate = [];
-    deadCrossList.push(NaN);
     for(let i = 1; i < date_list.length - 1; i++){
-        let push_check = false;
         if(average_5[i] < average_20[i] && average_5[i - 1] > average_20[i - 1]){ // 5일선이 20일선 아래로
             if(average_5[i + 1] < average_20[i + 1]){ // 다음날까지
                 deadCrossDate.push(date_list[i]);
-                deadCrossList.push(average_5[i]);
-                push_check = true;
+                deadCrossList.push([date_list[i],average_5[i]]);
             }
-        }
-
-        if(!push_check){
-            deadCrossList.push(NaN);
         }
     }
     console.log("데드크로스 발생일 = " + deadCrossDate);
@@ -191,13 +184,10 @@ export function searchDeadCross(date_list, average_5, average_20, average_60, av
 export function searchBTGoldenCross(date_list, baseLine, transitionLine){
     let goldenCrossList = [];
     let goldenCrossDate = [];
-    goldenCrossList.push(NaN);
     for(let i = 1; i < date_list.length - 1; i++){
         if(transitionLine[i] > baseLine[i] && transitionLine[i - 1] < baseLine[i - 1] && transitionLine[i + 1] > baseLine[i + 1]){ // 전환선이 기준선 돌파
             goldenCrossDate.push(date_list[i]);
-            goldenCrossList.push(transitionLine[i]);
-        }else{
-            goldenCrossList.push(NaN);
+            goldenCrossList.push([date_list[i],transitionLine[i]]);
         }
     }
     console.log("BT 골든크로스 발생일 = " + goldenCrossDate);
@@ -209,14 +199,10 @@ export function searchBTGoldenCross(date_list, baseLine, transitionLine){
 export function searchBTDeadCross(date_list, baseLine, transitionLine){
     let deadCrossList = [];
     let deadCrossDate = [];
-    deadCrossList.push(NaN);
     for(let i = 2; i < date_list.length - 1; i++){
-        let push_check = false;
         if(transitionLine[i] < baseLine[i] && transitionLine[i - 1] > baseLine[i - 1] && transitionLine[i - 2] > baseLine[i - 2]){ // 전환선이 기준선 아래로
             deadCrossDate.push(date_list[i]);
-            deadCrossList.push(transitionLine[i]);
-        }else{
-            deadCrossList.push(NaN);
+            deadCrossList.push([date_list[i],transitionLine[i]]);
         }
     }
     console.log("BT 데드크로스 발생일 = " + deadCrossDate);
@@ -228,19 +214,12 @@ export function searchBTDeadCross(date_list, baseLine, transitionLine){
 export function searchDisparityGoldenCross(date_list, average_5, average_20, average_60, average_120){
     let goldenCrossList = [];
     let goldenCrossDate = [];
-    goldenCrossList.push(NaN);
     for(let i = 1; i < date_list.length - 1; i++){
-        let push_check = false;
         let pre_disparity = (average_5[i - 1] / average_20[i - 1]) * 100; // 전날 5일선 20일선 이격도
         let disparity = (average_5[i] / average_20[i]) * 100; // 5일선 20일선 이격도
         if(disparity > 97 && pre_disparity <= 97){
             goldenCrossDate.push(date_list[i]);
-            goldenCrossList.push(average_5[i]);
-            push_check = true;
-        }
-
-        if(!push_check){
-            goldenCrossList.push(NaN);
+            goldenCrossList.push([date_list[i],average_5[i]]);
         }
     }
     console.log("이격도골든크로스 발생일 = " + goldenCrossDate);
@@ -252,19 +231,12 @@ export function searchDisparityGoldenCross(date_list, average_5, average_20, ave
 export function searchDisparityDeadCross(date_list, average_5, average_20, average_60, average_120){
     let deadCrossList = [];
     let deadCrossDate = [];
-    deadCrossList.push(NaN);
     for(let i = 1; i < date_list.length - 1; i++){
-        let push_check = false;
         let pre_disparity = (average_5[i - 1] / average_20[i - 1]) * 100; // 전날 5일선 20일선 이격도
         let disparity = (average_5[i] / average_20[i]) * 100; // 5일선 20일선 이격도
         if(disparity < 102 && pre_disparity >= 102){
             deadCrossDate.push(date_list[i]);
-            deadCrossList.push(average_5[i]);
-            push_check = true;
-        }
-
-        if(!push_check){
-            deadCrossList.push(NaN);
+            deadCrossList.push([date_list[i],average_5[i]]);
         }
     }
     console.log("이격도데드크로스 발생일 = " + deadCrossDate);
@@ -308,4 +280,11 @@ export function areaData(candle_list, bb_up_list, bb_down_list) {
     return output_list;
 }
 /* areaData */
+
+/* addCommas */
+export function addCommas(n) { 
+    const option = { maximumFractionDigits: 4};
+    return n.toLocaleString('ko-KR', option);
+}
+/* addCommas */
 
