@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Service</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .input-container {
+            position: relative;
+            opacity: 1;
+            margin-top: 50px;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 300px;
+            background-color: #333;
+            color: #ffffff;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-300px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="input-container">
+        <input type="text" id="service-key" placeholder="서비스 키를 입력하세요" onkeydown="handleKeyDown(event)">
+    </div>
+
+    <script>
+        function handleKeyDown(event) {
+            if (event.key === "Enter") {
+                document.getElementById("service-key").closest('.input-container').style.opacity = 0;
+                document.getElementById("service-key").closest('.input-container').style.transform = 'translateY(-300px)';
+                setTimeout(() => {
+                    document.getElementById("service-key").classList.add("hidden");
+
+                    const serviceKey = document.getElementById("service-key").value;
+                    console.log("서비스 키:", serviceKey);
+
+                }, 500); // 애니메이션 시간과 일치하는 시간 설정
+            } else if (event.key === "Backspace") {
+                document.getElementById("service-key").classList.remove("hidden");
+                document.getElementById("service-key").closest('.input-container').style.opacity = 1;
+                document.getElementById("service-key").closest('.input-container').style.transform = 'translateY(0)';
+            }
+        }
+    </script>
+
+</body>
+
+</html>
