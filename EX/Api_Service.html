@@ -29,7 +29,7 @@
             border: 1px solid #555;
             border-radius: 5px;
             font-size: 16px;
-            width: 300px;
+            width: 400px;
             background-color: #333;
             color: #ffffff;
             transition: opacity 0.5s ease, transform 0.5s ease;
@@ -44,15 +44,131 @@
             pointer-events: none;
             transform: translateY(-300px);
         }
+
+        #weather-container table{
+            display: block;
+            opacity: 0;
+            overflow-y: scroll;
+            width: 100%;
+            height: 400px;
+            transition: opacity 0.5s ease;
+        }
+
+        #weather-container table::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        #weather-container table::-webkit-scrollbar-button {
+            width: 10px;
+            height: 10px;
+        }
+
+        #weather-container table::-webkit-scrollbar-corner {
+            background: transparent;
+        }
+
+        #weather-container table::-webkit-scrollbar-thumb {
+            background: #999;
+            border: 1px solid #999;
+        }
+        #weather-container table::-webkit-scrollbar-track {
+            background: transparent;
+            border: 0 none transparent;
+        }
+
+        #weather-container th, td {
+            padding: 5px 8px;
+            border-bottom: 1px solid #333333;
+        }
+
+        #weather-container th {
+            background-color: #333333;
+        }
+
+        #weather-container tr:nth-child(even) {
+            background-color: #282828;
+        }
+
+        #weather-container tr:hover {
+            background-color: #383838;
+        }
+
+        #err_text{
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #prev_btn {
+            float: right;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.1s ease
+        }
+
+        /* 로딩 */
+        .loader {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loader span {
+            position: relative;
+            width: 45px;
+            height: 45px;
+            background: #eaeef0;
+            border: 2px solid #eaeef0;
+            box-shadow: 0px 0px 25px rgba(255, 255, 255, 1), 8px 8px 25px rgba(0, 0, 0, 0.15);
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .loader span::before {
+            content: '';
+            position: absolute;
+            inset: 10px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            border: 2px solid #eaeef0;
+            z-index: 1;
+        }
+        
+        .loader span i {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(#0583ebd4, #f12368db, #f3dd1bd9);
+            border-radius: 50%;
+            filter: blur(5px);
+            animation: animate 1s linear infinite;
+        }
+        
+        @keyframes animate{
+            0%{transform: rotate(0deg);}
+            100%{transform: rotate(360deg);}
+        }
+        /* 로딩 */
     </style>
 </head>
 
 <body>
-
-    <div class="input-container">
-        <input type="text" id="service-key" placeholder="서비스 키를 입력하세요" onkeydown="handleKeyDown(event)">
+    <!-- abPiIAX9s%2BDHXRnUd1X%2BRSPn3gr429SocWtL%2BLhIW3gLaY%2BV8DuQ6ypRPmmeoyfysHbBV0hh1EUSNCqKQR%2F74A%3D%3D -->
+    <div class="container">
+        <div class="input-container">
+            <input type="text" id="service-key" placeholder="서비스 키를 입력하세요" onkeydown="handleKeyDown(event)">
+        </div>
+        <button id="prev_btn" onclick="showServiceKeyInput()">이전</button>
+        <div id="weather-container"></div>
     </div>
-
+    
     <script>
         function handleKeyDown(event) {
             if (event.key === "Enter") {
@@ -62,15 +178,149 @@
                     document.getElementById("service-key").classList.add("hidden");
 
                     const serviceKey = document.getElementById("service-key").value;
-                    console.log("서비스 키:", serviceKey);
-
+                    weather_service(serviceKey);
                 }, 500); // 애니메이션 시간과 일치하는 시간 설정
-            } else if (event.key === "Backspace") {
+            } 
+            /* else if (event.key === "Backspace") {
                 document.getElementById("service-key").classList.remove("hidden");
                 document.getElementById("service-key").closest('.input-container').style.opacity = 1;
                 document.getElementById("service-key").closest('.input-container').style.transform = 'translateY(0)';
+                document.getElementById("service-key").value = "";
+                document.getElementById("weather-container").innerHTML = "";
+            } */
+        }
+
+        function weather_service(key){
+            document.getElementById("weather-container").innerHTML = "<div class='loader'><span><i></i></span></div>";
+
+            var xhr = new XMLHttpRequest();
+            var url = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst'; /*URL*/
+            var queryParams = '?' + encodeURIComponent('serviceKey') + '=' + key; /*Service Key*/
+            queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /*page*/
+            queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('1000'); /**/
+            queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /* XML, JSON*/
+            queryParams += '&' + encodeURIComponent('base_date') + '=' + encodeURIComponent(getToday()); /**/
+            queryParams += '&' + encodeURIComponent('base_time') + '=' + encodeURIComponent('0500'); /**/
+            queryParams += '&' + encodeURIComponent('nx') + '=' + encodeURIComponent('55'); /* X */
+            queryParams += '&' + encodeURIComponent('ny') + '=' + encodeURIComponent('127'); /* Y */
+
+            console.log("url = " + url + queryParams);
+
+            xhr.open('GET', url + queryParams);
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4) {
+                    create_weather_table(this.response);
+                }
+            };
+
+            xhr.send('');
+        }
+
+        function create_weather_table(data){
+            if(IsJson(data)){
+                let table = "<table id='weather_table'><tr><th>예보일자</th><th>예보시간</th><th>기온</th></tr>";
+                let json_data = JSON.parse(data);
+                let items = json_data.response.body.items.item;
+                for (i = 0; i < items.length; i++) {
+                    let fcstDate = items[i].fcstDate;
+                    let fcstTime = items[i].fcstTime;
+                    let fcstValue = items[i].fcstValue;
+                    let category = items[i].category;
+                    /* console.log(fcstDate);
+                    console.log(fcstTime);
+                    console.log(fcstValue);
+                    console.log(category); */
+
+                    if(category == "TMP"){ // 기온
+                        table += "<tr>";
+                        table += "<td>" + dateForamt(fcstDate) + "</td>";
+                        table += "<td>" + func_time(fcstTime) + "</td>";
+                        table += "<td>" + fcstValue + "</td>";
+                        table += "</tr>";
+                    }
+                    
+                }
+                table += "</table>";
+
+                document.getElementById("weather-container").innerHTML = table;
+                effect_show("weather_table");
+            }else{
+                let xmlParser = new DOMParser();
+                let xmlDoc = xmlParser.parseFromString(data, "text/xml"); // parseFromString() 메소드를 이용해 문자열을 파싱함. 
+                let errMsg = xmlDoc.getElementsByTagName("errMsg")[0].textContent; 
+                let returnAuthMsg = xmlDoc.getElementsByTagName("returnAuthMsg")[0].textContent; 
+                
+                let err_text = "<div id='err_text'>" + errMsg + " : " + returnAuthMsg + "</div>";
+
+                document.getElementById("weather-container").innerHTML = err_text;
+                effect_show("err_text");
+            }
+            effect_show("prev_btn");
+        }
+
+        function showServiceKeyInput() {
+            effect_hide("prev_btn");
+            setTimeout(() => {
+                document.getElementById("service-key").value = "";
+                document.getElementById("weather-container").innerHTML = "";
+                document.getElementById("service-key").classList.remove("hidden");
+                document.getElementById("service-key").closest('.input-container').style.opacity = 1;
+                document.getElementById("service-key").closest('.input-container').style.transform = 'translateY(0)';
+            }, 500);
+        }
+
+        function getToday() {
+            const date = new Date();
+            const hour = date.getHours();
+            let getDay = date.getDate();
+            if(hour < 10) {
+                getDay = getDay -1;
+            }
+            const year = date.getFullYear();
+            const month = ("0"+(1+date.getMonth())).slice(-2);
+            const day = ("0" + getDay).slice(-2);
+            return `${year}${month}${day}`;
+        }
+
+        /* Json 확인 */
+        function IsJson(s) {
+            try {
+                var json = JSON.parse(s);
+                return (typeof json === 'object');
+            } catch (e) {
+                return false;
             }
         }
+
+        function func_time(t){
+            let time = t.substring(0,2);
+            return time;
+        }
+
+        /* yyyymmdd => yyyy년 mm월 dd일 */
+        function dateForamt(date_str) {
+            let yyyyMMdd = String(date_str);
+            let year = yyyyMMdd.substring(0,4);
+            let month = Number(yyyyMMdd.substring(4,6));
+            let day = Number(yyyyMMdd.substring(6,8));
+
+            return year + '년 ' + month + '월 ' + day + '일';
+        }
+
+        function effect_show(id) {
+            let target = document.getElementById(id);
+            setTimeout(() => {
+                target.style.opacity = 1;
+            }, 10);
+        }
+
+        function effect_hide(id) {
+            let target = document.getElementById(id);
+            setTimeout(() => {
+                target.style.opacity = 0;
+            }, 10);
+        }
+        
     </script>
 
 </body>
