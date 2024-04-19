@@ -9,6 +9,11 @@ body {
     color: #ffffff;
 }
 
+#service-key:-webkit-autofill, #service-key:-webkit-autofill:hover, #service-key:-webkit-autofill:focus, #service-key:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 1000px #333 inset !important;
+    -webkit-text-fill-color: #ffffff; 
+}
+
 .input-container {
     position: relative;
     opacity: 1;
