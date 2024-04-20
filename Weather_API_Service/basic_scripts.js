@@ -99,6 +99,7 @@ export function dateForamt(date_str) {
  */
 export function effect_show(id) {
     let target = document.getElementById(id);
+    target.style.visibility = 'visible';
     setTimeout(() => {
         target.style.opacity = 1;
     }, 10);
@@ -110,6 +111,7 @@ export function effect_show(id) {
  */
 export function effect_hide(id) {
     let target = document.getElementById(id);
+    target.style.visibility = 'hidden';
     setTimeout(() => {
         target.style.opacity = 0;
     }, 10);
