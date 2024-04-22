@@ -101,7 +101,7 @@ async function create_all_weather_table(serviceKey, type_val){
     let dataForError;
     let error_check = false;
 
-    let table = "<table id='weather_table'><tr><th>지역</th><th>기온</th><th>1시간 강수량</th><th>습도</th><th>강수형태</th><th>풍향</th><th>풍속</th></tr>";
+    let table = "<table id='weather_table' style='transform: translateY(200px);'><tr><th>지역</th><th>기온</th><th>1시간 강수량</th><th>습도</th><th>강수형태</th><th>풍향</th><th>풍속</th></tr>";
     for(let i = 1; i <= 17; i++){
         let loc_xy = basic.getLocXY(String(i));
         try {
@@ -165,7 +165,7 @@ async function create_all_weather_table(serviceKey, type_val){
     }else{
         document.getElementById("weather-container").innerHTML = table;
         basic.effect_show("weather_table");
-        
+        basic.effect_transY("weather_table", 0);
     }
     basic.effect_show("prev_btn");
 }
@@ -184,7 +184,7 @@ async function create_weather_table(serviceKey, loc_xy, type_val){
             let items = parse_data.response.body.items.item;
             let table = "";
             if(type_val == '2'){
-                table += "<table id='weather_table'><tr><th>지역</th><th>예보일자</th><th>예보시간</th><th>기온</th></tr>";
+                table += "<table id='weather_table' style='transform: translateY(200px);'><tr><th>지역</th><th>예보일자</th><th>예보시간</th><th>기온</th></tr>";
                 
                 items.forEach(item => {
                     let fcstDate = item.fcstDate;
@@ -208,7 +208,7 @@ async function create_weather_table(serviceKey, loc_xy, type_val){
                 let PTY = ""; // 강수형태
                 let VEC = ""; // 풍향
                 let WSD = ""; // 풍속
-                table += "<table id='weather_table'><tr><th>지역</th><th>기온</th><th>1시간 강수량</th><th>습도</th><th>강수형태</th><th>풍향</th><th>풍속</th></tr>";
+                table += "<table id='weather_table' style='transform: translateY(200px);'><tr><th>지역</th><th>기온</th><th>1시간 강수량</th><th>습도</th><th>강수형태</th><th>풍향</th><th>풍속</th></tr>";
 
                 items.forEach(item => {
                     let category = item.category;
@@ -243,6 +243,7 @@ async function create_weather_table(serviceKey, loc_xy, type_val){
 
             document.getElementById("weather-container").innerHTML = table;
             basic.effect_show("weather_table");
+            basic.effect_transY("weather_table", 0);
         }else{
             let errMsg = data.response.header.resultMsg;
             let returnAuthMsg = data.response.header.returnAuthMsg;

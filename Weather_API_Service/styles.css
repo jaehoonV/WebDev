@@ -86,7 +86,7 @@ body {
     overflow-y: scroll;
     width: 100%;
     height: 400px;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 #weather-container table::-webkit-scrollbar {

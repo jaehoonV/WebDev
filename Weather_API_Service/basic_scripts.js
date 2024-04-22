@@ -148,6 +148,20 @@ export function effect_hide(id) {
 }
 
 /**
+ * 해당 id를 가진 요소에 translateY를 val 만큼 적용시킨다.
+ * @param {String} id 아이디
+ * @param {String} val 값
+ */
+export function effect_transY(id, val) {
+    let target = document.getElementById(id);
+    if(target != null){
+        setTimeout(() => {
+            target.style.transform = 'translateY('+val+'px)';
+        }, 10);
+    }
+}
+
+/**
  * 위치번호의 X좌표와 Y좌표를 반환한다.
  * @param {String} loc 위치 번호
  * @returns {Map} ex) {'x' : 60, 'y' : 127}
