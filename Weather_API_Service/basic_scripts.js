@@ -4,11 +4,7 @@
  */
 export function getToday() {
     const date = new Date();
-    const hour = date.getHours();
     let getDay = date.getDate();
-    if(hour < 10) {
-        getDay = getDay -1;
-    }
     const year = date.getFullYear();
     const month = ("0"+(1+date.getMonth())).slice(-2);
     const day = ("0" + getDay).slice(-2);
@@ -23,7 +19,7 @@ export function getToday() {
  * 오늘 최저기온은 02시, 최고기온은 02시, 05시, 11시에 예보됨
  * @returns {String} ex) 0200
  */
-export function getTime_weather() {
+export function getTime_weather_v() {
     let today = new Date();   
     let hours = today.getHours(); // 시
     let minutes = today.getMinutes(); // 분
@@ -53,6 +49,36 @@ export function getTime_weather() {
     }else{
         return "";
     }
+}
+
+/**
+ * 현재 시간을 기준으로 초단기실황의 예보시간을 반환한다. 
+ * 초단기실황 Basetime : 0000, 0100, 0200, ... (매시 정각) 
+ * 초단기실황 API 제공 시간(~이후) : 00:30, 01:30, 02:30, ...
+ * @returns {String} ex) 0200
+ */
+export function getTime_weather_u() {
+    let today = new Date();   
+    let hours = today.getHours(); // 시
+    let minutes = today.getMinutes(); // 분
+    let basetime = "";
+
+    // 날짜와 시간을 문자열로 포맷팅
+    const time = `${String(hours).padStart(2, '0')}${String(minutes).padStart(2, '0')}`;
+    console.log("현재 시간 : ",time);
+
+    if(minutes >= 35){
+        basetime = String(today.getHours());
+    }else{
+        hours -= 1; // 35분전은 이전 시간대로 설정
+        if(hours / 10 >= 1){
+            basetime = String(today.getHours()-1);
+        }else{
+            basetime = "0" + String(today.getHours()-1);
+        }
+    }
+
+    return basetime + "00";
 }
 
 /**
@@ -99,10 +125,12 @@ export function dateForamt(date_str) {
  */
 export function effect_show(id) {
     let target = document.getElementById(id);
-    target.style.visibility = 'visible';
-    setTimeout(() => {
-        target.style.opacity = 1;
-    }, 10);
+    if(target != null){
+        target.style.visibility = 'visible';
+        setTimeout(() => {
+            target.style.opacity = 1;
+        }, 10);
+    }
 }
 
 /**
@@ -111,10 +139,12 @@ export function effect_show(id) {
  */
 export function effect_hide(id) {
     let target = document.getElementById(id);
-    target.style.visibility = 'hidden';
-    setTimeout(() => {
-        target.style.opacity = 0;
-    }, 10);
+    if(target != null){
+        target.style.visibility = 'hidden';
+        setTimeout(() => {
+            target.style.opacity = 0;
+        }, 10);
+    }
 }
 
 /**
@@ -166,4 +196,30 @@ export function getLocXY(loc) {
             break;
     }
     return {'x' : x_, 'y' : y_, 'loc_nm' : loc_nm};
+}
+
+/**
+ * 강수형태 코드(PTY)를 명칭으로 반환한다.
+ * @param {String} pty 강수형태 코드
+ * @returns {String} ex) 비
+ */
+export function getPtyName(pty) {
+    // 강수형태(PTY) 코드 : (초단기) 없음(0), 비(1), 비/눈(2), 눈(3), 빗방울(5), 빗방울눈날림(6), 눈날림(7) 
+    if(pty == '0'){
+        return "없음";
+    }else if(pty == '1'){
+        return "비";
+    }else if(pty == '2'){
+        return "비/눈";
+    }else if(pty == '3'){
+        return "눈";
+    }else if(pty == '5'){
+        return "빗방울";
+    }else if(pty == '6'){
+        return "빗방울눈날림";
+    }else if(pty == '7'){
+        return "눈날림";
+    }else{
+        return "없음";
+    }
 }
