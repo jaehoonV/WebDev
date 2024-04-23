@@ -67,16 +67,11 @@ export function getTime_weather_u() {
     const time = `${String(hours).padStart(2, '0')}${String(minutes).padStart(2, '0')}`;
     console.log("현재 시간 : ",time);
 
-    if(minutes >= 35){
-        basetime = String(today.getHours());
-    }else{
-        hours -= 1; // 35분전은 이전 시간대로 설정
-        if(hours / 10 >= 1){
-            basetime = String(today.getHours()-1);
-        }else{
-            basetime = "0" + String(today.getHours()-1);
-        }
-    }
+    if(minutes >= 35) basetime = today.getHours();
+    else basetime = today.getHours()-1; // 35분전은 이전 시간대로 설정
+
+    if(hours / 10 >= 1) basetime = String(basetime);
+    else basetime = "0" + String(basetime);
 
     return basetime + "00";
 }
