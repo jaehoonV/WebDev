@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher API Service Sample</title>
+    <!-- css -->
+    <link rel="stylesheet" href="./styles.css">
+    <!-- js -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script rel="script" src="./scripts.js" defer></script>
+</head>
+<body>
+    <h2>Caesar Cipher Api Service Sample</h2>
+    <label for="text">Type:</label>
+    <select id="select_type">
+        <option value="e">Encrypt</option>
+        <option value="d">Decrypt</option>
+    </select>
+    <label for="text" style="margin-left: 10px;">Text:</label>
+    <input id="input_text" type="text" placeholder="Enter text" size="120">
+    <label for="shift" style="margin-left: 10px;">Shift:</label>
+    <input type="number" id="shift" value="3">
+    <label for="spe_num" style="margin-left: 10px;">Spe_num:</label>
+    <input type="number" id="spe_num" value="1">
+    <button type="button" id="execute">Execution</button>
+    <br>
+    <h3>Result</h3>
+    <p id="result">&nbsp;</p>
+    <br>
+    <br>
+    <div id="result_div"></div>
+    <div id="show_code" class="show">hide</div>
+    <pre id="code_pre">
+        <code>
+<span class="yellow">$</span><span class="yellow2">(</span><span class="string">'#execute'</span><span class="yellow2">)</span><span class="yellow">.click</span><span class="yellow2">(</span><span class="keyword">function</span><span class="purple">(){</span>
+    <span class="keyword">let</span> <span class="blue">_type</span> <span class="white">=</span> <span class="yellow">$</span><span class="keyword">(</span><span class="string">'#select_type'</span><span class="keyword">)</span><span class="yellow">.val</span><span class="keyword">()</span><span class="white">;</span>
+    <span class="keyword">let</span> <span class="blue">_text</span> <span class="white">=</span> <span class="yellow">$</span><span class="keyword">(</span><span class="string">'#input_text'</span><span class="keyword">)</span><span class="yellow">.val</span><span class="keyword">()</span><span class="white">;</span>
+    <span class="keyword">let</span> <span class="blue">_shift</span> <span class="white">=</span> <span class="yellow">$</span><span class="keyword">(</span><span class="string">'#shift'</span><span class="keyword">)</span><span class="yellow">.val</span><span class="keyword">()</span><span class="white">;</span>
+    <span class="keyword">let</span> <span class="blue">_spe_num</span> <span class="white">=</span> <span class="yellow">$</span><span class="keyword">(</span><span class="string">'#spe_num'</span><span class="keyword">)</span><span class="yellow">.val</span><span class="keyword">()</span><span class="white">;</span>
+    <span class="blue">$</span><span class="yellow">.ajax</span><span class="keyword">(</span><span class="yellow2">{</span>
+        <span class="blue">url:</span> <span class="string">"https://port-0-node-express-for-deploy-3sojxk2ilby9mu8p.gksl2.cloudtype.app/caesar/result"</span><span class="white">,</span>
+        <span class="blue">type:</span> <span class="string">"POST"</span><span class="white">,</span>
+        <span class="blue">dataType:</span> <span class="string">"JSON"</span><span class="white">,</span>
+        <span class="blue">data:</span> <span class="purple">{</span>
+            <span class="string">"type"</span><span class="blue"> : _type</span><span class="white">,</span>
+            <span class="string">"text"</span><span class="blue"> : _text</span><span class="white">,</span>
+            <span class="string">"shift"</span><span class="blue"> : _shift</span><span class="white">,</span>
+            <span class="string">"spe_num"</span><span class="blue"> : _spe_num</span>
+        <span class="purple">}</span>
+    <span class="yellow2">}</span><span class="keyword">)</span>
+    <span class="yellow">.done</span><span class="keyword">(</span><span class="keyword">function</span> <span class="yellow2">(</span><span class="blue">json</span><span class="yellow2">) {</span>
+        <span class="keyword">let</span> <span class="blue">json_data</span> <span class="white">=</span> <span class="blue">JSON</span><span class="yellow"><span class="white">.</span>parse</span><span class="purple">(</span><span class="blue">JSON</span><span class="yellow"><span class="white">.</span>stringify</span><span class="keyword">(</span><span class="blue">json</span><span class="keyword">)</span><span class="purple">)</span><span class="white">;</span>
+        <span class="keyword">let</span> <span class="blue">result</span> <span class="white">=</span> <span class="string">`<span class="purple">${</span><span class="blue">json_data</span><span class="white">.</span><span class="blue">result</span><span class="purple">}</span>`</span><span class="white">;</span>
+    <span class="yellow2">}</span><span class="keyword">)</span>
+    <span class="yellow">.fail</span><span class="keyword">(</span><span class="keyword">function</span><span class="yellow2">(</span><span class="blue2">xhr</span><span class="white">,</span> <span class="blue2">status</span><span class="white">,</span> <span class="blue2">errorThrown</span><span class="yellow2">) {</span>
+        <span class="yellow">alert</span><span class="purple">(</span><span class="string">"Ajax failed"</span><span class="purple">)</span><span class="white">;</span>
+    <span class="yellow2">}</span><span class="keyword">)</span>
+<span class="purple">}</span><span class="yellow2">)</span>
+        </code>
+    </pre>
+</body>
+</html>

@@ -1,0 +1,124 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+input,
+button,
+select {
+    padding: 10px;
+    margin: 5px;
+}
+
+#shift,
+#spe_num {
+    display: inline-block;
+    background-color: #eeeeee;
+    border: 1px solid #eeeeee;
+    border-radius: 5px;
+    padding: 10px 5px;
+    margin: 5px 0px;
+    box-shadow: 0px 0px 5px #8a8a8a;
+    font-size: 12px;
+    width: 50px;
+}
+
+#select_type {
+    display: inline-block;
+    background-color: #eeeeee;
+    border: 1px solid #eeeeee;
+    border-radius: 5px;
+    padding: 10px 5px;
+    margin: 5px 0px;
+    box-shadow: 0px 0px 5px #8a8a8a;
+    font-size: 12px;
+    width: 100px;
+}
+
+#execute{
+    background-color: #eeeeee;
+    border: 1px solid #eeeeee;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px #8a8a8a;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+#execute:hover{
+    background-color: #d8d8d8;
+    border: 1px solid #d8d8d8;
+}
+
+#input_text{
+    width: auto;
+}
+
+#input_text:focus {
+    outline: none;
+}
+
+#result_div{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 50%;
+}
+
+#input_text,
+#result,
+.result_div{
+    display: inline-block;
+    background-color: #eeeeee;
+    border: 1px solid #eeeeee;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 5px 0px;
+    box-shadow: 0px 0px 5px #8a8a8a;
+    font-size: 12px;
+}
+
+#show_code{
+    background-color: #3b3b3b;
+    display: inline-block;
+    position: absolute;
+    top: 27%;
+    right: 2%;
+    padding: 10px;
+    color: #ffffff;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    text-align: center;
+    width: 40px;
+    cursor: pointer;
+}
+
+#show_code:hover{
+    background-color: #252525;
+}
+
+#code_pre {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    width: 43%;
+    position: absolute;
+    top: 30%;
+    right: 2%;
+}
+
+.keyword { color: #569cd6; }
+.string { color: #d69d85; }
+.function { color: #dcdcaa; }
+.comment { color: #6a9955; }
+.operator { color: #b5cea8; }
+.blue { color: #29B6F6; }
+.blue2 { color: #1e85b4; }
+.yellow { color: #dcdcaa; }
+.yellow2 { color: #e6e662; }
+.white { color: #ffffff; }
+.purple { color: #d940ff; }
