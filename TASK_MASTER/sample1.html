@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sample1</title>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        padding: 0;
+        margin: 0;
+    }
+
+    #container {
+        width: calc(100% - 640px);
+        transition: width 0.5s ease;
+        margin: 20px;
+        min-width: 500px;
+    }
+
+    .item {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        cursor: pointer;
+    }
+
+    .item:hover{
+        background-color: #f1f1f1;
+    }
+
+    .panel {
+        width: 700px;
+        height: calc(100% - 40px);
+        padding: 20px;
+        background-color: #f9f9f9;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+    }
+
+    #container.open {
+        width: calc(100% - 1480px);
+    }
+
+    .close-btn {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #707070;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .close-btn:hover{
+        color: #333333;
+        background-color: #dddddd;
+    }
+
+    #main-container{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100vh;
+        overflow-x: hidden;
+    }
+
+    #main-header{
+        width: 100%;
+        height: 80px;
+        background-color: bisque;
+        text-align: center;
+        font-size: 2rem;
+    }
+
+    #main-content{
+        display: flex;
+        height: 100vh;
+        width: calc(100% + 700px);
+        overflow-x: hidden;
+    }
+
+    #content-sidebar{
+        min-width: 280px;
+        height: 100%;
+        background-color: burlywood;
+        text-align: center;
+        font-size: 2rem;
+    }
+
+    #content-board{
+        display: flex;
+        position: relative;
+        flex-grow: 1;
+    }
+
+    .item_box{
+        height: 80px;
+    }
+</style>
+
+<body>
+    <div id="main-container">
+        <div id="main-header">header 영역</div>
+        <div id="main-content">
+            <div id="content-sidebar"><p>sidebar 영역</p></div>
+            <div id="content-board">
+                <div id="container">
+                    <div class="item" data-content="Details for Item 1">Item 1</div>
+                    <div class="item" data-content="Details for Item 2">Item 2</div>
+                    <div class="item" data-content="Details for Item 3">Item 3</div>
+                    <div class="item" data-content="Details for Item 4">Item 4</div>
+                    <div class="item" data-content="Details for Item 5">Item 5</div>
+                    <div class="item" data-content="Details for Item 6">Item 6</div>
+                    <div class="item item_box" data-content="Details for Item 7">Item 7</div>
+                    <div class="item item_box" data-content="Details for Item 8">Item 8</div>
+                    <div class="item item_box" data-content="Details for Item 9">Item 9</div>
+                </div>
+            
+                <div class="panel" id="detailPanel">
+                    <span class="close-btn" id="closeBtn"><ion-icon style="font-size: 24px;" name="chevron-forward-circle-outline"></ion-icon></span>
+                    <div id="panelContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $('.item').click(function () {
+        const content = this.getAttribute('data-content');
+        $('#panelContent').text(content);
+        $('#container').addClass('open');
+    })
+
+    $('#closeBtn').click(function() {
+        $('#container').removeClass('open');
+    })
+</script>
+
+</html>
