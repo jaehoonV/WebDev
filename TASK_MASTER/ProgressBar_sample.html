@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Bar</title>
+</head>
+<style>
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .main_container {
+        position: relative;
+        width: 130px;
+        height: 5ch;
+        margin: 0 auto;
+    }
+
+    #container {
+        width: 120px;
+        height: 20px;
+        border: 1px solid #ddd;
+        border-radius: 2px;
+        background-color: #ddd;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        margin: 20px auto;
+    }
+
+    #rectangle {
+        width: 12px;
+        height: 90%;
+        border: 1px solid #fff;
+        border-radius: 2px;
+        background-color: rgba(47, 47, 243, 0.699);
+        position: absolute;
+        bottom: 0;
+        cursor: ew-resize;
+        transition: 0.2s;
+    }
+
+    #percentageInput {
+        position: relative;
+        background-color: rgba(255, 0, 0, 0);
+        text-align: center;
+        font-size: 12px;
+        font-weight: bold;
+        width: 30px;
+        height: 10px;
+        margin: auto auto;
+        border: 0;
+        outline: none;
+    }
+</style>
+<body>
+    <div class="main_container">
+        <div id="container">
+            <div id="rectangle" style="width: 10%;"></div>
+            <input type="number" id="percentageInput" value="10" min="0" max="100" step="1">
+        </div>
+    </div>
+    <script>
+        const container = document.getElementById('container');
+        const rectangle = document.getElementById('rectangle');
+        const percentageInput = document.getElementById('percentageInput');
+        let isDragging = false;
+        let mouseXOffset = 0;
+
+        function updateRectangleWidth() {
+            let percentage = parseFloat(percentageInput.value);
+            if (!isNaN(percentage) && percentage >= 0 && percentage <= 100) {
+                if(percentage >= 99){
+                    percentage -= 2;
+                }
+                rectangle.style.width = `${percentage}%`;
+            }
+        }
+
+        percentageInput.addEventListener('input', updateRectangleWidth);
+
+        rectangle.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            document.body.style.cursor = 'ew-resize';
+            mouseXOffset = e.clientX - rectangle.getBoundingClientRect().left;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const containerLeft = container.getBoundingClientRect().left;
+            let mouseX = e.clientX;
+            if (mouseX < containerLeft) {
+                mouseX = containerLeft;
+            } else if (mouseX > containerLeft + container.clientWidth) {
+                mouseX = containerLeft + container.clientWidth;
+            }
+            const offsetX = Math.min(container.clientWidth, mouseX - containerLeft);
+            let percentage = ((offsetX / container.clientWidth) * 100).toFixed(1);
+            if (percentage >= 0 && percentage <= 100) {
+                percentageInput.value = percentage;
+                if(percentage >= 99){
+                    percentage -= 2;
+                }
+                rectangle.style.width = `${percentage}%`;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            document.body.style.cursor = 'auto';
+        });
+    </script>
+</body>
+
+</html>
