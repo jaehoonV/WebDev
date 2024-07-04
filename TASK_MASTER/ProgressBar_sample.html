@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Progress Bar</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+    
 <style>
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button {
@@ -20,7 +22,7 @@
         margin: 0 auto;
     }
 
-    #container {
+    .container {
         width: 120px;
         height: 20px;
         border: 1px solid #ddd;
@@ -32,88 +34,157 @@
         margin: 20px auto;
     }
 
-    #rectangle {
+    .rectangle {
         width: 12px;
         height: 90%;
         border: 1px solid #fff;
         border-radius: 2px;
-        background-color: rgba(47, 47, 243, 0.699);
+        background-color: #ff7b00b4;
         position: absolute;
         bottom: 0;
-        cursor: ew-resize;
         transition: 0.2s;
     }
 
-    #percentageInput {
+    .percentageInput {
         position: relative;
         background-color: rgba(255, 0, 0, 0);
         text-align: center;
         font-size: 12px;
         font-weight: bold;
-        width: 30px;
+        width: 20px;
         height: 10px;
         margin: auto auto;
         border: 0;
         outline: none;
     }
+
+    .rectangle_bar{
+        position: absolute;
+        height: 100%;
+        width: 5px;
+        right: 0;
+        cursor: ew-resize;
+    }
 </style>
-<body>
-    <div class="main_container">
-        <div id="container">
-            <div id="rectangle" style="width: 10%;"></div>
-            <input type="number" id="percentageInput" value="10" min="0" max="100" step="1">
-        </div>
-    </div>
-    <script>
-        const container = document.getElementById('container');
-        const rectangle = document.getElementById('rectangle');
-        const percentageInput = document.getElementById('percentageInput');
+
+<script>
+    $(document).ready(function () {
         let isDragging = false;
         let mouseXOffset = 0;
+        let $currentRectangle;
+        let $currentPercentageInput;
 
-        function updateRectangleWidth() {
-            let percentage = parseFloat(percentageInput.value);
+        $('.percentageInput').each(function(index, item){
+            let percentage = $(this).val();
+            
+            if(percentage < 34){
+                $(this).siblings('.rectangle').css('backgroundColor', '#ff7b00b4');
+            }else if(percentage < 67){
+                $(this).siblings('.rectangle').css('backgroundColor', '#ffee00b4');
+            }else{
+                $(this).siblings('.rectangle').css('backgroundColor', '#73ff00b4');
+            }
+
+            if (percentage >= 99) {
+                percentage -= 2;
+            }
+            $(this).siblings('.rectangle').css('width', `${percentage}%`);
+        });
+
+        function updateRectangleWidth($input) {
+            let percentage = parseFloat($input.val());
+            if(isNaN(percentage)){
+                percentage = 0;
+                $input.siblings('.rectangle').css('backgroundColor', '#ff7b00b4');
+                $input.siblings('.rectangle').css('width', `0%`);
+            }
+
             if (!isNaN(percentage) && percentage >= 0 && percentage <= 100) {
-                if(percentage >= 99){
+                if(percentage < 34){
+                    $input.siblings('.rectangle').css('backgroundColor', '#ff7b00b4');
+                }else if(percentage < 67){
+                    $input.siblings('.rectangle').css('backgroundColor', '#ffee00b4');
+                }else{
+                    $input.siblings('.rectangle').css('backgroundColor', '#73ff00b4');
+                }
+
+                if (percentage >= 99) {
                     percentage -= 2;
                 }
-                rectangle.style.width = `${percentage}%`;
+                $input.siblings('.rectangle').css('width', `${percentage}%`);
             }
         }
 
-        percentageInput.addEventListener('input', updateRectangleWidth);
-
-        rectangle.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            document.body.style.cursor = 'ew-resize';
-            mouseXOffset = e.clientX - rectangle.getBoundingClientRect().left;
+        $('.percentageInput').on('input', function () {
+            let inputVal = $(this).val();
+            
+            if(! /^[0-9]*$/.test(inputVal)) {
+                inputVal = 0;
+            }
+            if(inputVal > 100){
+                inputVal = 100;
+            }
+            
+            $(this).val(inputVal);
+            updateRectangleWidth($(this));
         });
 
-        document.addEventListener('mousemove', (e) => {
+        $('.rectangle_bar').on('mousedown', function (e) {
+            isDragging = true;
+            $currentRectangle = $(this).closest('.rectangle');
+            $currentPercentageInput = $currentRectangle.siblings('.percentageInput');
+            mouseXOffset = e.clientX - $(this).offset().left;
+        });
+
+        $(document).on('mousemove', function (e) {
             if (!isDragging) return;
-            const containerLeft = container.getBoundingClientRect().left;
+            const $container = $currentRectangle.parent();
+            const containerLeft = $container.offset().left;
             let mouseX = e.clientX;
             if (mouseX < containerLeft) {
                 mouseX = containerLeft;
-            } else if (mouseX > containerLeft + container.clientWidth) {
-                mouseX = containerLeft + container.clientWidth;
+            } else if (mouseX > containerLeft + $container.width()) {
+                mouseX = containerLeft + $container.width();
             }
-            const offsetX = Math.min(container.clientWidth, mouseX - containerLeft);
-            let percentage = ((offsetX / container.clientWidth) * 100).toFixed(1);
+            const offsetX = Math.min($container.width(), mouseX - containerLeft);
+            let percentage = ((offsetX / $container.width()) * 100).toFixed(0);
             if (percentage >= 0 && percentage <= 100) {
-                percentageInput.value = percentage;
-                if(percentage >= 99){
+                $currentPercentageInput.val(percentage);
+                if(percentage < 34){
+                    $currentRectangle.css('backgroundColor', '#ff7b00b4');
+                }else if(percentage < 67){
+                    $currentRectangle.css('backgroundColor', '#ffee00b4');
+                }else{
+                    $currentRectangle.css('backgroundColor', '#73ff00b4');
+                }
+
+                if (percentage >= 99) {
                     percentage -= 2;
                 }
-                rectangle.style.width = `${percentage}%`;
+                $currentRectangle.css('width', `${percentage}%`);
             }
         });
 
-        document.addEventListener('mouseup', () => {
+        $(document).on('mouseup', function () {
             isDragging = false;
-            document.body.style.cursor = 'auto';
         });
-    </script>
+    });
+</script>
+<body>
+    <div class="main_container">
+        <div class="container">
+            <div class="rectangle"><div class="rectangle_bar"></div></div>
+            <input type="number" class="percentageInput" value="10" min="0" max="100" step="1">
+        </div>
+        <div class="container">
+            <div class="rectangle"><div class="rectangle_bar"></div></div>
+            <input type="number" class="percentageInput" value="40" min="0" max="100" step="1">
+        </div>
+        <div class="container">
+            <div class="rectangle"><div class="rectangle_bar"></div></div>
+            <input type="number" class="percentageInput" value="70" min="0" max="100" st ep="1">
+        </div>
+    </div>
 </body>
 
 </html>
