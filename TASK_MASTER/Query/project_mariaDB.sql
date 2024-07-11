@@ -6,9 +6,9 @@ CREATE TABLE PROJ.TB_PROJECT_INFO (
   START_DATE DATE,                            -- 시작일
   END_DATE DATE,                              -- 종료일
   COMPANY_CD VARCHAR(50),                     -- 회사코드
-  REG_DATE DATE,                              -- 생성일
+  REG_DATE DATETIME,                          -- 생성일
   REG_ID VARCHAR(50),                         -- 생성자ID
-  MOD_DATE DATE,                              -- 수정일
+  MOD_DATE DATETIME,                          -- 수정일
   MOD_ID VARCHAR(50)                          -- 수정자ID
 );
 
@@ -25,7 +25,7 @@ CREATE TABLE PROJ.TB_USER_INFO (
   AUTH_KEY VARCHAR(50),               -- 인증키
   AUTH_YN CHAR(1) DEFAULT 'N',        -- 로그인권한
   COMP_ADMIN_YN CHAR(1) DEFAULT 'N',  -- 회사관리자권한
-  JOIN_DATE DATE,                      -- 가입일
+  JOIN_DATE DATETIME,                 -- 가입일
   FOREIGN KEY (COMPANY_CD) REFERENCES TB_COMPANY_INFO(COMPANY_CD)
 );
 
@@ -35,7 +35,7 @@ CREATE TABLE PROJ.TB_PROJECT_MEMBER (
   REG_YN CHAR(1) DEFAULT 'N',         -- 생성자유무
   MASTER_YN CHAR(1) DEFAULT 'N',      -- 관리자유무
   FAVORITES_YN CHAR(1) DEFAULT 'N',   -- 즐겨찾기유무
-  REG_DATE DATE,                      -- 생성일
+  REG_DATE DATETIME,                  -- 생성일
   PRIMARY KEY (PROJECT_SEQ, USER_ID),
   FOREIGN KEY (PROJECT_SEQ) REFERENCES TB_PROJECT_INFO(PROJECT_SEQ),
   FOREIGN KEY (USER_ID) REFERENCES TB_USER_INFO(USER_ID)
@@ -50,9 +50,9 @@ CREATE TABLE PROJ.TB_TASK_INFO (
   END_DATE DATE,                            -- 종료일
   TASK_STATUS VARCHAR(50),                  -- 업무상태
   TASK_PROGRESS INT,                        -- 업무진행률
-  REG_DATE DATE,                            -- 생성일
+  REG_DATE DATETIME,                        -- 생성일
   REG_ID VARCHAR(50),                       -- 생성자
-  MOD_DATE DATE,                            -- 수정일
+  MOD_DATE DATETIME,                        -- 수정일
   MOD_ID VARCHAR(50),                       -- 수정자ID
   FOREIGN KEY (PROJECT_SEQ) REFERENCES TB_PROJECT_INFO(PROJECT_SEQ)
 );
@@ -61,7 +61,7 @@ CREATE TABLE PROJ.TB_TASK_MEMBER (
   TASK_SEQ INT,                      -- 업무SEQ
   USER_ID VARCHAR(50),               -- 사용자ID
   MASTER_YN CHAR(1) DEFAULT 'N',     -- 관리자유무
-  REG_DATE DATE,                     -- 생성일
+  REG_DATE DATETIME,                 -- 생성일
   PRIMARY KEY (TASK_SEQ, USER_ID),
   FOREIGN KEY (TASK_SEQ) REFERENCES TB_TASK_INFO(TASK_SEQ),
   FOREIGN KEY (USER_ID) REFERENCES TB_USER_INFO(USER_ID)
@@ -73,8 +73,8 @@ CREATE TABLE PROJ.TB_TASK_REPLY (
   USER_ID VARCHAR(50),                      -- 사용자ID
   TASK_SEQ INT,                             -- 업무SEQ
   REPLY VARCHAR(500),                       -- 댓글
-  REG_DATE DATE,                            -- 작성일
-  MOD_DATE DATE,                            -- 수정일
+  REG_DATE DATETIME,                        -- 작성일
+  MOD_DATE DATETIME,                        -- 수정일
   FOREIGN KEY (USER_ID) REFERENCES TB_USER_INFO(USER_ID),
   FOREIGN KEY (TASK_SEQ) REFERENCES TB_TASK_INFO(TASK_SEQ)
 );
@@ -84,10 +84,11 @@ CREATE TABLE PROJ.TB_ALARM (
   PROJECT_SEQ INT,                          -- 프로젝트SEQ
   TASK_SEQ INT,                             -- 업무SEQ
   USER_ID VARCHAR(50),                      -- 사용자ID
+  CREATE_USER_ID VARCHAR(50),               -- 생성자ID
   ALARM_CONTENTS VARCHAR(500),              -- 알람내용
   ALARM_TYPE CHAR(1),                       -- 알람타입
   READ_YN CHAR(1) DEFAULT 'N',              -- 읽음유무
-  REG_DATE DATE,                            -- 생성일
+  REG_DATE DATETIME,                        -- 생성일
   FOREIGN KEY (USER_ID) REFERENCES TB_USER_INFO(USER_ID),
   FOREIGN KEY (TASK_SEQ) REFERENCES TB_TASK_INFO(TASK_SEQ),
   FOREIGN KEY (PROJECT_SEQ) REFERENCES TB_PROJECT_INFO(PROJECT_SEQ)
@@ -98,8 +99,8 @@ CREATE TABLE PROJ.TB_PROJECT_INVITE (
   PROJECT_SEQ INT,                            -- 프로젝트SEQ
   USER_ID VARCHAR(50),                        -- 사용자ID
   AUTH_KEY VARCHAR(50),                       -- 인증키
-  APPR_DATE DATE,                             -- 승인일
-  REG_DATE DATE,                              -- 생성일
+  APPR_DATE DATETIME,                         -- 승인일
+  REG_DATE DATETIME,                          -- 생성일
   REG_ID VARCHAR(50),                         -- 생성자
   FOREIGN KEY (PROJECT_SEQ) REFERENCES TB_PROJECT_INFO(PROJECT_SEQ),
   FOREIGN KEY (USER_ID) REFERENCES TB_USER_INFO(USER_ID)

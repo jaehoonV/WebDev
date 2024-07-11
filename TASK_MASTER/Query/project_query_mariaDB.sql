@@ -150,14 +150,13 @@ SELECT
     PROJECT_SEQ,
     TASK_SEQ,
     USER_ID,
+    CREATE_USER_ID,
     ALARM_CONTENTS,
     ALARM_TYPE,
     READ_YN,
-    REG_DATE
+    DATE_FORMAT(REG_DATE, '%Y-%m-%d %T' )REG_DATE
 FROM PROJ.TB_ALARM 
-WHERE 
-    PROJECT_SEQ = 1
-    AND USER_ID = 'user2';
+WHERE USER_ID = 'user1';
 
 ---------------------------------------------------
 -- INSERT
@@ -171,97 +170,97 @@ VALUES ('COMP003', '전산 디자인.CO');
 
 -- 유저정보 INSERT
 INSERT INTO PROJ.TB_USER_INFO (USER_ID, USER_NAME, PASSWORD, COMPANY_CD, AUTH_KEY, AUTH_YN, COMP_ADMIN_YN, JOIN_DATE)
-VALUES ('user1', '유저1', 'user1', 'COMP001', 'aabbccdd11', 'Y', 'Y', current_date());
+VALUES ('user1', '유저1', 'user1', 'COMP001', 'aabbccdd11', 'Y', 'Y', NOW());
 INSERT INTO PROJ.TB_USER_INFO (USER_ID, USER_NAME, PASSWORD, COMPANY_CD, AUTH_KEY, AUTH_YN, COMP_ADMIN_YN, JOIN_DATE)
-VALUES ('user2', '유저2', 'user2', 'COMP001', 'aabbccdd22', 'Y', 'N', current_date());
+VALUES ('user2', '유저2', 'user2', 'COMP001', 'aabbccdd22', 'Y', 'N', NOW());
 INSERT INTO PROJ.TB_USER_INFO (USER_ID, USER_NAME, PASSWORD, COMPANY_CD, AUTH_KEY, AUTH_YN, COMP_ADMIN_YN, JOIN_DATE)
-VALUES ('user3', '유저3', 'user3', 'COMP001', 'aabbccdd33', 'Y', 'N', current_date());
+VALUES ('user3', '유저3', 'user3', 'COMP001', 'aabbccdd33', 'Y', 'N', NOW());
 INSERT INTO PROJ.TB_USER_INFO (USER_ID, USER_NAME, PASSWORD, COMPANY_CD, AUTH_KEY, AUTH_YN, COMP_ADMIN_YN, JOIN_DATE)
-VALUES ('aaa1', 'aaa1', 'aaa1', 'COMP001', 'aabbccdd44', 'Y', 'N', current_date());
+VALUES ('aaa1', 'aaa1', 'aaa1', 'COMP001', 'aabbccdd44', 'Y', 'N', NOW());
 INSERT INTO PROJ.TB_USER_INFO (USER_ID, USER_NAME, PASSWORD, COMPANY_CD, AUTH_KEY, AUTH_YN, COMP_ADMIN_YN, JOIN_DATE)
-VALUES ('aaa2', 'aaa2', 'aaa2', 'COMP002', 'aabbccdd55', 'Y', 'Y', current_date());
+VALUES ('aaa2', 'aaa2', 'aaa2', 'COMP002', 'aabbccdd55', 'Y', 'Y', NOW());
 INSERT INTO PROJ.TB_USER_INFO (USER_ID, USER_NAME, PASSWORD, COMPANY_CD, AUTH_KEY, AUTH_YN, COMP_ADMIN_YN, JOIN_DATE)
-VALUES ('aaa3', 'aaa3', 'aaa3', 'COMP002', 'aabbccdd66', 'Y', 'N', current_date());
+VALUES ('aaa3', 'aaa3', 'aaa3', 'COMP002', 'aabbccdd66', 'Y', 'N', NOW());
 
 -- 프로젝트 정보 INSERT
 INSERT INTO PROJ.TB_PROJECT_INFO (PROJECT_NAME, PROJECT_DESC, START_DATE, END_DATE, COMPANY_CD, REG_DATE, REG_ID)
-VALUES ('Project A', 'Project A 테스트', STR_TO_DATE('20240601', '%Y%m%d'), STR_TO_DATE('20241231', '%Y%m%d'), 'COMP001', current_date(), 'user1');
+VALUES ('Project A', 'Project A 테스트', STR_TO_DATE('20240601', '%Y%m%d'), STR_TO_DATE('20241231', '%Y%m%d'), 'COMP001', NOW(), 'user1');
 INSERT INTO PROJ.TB_PROJECT_INFO (PROJECT_NAME, PROJECT_DESC, START_DATE, END_DATE, COMPANY_CD, REG_DATE, REG_ID)
-VALUES ('Project B', 'Project B 테스트', STR_TO_DATE('20240601', '%Y%m%d'), STR_TO_DATE('20250601', '%Y%m%d'), 'COMP001', current_date(), 'user1');
+VALUES ('Project B', 'Project B 테스트', STR_TO_DATE('20240601', '%Y%m%d'), STR_TO_DATE('20250601', '%Y%m%d'), 'COMP001', NOW(), 'user1');
 INSERT INTO PROJ.TB_PROJECT_INFO (PROJECT_NAME, PROJECT_DESC, START_DATE, END_DATE, COMPANY_CD, REG_DATE, REG_ID)
-VALUES ('Project C', 'Project C 테스트', STR_TO_DATE('20240701', '%Y%m%d'), STR_TO_DATE('20260201', '%Y%m%d'), 'COMP002', current_date(), 'aaa2');
+VALUES ('Project C', 'Project C 테스트', STR_TO_DATE('20240701', '%Y%m%d'), STR_TO_DATE('20260201', '%Y%m%d'), 'COMP002', NOW(), 'aaa2');
 
 -- 프로젝트 멤버 INSERT
 INSERT INTO PROJ.TB_PROJECT_MEMBER (PROJECT_SEQ, USER_ID, REG_YN, MASTER_YN, FAVORITES_YN, REG_DATE)
-VALUES (1, 'user1', 'Y', 'Y', 'Y', current_date());
+VALUES (1, 'user1', 'Y', 'Y', 'Y', NOW());
 INSERT INTO PROJ.TB_PROJECT_MEMBER (PROJECT_SEQ, USER_ID, REG_YN, MASTER_YN, FAVORITES_YN, REG_DATE)
-VALUES (1, 'user2', 'N', 'N', 'N', current_date());
+VALUES (1, 'user2', 'N', 'N', 'N', NOW());
 INSERT INTO PROJ.TB_PROJECT_MEMBER (PROJECT_SEQ, USER_ID, REG_YN, MASTER_YN, FAVORITES_YN, REG_DATE)
-VALUES (1, 'user3', 'N', 'N', 'N', current_date());
+VALUES (1, 'user3', 'N', 'N', 'N', NOW());
 INSERT INTO PROJ.TB_PROJECT_MEMBER (PROJECT_SEQ, USER_ID, REG_YN, MASTER_YN, FAVORITES_YN, REG_DATE)
-VALUES (2, 'user1', 'Y', 'N', 'Y', current_date());
+VALUES (2, 'user1', 'Y', 'N', 'Y', NOW());
 INSERT INTO PROJ.TB_PROJECT_MEMBER (PROJECT_SEQ, USER_ID, REG_YN, MASTER_YN, FAVORITES_YN, REG_DATE)
-VALUES (2, 'aaa1', 'N', 'N', 'N', current_date());
+VALUES (2, 'aaa1', 'N', 'N', 'N', NOW());
 INSERT INTO PROJ.TB_PROJECT_MEMBER (PROJECT_SEQ, USER_ID, REG_YN, MASTER_YN, FAVORITES_YN, REG_DATE)
-VALUES (2, 'user3', 'N', 'Y', 'N', current_date());
+VALUES (2, 'user3', 'N', 'Y', 'N', NOW());
 INSERT INTO PROJ.TB_PROJECT_MEMBER (PROJECT_SEQ, USER_ID, REG_YN, MASTER_YN, FAVORITES_YN, REG_DATE)
-VALUES (3, 'aaa2', 'Y', 'N', 'Y', current_date());
+VALUES (3, 'aaa2', 'Y', 'N', 'Y', NOW());
 
 -- 프로젝트 초대 INSERT
 INSERT INTO PROJ.TB_PROJECT_INVITE (PROJECT_SEQ, USER_ID, AUTH_KEY, APPR_DATE, REG_DATE, REG_ID)
-VALUES (1, 'user2', 'aaabbbcccdd', current_date(), current_date(), 'user1');
+VALUES (1, 'user2', 'aaabbbcccdd', NOW(), NOW(), 'user1');
 INSERT INTO PROJ.TB_PROJECT_INVITE (PROJECT_SEQ, USER_ID, AUTH_KEY, APPR_DATE, REG_DATE, REG_ID)
-VALUES (1, 'user3', 'deeefffggg', current_date(), current_date(), 'user1');
+VALUES (1, 'user3', 'deeefffggg', NOW(), NOW(), 'user1');
 
 -- 업무 정보 INSERT
 INSERT INTO PROJ.TB_TASK_INFO (PROJECT_SEQ, TASK_NAME, TASK_DESC, START_DATE, END_DATE, TASK_STATUS, TASK_PROGRESS, REG_DATE, REG_ID)
-VALUES (1, 'Task 1', '업무 1 입니다.', STR_TO_DATE('20240601', '%Y%m%d'), STR_TO_DATE('20240801', '%Y%m%d'), '0', 0, current_date(), 'user1');
+VALUES (1, 'Task 1', '업무 1 입니다.', STR_TO_DATE('20240601', '%Y%m%d'), STR_TO_DATE('20240801', '%Y%m%d'), '0', 0, NOW(), 'user1');
 INSERT INTO PROJ.TB_TASK_INFO (PROJECT_SEQ, TASK_NAME, TASK_DESC, START_DATE, END_DATE, TASK_STATUS, TASK_PROGRESS, REG_DATE, REG_ID)
-VALUES (1, 'Task 2', '업무 2 입니다.', STR_TO_DATE('20240601', '%Y%m%d'), STR_TO_DATE('20240901', '%Y%m%d'), '1', 10, current_date(), 'user1');
+VALUES (1, 'Task 2', '업무 2 입니다.', STR_TO_DATE('20240601', '%Y%m%d'), STR_TO_DATE('20240901', '%Y%m%d'), '1', 10, NOW(), 'user1');
 INSERT INTO PROJ.TB_TASK_INFO (PROJECT_SEQ, TASK_NAME, TASK_DESC, START_DATE, END_DATE, TASK_STATUS, TASK_PROGRESS, REG_DATE, REG_ID)
-VALUES ( 1, 'Task 3', '업무 3 입니다.', STR_TO_DATE('20240601', '%Y%m%d'), STR_TO_DATE('20241001', '%Y%m%d'), '2', 100, current_date(), 'user1');
+VALUES ( 1, 'Task 3', '업무 3 입니다.', STR_TO_DATE('20240601', '%Y%m%d'), STR_TO_DATE('20241001', '%Y%m%d'), '2', 100, NOW(), 'user1');
 INSERT INTO PROJ.TB_TASK_INFO (PROJECT_SEQ, TASK_NAME, TASK_DESC, START_DATE, END_DATE, TASK_STATUS, TASK_PROGRESS, REG_DATE, REG_ID)
-VALUES (1, 'user1 개인업무', 'user1 개인업무 입니다.', STR_TO_DATE('20240615', '%Y%m%d'), STR_TO_DATE('20240801', '%Y%m%d'), '3', 40, current_date(), 'user1');
+VALUES (1, 'user1 개인업무', 'user1 개인업무 입니다.', STR_TO_DATE('20240615', '%Y%m%d'), STR_TO_DATE('20240801', '%Y%m%d'), '3', 40, NOW(), 'user1');
 
 -- 업무 멤버 INSERT
 INSERT INTO PROJ.TB_TASK_MEMBER (TASK_SEQ, USER_ID, MASTER_YN, REG_DATE)
-VALUES (1, 'user1', 'Y', current_date());
+VALUES (1, 'user1', 'Y', NOW());
 INSERT INTO PROJ.TB_TASK_MEMBER (TASK_SEQ, USER_ID, MASTER_YN, REG_DATE)
-VALUES (1, 'user2', 'N', current_date());
+VALUES (1, 'user2', 'N', NOW());
 INSERT INTO PROJ.TB_TASK_MEMBER (TASK_SEQ, USER_ID, MASTER_YN, REG_DATE)
-VALUES (2, 'user2', 'Y', current_date());
+VALUES (2, 'user2', 'Y', NOW());
 INSERT INTO PROJ.TB_TASK_MEMBER (TASK_SEQ, USER_ID, MASTER_YN, REG_DATE)
-VALUES (2, 'user3', 'N', current_date());
+VALUES (2, 'user3', 'N', NOW());
 INSERT INTO PROJ.TB_TASK_MEMBER (TASK_SEQ, USER_ID, MASTER_YN, REG_DATE)
-VALUES (3, 'user1', 'Y', current_date());
+VALUES (3, 'user1', 'Y', NOW());
 INSERT INTO PROJ.TB_TASK_MEMBER (TASK_SEQ, USER_ID, MASTER_YN, REG_DATE)
-VALUES (3, 'user2', 'Y', current_date());
+VALUES (3, 'user2', 'Y', NOW());
 INSERT INTO PROJ.TB_TASK_MEMBER (TASK_SEQ, USER_ID, MASTER_YN, REG_DATE)
-VALUES (3, 'user3', 'N', current_date());
+VALUES (3, 'user3', 'N', NOW());
 INSERT INTO PROJ.TB_TASK_MEMBER (TASK_SEQ, USER_ID, MASTER_YN, REG_DATE)
-VALUES (4, 'user1', 'Y', current_date());
+VALUES (4, 'user1', 'Y', NOW());
 
 -- 업무 댓글 INSERT
 INSERT INTO PROJ.TB_TASK_REPLY (USER_ID, TASK_SEQ, REPLY, REG_DATE)
-VALUES ('user1', 1, '업무 승인!!', current_date());
+VALUES ('user1', 1, '업무 승인!!', NOW());
 INSERT INTO PROJ.TB_TASK_REPLY (USER_ID, TASK_SEQ, REPLY, REG_DATE)
-VALUES ('user2', 2, '업무 진행중!!', current_date());
+VALUES ('user2', 2, '업무 진행중!!', NOW());
 INSERT INTO PROJ.TB_TASK_REPLY (USER_ID, TASK_SEQ, REPLY, REG_DATE)
-VALUES ('user3', 3, '업무 끝!!', current_date());
+VALUES ('user3', 3, '업무 끝!!', NOW());
 INSERT INTO PROJ.TB_TASK_REPLY (USER_ID, TASK_SEQ, REPLY, REG_DATE)
-VALUES ('user1', 3, '업무 확인완료!!', current_date());
+VALUES ('user1', 3, '업무 확인완료!!', NOW());
 INSERT INTO PROJ.TB_TASK_REPLY (USER_ID, TASK_SEQ, REPLY, REG_DATE)
-VALUES ('user1', 4, '업무 잠시보류!!', current_date());
+VALUES ('user1', 4, '업무 잠시보류!!', NOW());
 INSERT INTO PROJ.TB_TASK_REPLY (UP_REPLY_SEQ, USER_ID, TASK_SEQ, REPLY, REG_DATE)
-VALUES (5, 'user1', 4, '보류 사유입니다.', current_date());
+VALUES (5, 'user1', 4, '보류 사유입니다.', NOW());
 INSERT INTO PROJ.TB_TASK_REPLY (USER_ID, TASK_SEQ, REPLY, REG_DATE)
-VALUES ('user1', 4, '업무 댓글!', current_date());
+VALUES ('user1', 4, '업무 댓글!', NOW());
 INSERT INTO PROJ.TB_TASK_REPLY (UP_REPLY_SEQ, USER_ID, TASK_SEQ, REPLY, REG_DATE)
-VALUES (5, 'user1', 4, '언제까지 보류해야되는지..', current_date());
+VALUES (5, 'user1', 4, '언제까지 보류해야되는지..', NOW());
 
 -- 알람 INSERT
 INSERT INTO PROJ.TB_ALARM (PROJECT_SEQ, TASK_SEQ, USER_ID, ALARM_CONTENTS, ALARM_TYPE, READ_YN, REG_DATE)
-VALUES (1, 1,'user2', '\'Task 1\' 업무에 \'user1\'님이 댓글을 작성하였습니다.', 'D', 'N', current_date());
+VALUES (1, 1,'user2', '\'Task 1\' 업무에 \'user1\'님이 댓글을 작성하였습니다.', 'D', 'N', NOW());
 
 -- 공통코드 INSERT
 INSERT INTO PROJ.TB_COMMON_CODE (COMMON_CD, COMMON_CD_VAL, COMMON_CD_NAME)
@@ -279,7 +278,7 @@ VALUES ('TASK_STATUS', '3', '보류');
 UPDATE TB_PROJECT_INFO
 SET PROJECT_NAME = 'Project A', 
     PROJECT_DESC = 'Project A 테스트 수정함',
-    MOD_DATE = current_date(), 
+    MOD_DATE = NOW(), 
     MOD_ID = 'user1'
 WHERE PROJECT_SEQ = 1;
 
@@ -301,7 +300,7 @@ WHERE
 UPDATE TB_TASK_INFO
 SET TASK_STATUS = '3', 
     TASK_PROGRESS = 50,
-    MOD_DATE = current_date(), 
+    MOD_DATE = NOW(), 
     MOD_ID = 'user1'
 WHERE TASK_SEQ = 4;
 
@@ -309,7 +308,7 @@ WHERE TASK_SEQ = 4;
 UPDATE TB_TASK_REPLY
 SET REPLY = '업무 잠시보류!! / 업무진행률 수정!!', 
     TASK_PROGRESS = 50,
-    MOD_DATE = current_date()
+    MOD_DATE = NOW()
 WHERE 
     REPLY_SEQ = 5 
     AND USER_ID = 'user1';
@@ -317,27 +316,27 @@ WHERE
 ---------------------------------------------------
 -- DROP
 SET foreign_key_checks = 0; -- 외래키 참조 체크 해제 
-DROP TABLE TB_PROJECT_INFO;
-DROP TABLE TB_USER_INFO;
-DROP TABLE TB_COMPANY_INFO;
-DROP TABLE TB_PROJECT_MEMBER;
-DROP TABLE TB_TASK_INFO;
-DROP TABLE TB_TASK_MEMBER;
-DROP TABLE TB_TASK_REPLY;
-DROP TABLE TB_ALARM;
-DROP TABLE TB_PROJECT_INVITE;
-DROP TABLE TB_COMMON_CODE;
+DROP TABLE PROJ.TB_PROJECT_INFO;
+DROP TABLE PROJ.TB_USER_INFO;
+DROP TABLE PROJ.TB_COMPANY_INFO;
+DROP TABLE PROJ.TB_PROJECT_MEMBER;
+DROP TABLE PROJ.TB_TASK_INFO;
+DROP TABLE PROJ.TB_TASK_MEMBER;
+DROP TABLE PROJ.TB_TASK_REPLY;
+DROP TABLE PROJ.TB_ALARM;
+DROP TABLE PROJ.TB_PROJECT_INVITE;
+DROP TABLE PROJ.TB_COMMON_CODE;
 SET foreign_key_checks = 1; -- 외래키 참조 체크 설정
 
 ---------------------------------------------------
 -- DELETE
-DELETE FROM TB_PROJECT_INFO WHERE 1 = 1;
-DELETE FROM TB_USER_INFO WHERE 1 = 1;
-DELETE FROM TB_COMPANY_INFO WHERE 1 = 1;
-DELETE FROM TB_PROJECT_MEMBER WHERE 1 = 1;
-DELETE FROM TB_TASK_INFO WHERE 1 = 1;
-DELETE FROM TB_TASK_MEMBER WHERE 1 = 1;
-DELETE FROM TB_TASK_REPLY WHERE 1 = 1;
-DELETE FROM TB_ALARM WHERE 1 = 1;
-DELETE FROM TB_PROJECT_INVITE WHERE 1 = 1;
-DELETE FROM TB_COMMON_CODE WHERE 1 = 1;
+DELETE FROM PROJ.TB_PROJECT_INFO WHERE 1 = 1;
+DELETE FROM PROJ.TB_USER_INFO WHERE 1 = 1;
+DELETE FROM PROJ.TB_COMPANY_INFO WHERE 1 = 1;
+DELETE FROM PROJ.TB_PROJECT_MEMBER WHERE 1 = 1;
+DELETE FROM PROJ.TB_TASK_INFO WHERE 1 = 1;
+DELETE FROM PROJ.TB_TASK_MEMBER WHERE 1 = 1;
+DELETE FROM PROJ.TB_TASK_REPLY WHERE 1 = 1;
+DELETE FROM PROJ.TB_ALARM WHERE 1 = 1;
+DELETE FROM PROJ.TB_PROJECT_INVITE WHERE 1 = 1;
+DELETE FROM PROJ.TB_COMMON_CODE WHERE 1 = 1;
