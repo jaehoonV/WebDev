@@ -47,7 +47,7 @@ function stockSearch(){
     url_ += "&pageNo=" + pageNo;
     url_ += "&resultType=" + resultType;
     url_ += "&basDt=" + basDt;
-    if (likeItmsNm != "") url_ += "&likeItmsNm=" + likeItmsNm;
+    if (likeItmsNm != "") url_ += "&likeItmsNm=" + encodeURIComponent(likeItmsNm);
 
     console.log(url_);
 
@@ -79,7 +79,7 @@ function stockSearch2(){
     url_ += "&resultType=" + resultType;
     url_ += "&beginBasDt=" + beginBasDt;
     url_ += "&endBasDt=" + endBasDt;
-    if (itmsNm != "") url_ += "&itmsNm=" + itmsNm;
+    if (itmsNm != "") url_ += "&itmsNm=" + encodeURIComponent(itmsNm);
 
     console.log(url_);
 
