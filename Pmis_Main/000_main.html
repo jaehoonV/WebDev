@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width">
+    <title>PMIS</title>
+    <link rel="icon" type="image/png" href="images/common/pmis_favicon.png" />
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="js/layout.js"></script>
+</head>
+<body>
+<div class="header">
+    <div class="header_wrap">
+        <div class="header_top fx-between item-center">
+            <div class="header_tl">
+                <a href="" class="logo fx-start item-center">
+                    <img src="images/logo_color.png" alt="logo">
+                    <span class="logo_txt">남양주열병합 건설사업관리시스템</span>
+                </a>
+            </div>
+            <div class="header_tr fx-end item-center">
+                <div class="header_manager">
+                    <img src="images/common/header_manager.png" alt="header_manager">
+                    관리자
+                </div>
+                <div class="separator"></div>
+                <div class="header_sitemap">
+                    <img src="images/common/header_sitemap.png" alt="header_sitemap">
+                    Sitemap
+                </div>
+                <div class="separator"></div>
+                <div class="header_project">
+                    <img src="images/common/header_project.png" alt="header_project">
+                    Projects
+                </div>
+                <div class="separator"></div>
+                <div class="header_webhard">
+                    <img src="images/common/header_webhard.png" alt="header_webhard">
+                    Webhard
+                </div>
+                <div class="separator"></div>
+                <div class="header_system">
+                    <img src="images/common/header_system.png" alt="header_system">
+                    System
+                </div>
+                <div class="separator"></div>
+                <div>
+                    <label for="lang">Language</label>
+                    <select name="lang" id="lang">
+                        <option value="">Korean</option>
+                    </select>
+                </div>
+                <div class="separator"></div>
+                <div class="header_logout">
+                    <img src="images/common/header_logout.png" alt="header_logout">
+                    Logout
+                </div>
+            </div>
+        </div>
+        <div class="header_menu">
+            <ul class="fx-between item-center">
+                <li>
+                    <a href="" class="menu_1depth">
+                        사업관리
+                        <span>
+                            <img src="images/common/arr_bottom.png" alt="arr_bottom">
+                        </span>
+                    </a> 
+                    <div class="depth_wrap fx-start item-stretch">
+                        <div class="wrap_2depth">
+                            <a href="" class="menu_2depth">사업개요</a>
+                            <div class="wrap_3depth">
+                            <a href="" class="menu_3depth">• 사업개요</a>
+                            <a href="" class="menu_3depth">• 사업추진경위</a>
+                            <a href="" class="menu_3depth">• 조감도</a>
+                            <a href="" class="menu_3depth">• 부지배치도</a>
+                            </div>
+                        </div>
+                        <div class="wrap_2depth">
+                            <a href="" class="menu_2depth">조직관리</a>
+                            <div class="wrap_3depth">
+                            <a href="" class="menu_3depth">• 조직도</a>
+                            <a href="" class="menu_3depth">• 비상연락망</a>
+                            </div>
+                        </div>
+                        <div class="wrap_2depth">
+                            <a href="" class="menu_2depth">인허가현황</a>
+                            <div class="wrap_3depth">
+                            <a href="" class="menu_3depth">• 인허가 일정</a>
+                            <a href="" class="menu_3depth">• 인허가 현황</a>
+                            <a href="" class="menu_3depth">• 인허가 자료실</a>
+                            </div>
+                        </div>
+                        <div class="wrap_2depth">
+                            <a href="" class="menu_2depth">협업관리</a>
+                            <div class="wrap_3depth">
+                            <a href="" class="menu_3depth">• 공지사항</a>
+                            <a href="" class="menu_3depth">• 일정관리</a>
+                            <a href="" class="menu_3depth">• 웹하드</a>
+                            <a href="" class="menu_3depth">• PMIS Help Desk</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <a href="" class="menu_1depth">
+                    계약관리
+                    <span>
+                        <img src="images/common/arr_bottom.png" alt="arr_bottom">
+                    </span>
+                    </a>  
+                    <div class="depth_wrap fx-start item-stretch">
+                        <div class="wrap_2depth">
+                            <a href="" class="menu_2depth">2depth</a>
+                            <div class="wrap_3depth">
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            </div>
+                        </div>
+                        <div class="wrap_2depth">
+                            <a href="" class="menu_2depth">2depth</a>
+                            <div class="wrap_3depth">
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_4depth">• 4depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            </div>
+                        </div>
+                        <div class="wrap_2depth">
+                            <a href="" class="menu_2depth">2depth</a>
+                            <div class="wrap_3depth">
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_4depth">• 4depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            </div>
+                        </div>
+                        <div class="wrap_2depth">
+                            <a href="" class="menu_2depth">2depth</a>
+                            <div class="wrap_3depth">
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            </div>
+                        </div>
+                        <div class="wrap_2depth">
+                            <a href="" class="menu_2depth">2depth</a>
+                            <div class="wrap_3depth">
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_4depth">• 4depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            </div>
+                        </div>
+                        <div class="wrap_2depth">
+                            <a href="" class="menu_2depth">2depth</a>
+                            <div class="wrap_3depth">
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            </div>
+                        </div>
+                        <div class="wrap_2depth">
+                            <a href="" class="menu_2depth">2depth</a>
+                            <div class="wrap_3depth">
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_4depth">• 4depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            </div>
+                        </div>
+                        <div class="wrap_2depth">
+                            <a href="" class="menu_2depth">2depth</a>
+                            <div class="wrap_3depth">
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            </div>
+                        </div>
+                        <div class="wrap_2depth">
+                            <a href="" class="menu_2depth">2depth</a>
+                            <div class="wrap_3depth">
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            <a href="" class="menu_4depth">• 4depth</a>
+                            <a href="" class="menu_3depth">• 3depth</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <a href="" class="menu_1depth">
+                        종합공정현황
+                        <span>
+                            <img src="images/common/arr_bottom.png" alt="arr_bottom">
+                        </span>
+                    </a>  
+                </li>
+                <li>
+                    <a href="" class="menu_1depth">
+                        기본설계
+                        <span>
+                            <img src="images/common/arr_bottom.png" alt="arr_bottom">
+                        </span>
+                    </a>  
+                </li>
+                <li>
+                    <a href="" class="menu_1depth">
+                        설계관리
+                        <span>
+                            <img src="images/common/arr_bottom.png" alt="arr_bottom">
+                        </span>
+                    </a>  
+                </li>
+                <li>
+                    <a href="" class="menu_1depth">
+                        구매관리
+                        <span>
+                            <img src="images/common/arr_bottom.png" alt="arr_bottom">
+                        </span>
+                    </a>  
+                </li>
+                <li>
+                    <a href="" class="menu_1depth">
+                        시공관리
+                        <span>
+                            <img src="images/common/arr_bottom.png" alt="arr_bottom">
+                        </span>
+                    </a>  
+                </li>
+                <li>
+                    <a href="" class="menu_1depth">
+                        시운전관리
+                        <span>
+                            <img src="images/common/arr_bottom.png" alt="arr_bottom">
+                        </span>
+                    </a>  
+                </li>
+                <li>
+                    <a href="" class="menu_1depth">
+                        안전·품질·환경
+                        <span>
+                            <img src="images/common/arr_bottom.png" alt="arr_bottom">
+                        </span>
+                    </a>  
+                </li>
+                <li>
+                    <a href="" class="menu_1depth">
+                        문서·자료
+                        <span>
+                            <img src="images/common/arr_bottom.png" alt="arr_bottom">
+                        </span>
+                    </a>  
+                </li>
+                <li>
+                    <a href="" class="menu_1depth">
+                        운영관리
+                        <span>
+                            <img src="images/common/arr_bottom.png" alt="arr_bottom">
+                        </span>
+                    </a>  
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div id="ui-overlay"></div>
+    <div class="modal_popup">
+        <div class="pop_overview">
+            <div class="popup_title fx-between item-center">
+                <div class="box_title_sub fx-start item-center gap10">
+                    프로젝트 개요
+                </div>
+                <div class="pop_close img_box">
+                    <img src="images/common/close.png" alt="">
+                </div>
+            </div>
+            <div class="popup_content fx-between gap20">
+                <div class="overview_img">
+                    <img src="images/industrial-park-factory-building-warehouse.jpg" alt="">
+                </div>
+                <table class="list-table">
+                    <tr>
+                        <th>프로젝트명</th>
+                        <td>남양주열병합 건설사업관리시스템</td>
+                    </tr>
+                    <tr>
+                        <th>발주처</th>
+                        <td>남양주열병합, 한국서부발전</td>
+                    </tr>
+                    <tr>
+                        <th>위치</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>총사업비</th>
+                        <td>1,000,000 백만원</td>
+                    </tr>
+                    <tr>
+                        <th>사업기간</th>
+                        <td>2025-05-01 ~ 2028-06-30</td>
+                    </tr>
+                    <tr>
+                        <th>CM/감리단</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>설계사</th>
+                        <td>한국지역난방기술</td>
+                    </tr>
+                    <tr>
+                        <th>시공사</th>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="pop_location">
+            <div class="popup_title fx-between item-center">
+                <div class="box_title_sub fx-start item-center gap10">
+                    프로젝트 위치
+                </div>
+                <div class="pop_close img_box">
+                    <img src="images/common/close.png" alt="">
+                </div>
+            </div>
+            <div class="popup_content">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d470.55097236503053!2d127.03232282358867!3d37.496666289560046!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca15003ac4ef7%3A0xdd46f97b0a089b00!2z7IOB7JWE66ek64uI7KeA66i87Yq47Luo7ISk7YyF!5e0!3m2!1sko!2skr!4v1720400607229!5m2!1sko!2skr" width="1420" height="320" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+        <div class="pop_progress">
+            <div class="popup_title fx-between item-center">
+                <div class="box_title_sub fx-start item-center gap10">
+                    분야별 공정진도
+                </div>
+                <div class="pop_close img_box">
+                    <img src="images/common/close.png" alt="">
+                </div>
+            </div>
+            <div class="popup_content fx-between-col gap10">
+                <div class="progress_inform fx-between item-center gap10 flex1">
+                    <div class="pi_plan fx-between item-center flex1">
+                        계획
+                        <div>
+                            <span>61</span><span>.30</span>%
+                        </div>
+                    </div>
+                    <div class="pi_actual fx-between item-center flex1">
+                        실적
+                        <div>
+                            <span>81</span><span>.30</span>%
+                        </div>
+                    </div>
+                    <div class="pi_contrast fx-between item-center flex1">
+                        대비
+                        <div>
+                            <span>-81</span><span>.30</span>%
+                        </div>
+                    </div>
+                </div>
+                <div class="progress_branch tb_scroll">
+                    <div class="pb_tr fx-between item-center">
+                        <div class="pb_name">
+                            01-Team
+                        </div>
+                        <div class="pb_graph progress_box fx-between-col gap10">
+                            <div class="graph_plan">
+                                <div class="graph_wd90 background_b"></div>
+                            </div>
+                            <div class="graph_actual">
+                                <div class="graph_wd10 background_p"></div>
+                            </div>
+                        </div>
+                        <div class="pb_percent fx-between-col gap10">
+                            <div class="percent_plan">88.40%</div>
+                            <div class="percent_actual">27.31%</div>
+                        </div>
+                    </div>
+                    <div class="pb_tr fx-between item-center">
+                        <div class="pb_name">
+                            02-Team
+                        </div>
+                        <div class="pb_graph progress_box fx-between-col gap10">
+                            <div class="graph_plan">
+                                <div class="graph_wd90 background_b"></div>
+                            </div>
+                            <div class="graph_actual">
+                                <div class="graph_wd90 background_p"></div>
+                            </div>
+                        </div>
+                        <div class="pb_percent fx-between-col gap10">
+                            <div class="percent_plan">88.40%</div>
+                            <div class="percent_actual">27.31%</div>
+                        </div>
+                    </div>
+                    <div class="pb_tr fx-between item-center">
+                        <div class="pb_name">
+                            03-Team
+                        </div>
+                        <div class="pb_graph progress_box fx-between-col gap10">
+                            <div class="graph_plan">
+                                <div class="graph_wd90 background_b"></div>
+                            </div>
+                            <div class="graph_actual">
+                                <div class="graph_wd30 background_p"></div>
+                            </div>
+                        </div>
+                        <div class="pb_percent fx-between-col gap10">
+                            <div class="percent_plan">88.40%</div>
+                            <div class="percent_actual">27.31%</div>
+                        </div>
+                    </div>
+                    <div class="pb_tr fx-between item-center">
+                        <div class="pb_name">
+                            04-Team
+                        </div>
+                        <div class="pb_graph progress_box fx-between-col gap10">
+                            <div class="graph_plan">
+                                <div class="graph_wd90 background_b"></div>
+                            </div>
+                            <div class="graph_actual">
+                                <div class="graph_wd50 background_p"></div>
+                            </div>
+                        </div>
+                        <div class="pb_percent fx-between-col gap10">
+                            <div class="percent_plan">88.40%</div>
+                            <div class="percent_actual">27.31%</div>
+                        </div>
+                    </div>
+                    <div class="pb_tr fx-between item-center">
+                        <div class="pb_name">
+                            05-Team
+                        </div>
+                        <div class="pb_graph progress_box fx-between-col gap10">
+                            <div class="graph_plan">
+                                <div class="graph_wd90 background_b"></div>
+                            </div>
+                            <div class="graph_actual">
+                                <div class="graph_wd90 background_p"></div>
+                            </div>
+                        </div>
+                        <div class="pb_percent fx-between-col gap10">
+                            <div class="percent_plan">88.40%</div>
+                            <div class="percent_actual">27.31%</div>
+                        </div>
+                    </div>
+                    <div class="pb_tr fx-between item-center">
+                        <div class="pb_name">
+                            06-Team
+                        </div>
+                        <div class="pb_graph progress_box fx-between-col gap10">
+                            <div class="graph_plan">
+                                <div class="graph_wd90 background_b"></div>
+                            </div>
+                            <div class="graph_actual">
+                                <div class="graph_wd10 background_p"></div>
+                            </div>
+                        </div>
+                        <div class="pb_percent fx-between-col gap10">
+                            <div class="percent_plan">88.40%</div>
+                            <div class="percent_actual">27.31%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content_wrap gap30">
+        <div class="cont cont01 fx-between item-stretch gap30">
+            <div class="cont_inform default_box fx-between item-center gap30">
+                <div class="inform_wrap fx-between item-center flex1">
+                    <div class="i_left fx-start item-center gap10">
+                        <div class="img_box">
+                            <img src="images/common/icon_inform.png" alt="icon_inform">
+                        </div>
+                        결재대기
+                    </div>
+                    <div class="i_right fx-start item-center">
+                        <span>8</span>건
+                    </div>
+                </div>
+                <div class="separator"></div>
+                <div class="inform_wrap fx-between item-center flex1">
+                    <div class="i_left fx-start item-center gap10">
+                        <div class="img_box">
+                            <img src="images/common/icon_doc.png" alt="icon_doc">
+                        </div>
+                        서신문서
+                    </div>
+                    <div class="i_right fx-start item-center">
+                        <span>16</span>건
+                    </div>
+                </div>
+            </div>
+            <div class="cont_weather default_box fx-between item-center gap30">
+                <div class="today_weather fx-between item-center flex1">
+                    <div class="w_left">
+                        <div class="img_box">
+                            <img src="images/icon_weather01.png" alt="icon_weather">
+                        </div>
+                        <div class="fx-start item-start">
+                            <span>32</span>℃
+                        </div>
+                    </div>
+                    <div class="w_right fx-between-col item-end gap10">
+                        <div>2024.10.16 (수)</div>
+                        <div>최저 <span>28</span>℃ / 최고 <span>32</span>℃</div>
+                    </div>
+                </div>
+                <div class="separator"></div>
+                <div class="tomorrow_weather fx-between item-center flex1">
+                    <div class="w_left">
+                        <div class="img_box">
+                            <img src="images/icon_weather02.png" alt="icon_weather">
+                        </div>
+                        <div class="fx-start item-start">
+                            <span>34</span>℃
+                        </div>
+                    </div>
+                    <div class="w_right fx-between-col item-end gap10">
+                        <div>2024.10.17 (목)</div>
+                        <div>최저 <span>30</span>℃ / 최고 <span>34</span>℃</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cont cont02 default_box fx-between item-stretch gap20">
+            <div class="btn_default fx-start item-center gap10 btn_overview">
+                <div class="img_box">
+                    <img src="images/common/icon_overview.png" alt="icon_overview">
+                </div>
+                프로젝트 개요
+            </div>
+            <div class="btn_default fx-start item-center gap10 btn_location">
+                <div class="img_box">
+                    <img src="images/common/icon_location.png" alt="icon_location">
+                </div>
+                프로젝트 위치
+            </div>
+            <div class="btn_default fx-start item-center gap10 btn_ccrs">
+                <div class="img_box">
+                    <img src="images/common/icon_ccrs.png" alt="icon_ccrs">
+                </div>
+                CCRS
+            </div>
+            <div class="btn_default fx-start item-center gap10 btn_weather">
+                <div class="img_box">
+                    <img src="images/common/icon_weather.png" alt="icon_weather">
+                </div>
+                Weather
+            </div>
+            <div class="btn_default fx-start item-center gap10 btn_qna">
+                <div class="img_box">
+                    <img src="images/common/icon_qna.png" alt="icon_qna">
+                </div>
+                PMIS Q&A
+            </div>
+            <div class="btn_default fx-start item-center gap10 btn_camera">
+                <div class="img_box">
+                    <img src="images/common/icon_camera.png" alt="icon_camera">
+                </div>
+                Web Camera
+            </div>
+        </div>
+        <div class="cont cont03 fx-between item-stretch gap30">
+            <div class="default_box project-timeline fx-between-col">
+                <div class="box_title fx-between item-center">
+                    D-DAY COUNTER
+                </div>
+                <div class="box_content fx-between-col gap10">
+                    <div class="od_name">남양주열병합 건설사업관리시스템</div>
+                    <div class="timeline_top fx-between item-center">
+                        <div class="od_date01">
+                            <span class="color_g">50</span>일 경과
+                        </div>
+                        <div class="od_date02">
+                            D-Day <span class="color_g">562</span>일
+                        </div>
+                    </div>
+                    <div class="timeline_middle">
+                        <div class="graph_wd10 background_g"></div>
+                        <div class="graph_percent">
+                            D-Day <span>28.08%</span>
+                        </div>
+                    </div>
+                    <div class="timeline_bottom fx-between item-center">
+                        <div class="start_date">2025-05-01</div>
+                        <div class="end_date">2028-06-30</div>
+                    </div>
+                </div>
+            </div>
+            <div class="project-progress default_box">
+                <div class="box_title fx-between item-center">
+                    <div class="box_title_sub">
+                        프로젝트 현황
+                        <span>기준일 2024.10.16</span>
+                    </div>
+                    <div class="title_btn fx-start item-center gap5">
+                        분야별 공정진도
+                        <div class="img_box">
+                            <img src="images/common/arr_right.png" alt="arr_right">
+                        </div>
+                    </div>
+                </div>
+                <div class="box_content fx-between-col gap20">
+                    <div class="progress_inform fx-between item-center gap10">
+                        <div class="pi_plan fx-between item-center flex1">
+                            계획
+                            <div>
+                                <span>61</span><span>.30</span>%
+                            </div>
+                        </div>
+                        <div class="pi_actual fx-between item-center flex1">
+                            실적
+                            <div>
+                                <span>81</span><span>.30</span>%
+                            </div>
+                        </div>
+                        <div class="pi_contrast fx-between item-center flex1">
+                            대비
+                            <div>
+                                <span>-81</span><span>.30</span>%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress_box fx-center-col item-center gap10">
+                        <div>
+                            <div class="graph_wd70 background_b"></div>
+                            <div class="graph_percent">
+                                계획 <span>61.30%</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="graph_wd90 background_p"></div>
+                            <div class="graph_percent">
+                                실적 <span>81.30%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cont cont04 default_box milestone-schedule">
+            <div class="box_title fx-between item-center">
+                <div class="box_title_sub fx-start item-center gap10">
+                    Milestone Schedule
+                    <div>
+                        <select name="all" id="all">
+                            <option value="">전체</option>
+                        </select>
+                        <select name="year" id="year">
+                            <option value="">연도별</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="title_btn fx-start item-center gap5">
+                    More
+                    <div class="img_box">
+                        <img src="images/common/arr_right.png" alt="arr_right">
+                    </div>
+                </div>
+            </div>
+            <div class="box_content fx-between-col gap20">
+                <div class="img_box">
+                    <img src="images/milestone.png" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="cont cont05 fx-between item-stretch gap30">
+            <div class="notice-board default_box">
+                <div class="box_title fx-between item-center">
+                    <div class="box_title_sub fx-start item-center gap10">
+                        공지사항
+                    </div>
+                    <div class="title_btn fx-start item-center gap5">
+                        More
+                        <div class="img_box">
+                            <img src="images/common/arr_right.png" alt="arr_right">
+                        </div>
+                    </div>
+                </div>
+                <div class="box_content fx-between-col table-container">
+                    <table class="table-header">
+                        <thead>
+                            <tr>
+                                <td>번호</td>
+                                <td>제목</td>
+                                <td>등록일</td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="table-body tb_scroll">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>50</td>
+                                    <td>공지사항 제목이 들어갑니다.</td>
+                                    <td>2024-04-25</td>
+                                </tr>
+                                <tr>
+                                    <td>49</td>
+                                    <td>공지사항 제목이 들어갑니다.</td>
+                                    <td>2024-04-25</td>
+                                </tr>
+                                <tr>
+                                    <td>48</td>
+                                    <td>공지사항 제목이 들어갑니다.</td>
+                                    <td>2024-04-25</td>
+                                </tr>
+                                <tr>
+                                    <td>47</td>
+                                    <td>공지사항 제목이 들어갑니다.</td>
+                                    <td>2024-04-25</td>
+                                </tr>
+                                <tr>
+                                    <td>46</td>
+                                    <td>공지사항 제목이 들어갑니다.</td>
+                                    <td>2024-04-25</td>
+                                </tr>
+                                <tr>
+                                    <td>45</td>
+                                    <td>공지사항 제목이 들어갑니다.</td>
+                                    <td>2024-04-25</td>
+                                </tr>
+                                <tr>
+                                    <td>44</td>
+                                    <td>공지사항 제목이 들어갑니다.</td>
+                                    <td>2024-04-25</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="project-photo default_box">
+                <div class="box_title fx-between item-center">
+                    <div class="box_title_sub fx-start item-center gap10">
+                        공정 이미지
+                    </div>
+                    <div class="title_btn fx-start item-center gap5">
+                        More
+                        <div class="img_box">
+                            <img src="images/common/arr_right.png" alt="arr_right">
+                        </div>
+                    </div>
+                </div>
+                <div class="box_content fx-between-col gap20">
+                    <div class="box_tab">
+                        <div class="tab_wrap fx-start item-center">
+                            <div class="img_tab active" data-target="photo_tab1">월간전경</div>
+                            <div class="img_tab" data-target="photo_tab2">주요공정</div>
+                        </div>
+                    </div>
+                    <div class="image_grid photo_tab1 active" id="photo_tab1">
+                        <div class="large_img">
+                            <img src="images/industrial-park-factory-building-warehouse.jpg" alt="default_img">
+                        </div>
+                        <div class="small_img">
+                            <div>
+                                <img src="images/common/default_img.png" alt="default_img">
+                            </div>
+                            <div>
+                                <img src="images/common/default_img.png" alt="default_img">
+                            </div>
+                            <div>
+                                <img src="images/common/default_img.png" alt="default_img">
+                            </div>
+                            <div>
+                                <img src="images/common/default_img.png" alt="default_img">
+                            </div>
+                            <div>
+                                <img src="images/common/default_img.png" alt="default_img">
+                            </div>
+                            <div>
+                                <img src="images/common/default_img.png" alt="default_img">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="image_grid " id="photo_tab2">
+                        <div class="large_img">
+                            <img src="images/common/default_img.png" alt="default_img">
+                        </div>
+                        <div class="small_img">
+                            <div>
+                                <img src="images/common/default_img.png" alt="default_img">
+                            </div>
+                            <div>
+                                <img src="images/common/default_img.png" alt="default_img">
+                            </div>
+                            <div>
+                                <img src="images/common/default_img.png" alt="default_img">
+                            </div>
+                            <div>
+                                <img src="images/common/default_img.png" alt="default_img">
+                            </div>
+                            <div>
+                                <img src="images/common/default_img.png" alt="default_img">
+                            </div>
+                            <div>
+                                <img src="images/common/default_img.png" alt="default_img">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
