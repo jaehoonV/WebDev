@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flatpickr 테마 설정</title>
+    <!-- jQuery 포함 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- jQuery UI CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- jQuery UI JS -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+    <!-- Flatpickr 추가 -->
+    <link rel="stylesheet" href="flatpickr/flatpickr.min.css">
+    <link rel="stylesheet" href="flatpickr/themes/airbnb.css">
+    <link rel="stylesheet" href="flatpickr/custom_flatpickr.css">
+    <script src="flatpickr/flatpickr.min.js"></script>
+    <script src="flatpickr/l10n/ko.js"></script>
+
+    <!-- Font Awesome CDN (달력 아이콘 사용) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<style>
+    li,
+    label {
+        font-size: 14px;
+    }
+
+    input {
+        width: 120px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+    }
+
+    input:focus {
+        outline: 1px solid #8f8f8f;
+    }
+
+    .readonly_input {
+        width: 70px;
+        background-color: #ddd;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+    }
+
+    .readonly_input:focus {
+        outline: none;
+    }
+
+    .content_container {
+        display: grid;
+        width: 1100px;
+        grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+        gap: .25rem;
+    }
+
+    .content {
+        padding: 10px;
+        margin: 5px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .calendar-icon {
+        cursor: pointer;
+    }
+
+</style>
+
+<body>
+    <ul>
+        <li style="font-weight: 600;">airbnb</li>
+    </ul>
+    <div class="flatpickr_date_div">
+        <input type="text" id="start_time" name="start_time" autocomplete='off'
+            style="width: 150px; margin: 0px 5px;">
+        <span class="calendar-icon fa fa-calendar"></span>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // flatpickr 적용
+            flatpickr("#start_time", {
+                locale: "ko", // 한국어 설정
+                dateFormat: "Y-m-d H:i",
+                enableTime: true,
+                time_24hr: true,
+                minuteIncrement: 1, // 분 단위 설정
+                allowInput: true, // 텍스트 입력 허용
+                className: "airbnb"
+            });
+
+            $(".calendar-icon").on("click", function () {
+                const closestInput = $(this).closest(".flatpickr_date_div").find(".flatpickr-input");
+                const fp = closestInput.get(0)._flatpickr; // 이미 생성된 Flatpickr 인스턴스를 가져옴
+                if (fp) {
+                    fp.open(); // 해당 Flatpickr 캘린더 열기
+                }
+            });
+
+        });
+    </script>
+</body>
+
+</html>

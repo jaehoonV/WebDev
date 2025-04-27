@@ -1,0 +1,75 @@
+/* 달력 전체 크기 */
+.flatpickr-calendar {
+    font-size: 12px; /* 전체 텍스트 크기 줄이기 */
+    width: 200px; /* 달력의 너비를 자동으로 설정 */
+    padding: 5px; /* 내부 여백 축소 */
+}
+
+.dayContainer{
+    width: 190px;
+    min-width: 190px;
+    max-width: 190px;
+}
+
+
+/* 날짜 셀 크기 */
+.flatpickr-day {
+    width: 20px; /* 날짜 셀의 너비 */
+    height: 26px; /* 날짜 셀의 높이 */
+    line-height: 20px; /* 텍스트를 중앙에 배치 */
+    font-size: 10px; /* 날짜 숫자 크기 */
+    margin: 2px 0;
+    border-radius: 50%;
+}
+
+/* 헤더 (월/연도 선택 영역) 크기 */
+.flatpickr-month {
+    font-size: 14px; /* 월/연도 텍스트 크기 */
+    height: 30px; /* 헤더 높이 */
+    line-height: 30px; /* 텍스트 수직 정렬 */
+}
+
+/* 이전/다음 버튼 크기 */
+.flatpickr-prev-button,
+.flatpickr-next-button {
+    width: 20px; /* 버튼 너비 */
+    height: 20px; /* 버튼 높이 */
+}
+
+/* 주 이름 (월, 화 등) 간격 줄이기 */
+.flatpickr-weekdays {
+    margin-bottom: 5px;
+    font-size: 10px; /* 주 이름 크기 줄이기 */
+    width: 190px;
+}
+
+.flatpickr-days{
+    width: 190px;
+}
+
+.flatpickr-months .flatpickr-prev-month, .flatpickr-months .flatpickr-next-month{
+    height: 20px;
+}
+
+.flatpickr-current-month{
+    width: 82%;
+    height: 24px;
+    padding: 3.48px 0 0 0;
+}
+
+.flatpickr-monthDropdown-months, .numInputWrapper{
+    font-size: 74% !important
+}
+
+.flatpickr-calendar.hasTime .flatpickr-time{
+    height: 30px;
+    line-height: 30px;
+}
+
+.flatpickr-time .numInputWrapper{
+    height: 30px;
+}
+
+.flatpickr-current-month .numInputWrapper{
+    width: 7ch;
+}

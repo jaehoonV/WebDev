@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datetimepicker 캘린더 설정</title>
+    <!-- jQuery 포함 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- jQuery UI CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- jQuery UI JS -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    
+    <!-- datetimepicker 추가 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+    
+    <!-- Flatpickr 추가 -->
+    <link rel="stylesheet" href="flatpickr/flatpickr.min.css">
+    <link rel="stylesheet" href="flatpickr/custom_flatpickr.css">
+    <script src="flatpickr/flatpickr.min.js"></script>
+    <script src="flatpickr/l10n/ko.js"></script>
+
+    <!-- Air-datepicker 추가 -->
+    <link rel="stylesheet" href="air_datepicker/air-datepicker.css">
+    <script src="air_datepicker/air-datepicker.js"></script>
+
+    <!-- Date Range Picker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
+    <!-- Moment.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <!-- Date Range Picker JS -->
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+    <!-- Font Awesome CDN (달력 아이콘 사용) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<style>
+    li, label{
+        font-size: 14px;
+    }
+    input{
+        width: 120px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+    }
+
+    input:focus{
+        outline: 1px solid #8f8f8f;
+    }
+
+    .readonly_input{
+        width: 70px;
+        background-color: #ddd;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+    }
+
+    .readonly_input:focus{
+        outline: none;
+    }
+
+    .content_container{
+        display: grid;
+        width: 1100px;
+        grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+        gap: .25rem;
+    }
+    
+    .content{
+        padding: 10px;
+        margin: 5px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .event_div{
+        border: 1px solid #ddd; 
+        border-radius: 10px; 
+        padding: 10px; 
+        min-width: 650px; 
+        margin: 30px; 
+        height: 400px; 
+        overflow-y: auto;
+    }
+
+    .calendar-icon {
+        cursor: pointer;
+    }
+</style>
+<body>
+    <h2>Datetimepicker 캘린더 설정</h2>
+    <div style="display: flex; gap: 50px; justify-content: space-between;">
+        <div class="content_container">
+            <div class="content">
+                <ul>
+                    <li style="font-weight: 600;">jQuery-datetimepicker</li>
+                    <li>달력 한국어 설정 가능</li>
+                    <li>시간 분단위 설정 가능</li>
+                    <li>시간 제한 설정 가능 (시작 시간전에 마감시간 설정X)</li>
+                    <li>Evnet onShow, onClose, onChangeDateTime, onSelectDate, onSelectTime</li>
+                </ul>
+                <label for="start_time">시작 시간 (jQuery):</label>
+                <input type="text" id="start_time" name="start_time" autocomplete='off'>
+                <input type="text" class="readonly_input" id="s_date" name="s_date" readonly>
+                <input type="text" class="readonly_input" id="s_time" name="s_time" readonly>
+                <br>
+                <label for="end_time">마감 시간 (jQuery):</label>
+                <input type="text" id="end_time" name="end_time" autocomplete='off'>
+                <input type="text" class="readonly_input" id="e_date" name="e_date" readonly>
+                <input type="text" class="readonly_input" id="e_time" name="e_time" readonly>
+                <br>
+                <button type="button" id="btn">확인</button>
+            </div>
+            <div class="content">
+                <ul>
+                    <li style="font-weight: 600;">Flatpickr</li>
+                    <li>달력 한국어 설정 가능</li>
+                    <li>시간 분단위 설정 가능</li>
+                    <li>시간 제한 설정 가능 (시작 시간전에 마감시간 설정X)</li>
+                    <li>주요 이벤트 onChange, onOpen, onClose</li>
+                </ul>
+                <label for="start_time">시작 시간 (Flatpickr):</label>
+                <div class="flatpickr_date_div">
+                    <input type="text" id="start_time_f" name="start_time_f" autocomplete='off' style="width: 150px; margin: 0px 5px;">
+                    <span id="start_time_f_icon" class="calendar-icon fa fa-calendar"></span>
+                    <input type="text" class="readonly_input" id="s_date_f" name="s_date_f" readonly>
+                    <input type="text" class="readonly_input" id="s_time_f" name="s_time_f" readonly>
+                </div>
+                <label for="end_time">마감 시간 (Flatpickr):</label>
+                <div class="flatpickr_date_div">
+                    <input type="text" id="end_time_f" name="end_time_f" autocomplete='off' style="width: 150px; margin: 0px 5px;">
+                    <span id="end_time_f_icon" class="calendar-icon fa fa-calendar"></span>
+                    <input type="text" class="readonly_input" id="e_date_f" name="e_date_f" readonly>
+                    <input type="text" class="readonly_input" id="e_time_f" name="e_time_f" readonly>
+                </div>
+                <button type="button" id="btn_f">확인</button>
+            </div>
+            <div class="content">
+                <ul>
+                    <li style="font-weight: 600;">Air-datepicker</li>
+                    <li>달력 한국어 설정 가능</li>
+                    <li>시간 스크롤 설정 가능</li>
+                    <li>시간 제한 설정 가능 (시작 시간전에 마감시간 설정X)</li>
+                    <li>주요 이벤트 onSelect, onShow, onHide</li>
+                </ul>
+                <label for="start_time">시작 시간 (Air-datepicker):</label>
+                <input type="text" id="start_time_a" name="start_time_a" autocomplete='off'>
+                <input type="text" class="readonly_input" id="s_date_a" name="s_date_a" readonly>
+                <input type="text" class="readonly_input" id="s_time_a" name="s_time_a" readonly>
+                <br>
+                <label for="end_time">마감 시간 (Air-datepicker):</label>
+                <input type="text" id="end_time_a" name="end_time_a" autocomplete='off'>
+                <input type="text" class="readonly_input" id="e_date_a" name="e_date_a" readonly>
+                <input type="text" class="readonly_input" id="e_time_a" name="e_time_a" readonly>
+                <br>
+                <button type="button" id="btn_a">확인</button>
+            </div>
+            <div class="content">
+                <ul>
+                    <li style="font-weight: 600;">Date Range Picker</li>
+                    <li>달력 한국어 설정 가능</li>
+                </ul>
+                <label for="start_time">시작 시간 (Date Range Picker):</label>
+                <input type="text" id="start_time_d" name="start_time_d" autocomplete='off'>
+                <input type="text" class="readonly_input" id="s_date_d" name="s_date_d" readonly>
+                <input type="text" class="readonly_input" id="s_time_d" name="s_time_d" readonly>
+                <br>
+                <button type="button" id="btn_d">확인</button>
+            </div>
+
+            <div id="timeInfo" style="margin-top: 20px; font-weight: bold;"></div>
+        </div>
+
+        <div class="event_div" id="event-log">
+            <p style="text-align: center;">- 이벤트 로그 -</p>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $.datetimepicker.setLocale('kr'); // 한국어 설정
+            let startPicker = $('#start_time'); // 시작 시간 input
+            let endPicker = $('#end_time'); // 마감 시간 input
+
+            startPicker.datetimepicker({
+                format: 'Y-m-d H:i', // 연도-월-일 시:분 형식
+                step: 1,            // 10분 간격
+                onShow: function(ct) {
+                    logEvent('시작 달력이 열렸습니다.');
+                    this.setOptions({
+                        maxDate: endPicker.val() ? endPicker.val().split(' ')[0] : false, // 마감시간 이전만 선택 가능
+                        maxTime: endPicker.val() ? endPicker.val().split(' ')[1] : false
+                    });
+                },
+                onClose: function() {
+                    logEvent('시작 달력이 닫혔습니다.');
+                },
+                onChangeDateTime: function(ct) {
+                    logEvent(`시작 날짜 및 시간이 변경되었습니다: ${ct ? ct.toLocaleString() : '없음'}`);
+                },
+                onSelectDate: function(ct) {
+                    logEvent(`시작 날짜가 선택되었습니다: ${ct.toLocaleDateString()}`);
+                },
+                onSelectTime: function(ct) {
+                    logEvent(`시작 시간이 선택되었습니다: ${ct.toLocaleTimeString()}`);
+                }
+            });
+
+            endPicker.datetimepicker({
+                format: 'Y-m-d H:i',
+                step: 1,
+                onShow: function(ct) {
+                    logEvent('마감 달력이 열렸습니다.');
+                    this.setOptions({
+                        minDate: startPicker.val() ? startPicker.val().split(' ')[0] : false, // 시작시간 이후만 선택 가능
+                        minTime: startPicker.val() ? startPicker.val().split(' ')[1] : false
+                    });
+                },
+                onClose: function() {
+                    logEvent('마감 달력이 닫혔습니다.');
+                },
+                onChangeDateTime: function(ct) {
+                    logEvent(`마감 날짜 및 시간이 변경되었습니다: ${ct ? ct.toLocaleString() : '없음'}`);
+                },
+                onSelectDate: function(ct) {
+                    logEvent(`마감 날짜가 선택되었습니다: ${ct.toLocaleDateString()}`);
+                },
+                onSelectTime: function(ct) {
+                    logEvent(`마감 시간이 선택되었습니다: ${ct.toLocaleTimeString()}`);
+                }
+            });
+
+            // 시작시간 변경 시 마감시간 제한 업데이트
+            startPicker.on('change', function() {
+                endPicker.datetimepicker('setOptions', {
+                    minDate: startPicker.val() ? startPicker.val().split(' ')[0] : false,
+                    minTime: startPicker.val() ? startPicker.val().split(' ')[1] : false
+                });
+            });
+
+            // 마감시간 변경 시 시작시간 제한 업데이트
+            endPicker.on('change', function() {
+                startPicker.datetimepicker('setOptions', {
+                    maxDate: endPicker.val() ? endPicker.val().split(' ')[0] : false,
+                    maxTime: endPicker.val() ? endPicker.val().split(' ')[1] : false
+                });
+            });
+
+            // flatpickr 적용
+            // 시작 시간 설정
+            const startTimePicker = flatpickr("#start_time_f", {
+                locale: "ko", // 한국어 설정
+                dateFormat: "Y-m-d H:i",
+                enableTime: true,
+                time_24hr: true,
+                minuteIncrement: 1, // 분 단위 설정
+                allowInput: true, // 텍스트 입력 허용
+                //minDate: "today", // 오늘 또는 이후 날짜만 선택 가능
+                onChange: function(selectedDates, dateStr, instance) {
+                    logEvent('Flatpickr 시작 날짜 및 시간이 변경되었습니다.');
+                    // 마감 시간의 최소 시간을 시작 시간 이후로 설정
+                    endTimePicker.set('minDate', selectedDates[0]);
+                },
+                onOpen: function() {
+                    logEvent('Flatpickr 시작 달력이 열렸습니다.');
+                },
+                onClose: function(selectedDates, dateStr, instance) {
+                    logEvent('Flatpickr 시작 달력이 닫혔습니다.');
+                    if (!instance.parseDate(dateStr, "Y-m-d H:i")) {
+                        //alert("올바른 형식(YYYY-MM-DD HH:mm)으로 입력해주세요.");
+                        instance.clear();
+                    }
+                }
+            });
+
+            // 마감 시간 설정
+            const endTimePicker = flatpickr("#end_time_f", {
+                locale: "ko", // 한국어 설정
+                dateFormat: "Y-m-d H:i",
+                enableTime: true,
+                time_24hr: true,
+                minuteIncrement: 1, // 분 단위 설정
+                allowInput: true, // 텍스트 입력 허용
+                //minDate: "today", // 오늘 또는 이후 날짜만 선택 가능
+                onChange: function(selectedDates, dateStr, instance) {
+                    logEvent('Flatpickr 마감 날짜 및 시간이 변경되었습니다.');
+                    // 시작 시간의 최대 시간을 마감 시간 이전으로 설정
+                    startTimePicker.set('maxDate', selectedDates[0]);
+                },
+                onOpen: function() {
+                    logEvent('Flatpickr 마감 달력이 열렸습니다.');
+                },
+                onClose: function(selectedDates, dateStr, instance) {
+                    logEvent('Flatpickr 마감 달력이 닫혔습니다.');
+                    if (!instance.parseDate(dateStr, "Y-m-d H:i")) {
+                        //alert("올바른 형식(YYYY-MM-DD HH:mm)으로 입력해주세요.");
+                        instance.clear();
+                    }
+                }
+            });
+
+            $(".calendar-icon").on("click", function() {
+                const closestInput = $(this).closest(".flatpickr_date_div").find(".flatpickr-input");
+                const fp = closestInput.get(0)._flatpickr; // 이미 생성된 Flatpickr 인스턴스를 가져옴
+                if (fp) {
+                    fp.open(); // 해당 Flatpickr 캘린더 열기
+                }
+            });
+
+            // Air-datepicker 적용
+            // 한국어 설정
+            AirDatepicker_locale_ko = {
+                days: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+                daysShort: ['일', '월', '화', '수', '목', '금', '토'],
+                daysMin: ['일', '월', '화', '수', '목', '금', '토'],
+                months: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+                monthsShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+                today: '오늘',
+                clear: '초기화',
+                dateFormat: 'yyyy-MM-dd',
+                timeFormat: 'HH:mm',
+                firstDay: 0 // 0: 일요일, 1: 월요일
+            };
+
+            const startAirPicker = new AirDatepicker('#start_time_a', {
+                locale: AirDatepicker_locale_ko, // 한국어 설정
+                is24hour: true, // 24시간 형식
+                timepicker: true,
+                onSelect({ date }) {
+                    logEvent('AirDatepicker 시작 날짜 및 시간이 변경되었습니다.');
+                    // 마감 시간 최소 날짜 설정
+                    endAirPicker.update({
+                        minDate: date
+                    });
+                },
+                onShow: function() {
+                    logEvent('AirDatepicker 시작 달력이 열렸습니다.');
+                },
+                onHide: function() {
+                    logEvent('AirDatepicker 시작 달력이 닫혔습니다.');
+                }
+            });
+
+            const endAirPicker = new AirDatepicker('#end_time_a', {
+                locale: AirDatepicker_locale_ko, // 한국어 설정
+                is24hour: true, // 24시간 형식
+                timepicker: true,
+                onSelect({ date }) {
+                    logEvent('AirDatepicker 마감 날짜 및 시간이 변경되었습니다.');
+                    // 시작 시간 최대 날짜 설정
+                    startAirPicker.update({
+                        maxDate: date
+                    });
+                },
+                onShow: function() {
+                    logEvent('AirDatepicker 마감 달력이 열렸습니다.');
+                },
+                onHide: function() {
+                    logEvent('AirDatepicker 마감 달력이 닫혔습니다.');
+                }
+            });
+
+            $('#start_time_d').daterangepicker({
+                singleDatePicker: true,
+                timePicker: true, // 시간 선택 활성화
+                timePicker24Hour: true, // 24시간 형식
+                showDropdowns: true, // 년/월 드롭다운 활성화
+                locale: {
+                format: 'YYYY-MM-DD HH:mm', // 날짜 및 시간 형식
+                applyLabel: "확인",
+                cancelLabel: "취소",
+                customRangeLabel: "Custom Range",
+                daysOfWeek: ["일", "월", "화", "수", "목", "금", "토"],
+                monthNames: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+                firstDay: 0
+                }
+            });
+
+            // 확인
+            $('#btn').on('click', function(e) {
+                const startTime = startPicker.val();
+                const endTime = endPicker.val();
+
+                $('#s_date').val(startTime.split(' ')[0]);
+                $('#s_time').val(startTime.split(' ')[1]);
+                $('#e_date').val(endTime.split(' ')[0]);
+                $('#e_time').val(endTime.split(' ')[1]);
+                $('#timeInfo').append(`<div>시작 일시: ${startTime}, 마감 일시: ${endTime}</div>`);
+            });
+
+            // 확인
+            $('#btn_f').on('click', function(e) {
+                const startTime = $('#start_time_f').val();
+                const endTime = $('#end_time_f').val();
+
+                $('#s_date_f').val(startTime.split(' ')[0]);
+                $('#s_time_f').val(startTime.split(' ')[1]);
+                $('#e_date_f').val(endTime.split(' ')[0]);
+                $('#e_time_f').val(endTime.split(' ')[1]);
+                $('#timeInfo').append(`<div>시작 일시: ${startTime}, 마감 일시: ${endTime}</div>`);
+            });
+
+            // 확인
+            $('#btn_a').on('click', function(e) {
+                const startTime = $('#start_time_a').val();
+                const endTime = $('#end_time_a').val();
+
+                $('#s_date_a').val(startTime.split(' ')[0]);
+                $('#s_time_a').val(startTime.split(' ')[1]);
+                $('#e_date_a').val(endTime.split(' ')[0]);
+                $('#e_time_a').val(endTime.split(' ')[1]);
+                $('#timeInfo').append(`<div>시작 일시: ${startTime}, 마감 일시: ${endTime}</div>`);
+            });
+
+            // 확인
+            $('#btn_d').on('click', function(e) {
+                const startTime = $('#start_time_d').val();
+                const endTime = $('#end_time_d').val();
+
+                $('#s_date_d').val(startTime.split(' ')[0]);
+                $('#s_time_d').val(startTime.split(' ')[1]);
+                $('#timeInfo').append(`<div>시작 일시: ${startTime}`);
+            });
+
+            function logEvent(message) {
+                const timeStamp = new Date().toLocaleTimeString();
+                $('#event-log').append(`<p style='margin: 8px 2px; font-size: 14px;'>[${timeStamp}] ${message}</p>`);
+                $("#event-log").scrollTop($("#event-log").prop("scrollHeight"));
+            }
+        });
+    </script>
+</body>
+</html>
