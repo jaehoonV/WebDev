@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>JavaScript 실행기</title>
+    <style>
+        :root {
+            --bg: #1e1e1e;
+            --text: #e0e0e0;
+            --output-bg: #2e2e2e;
+            --textarea-bg: #1e1e1e;
+            --textarea-border: #444;
+            --textarea-text: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            padding: 20px;
+            background: var(--bg);
+            color: var(--text);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .light {
+            --bg: #ffffff;
+            --text: #000000;
+            --output-bg: #f4f4f4;
+            --textarea-bg: #fff;
+            --textarea-border: #ccc;
+            --textarea-text: #000;
+        }
+
+        .editor-container {
+            display: flex;
+            background-color: var(--textarea-bg);
+            border: 1px solid var(--textarea-border);
+            border-radius: 8px;
+            overflow: hidden;
+            height: 250px;
+            position: relative;
+        }
+
+        .highlighted-code {
+            position: absolute;
+            flex: 1;
+            padding: 10px 10px 10px 60px;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            color: #e0e0e0;
+            background: transparent;
+            border: none;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-y: hidden;
+            pointer-events: none;
+            font-weight: 300;
+            height: 230px;
+            width: calc(100% - 85px);
+            z-index: 3;
+        }
+
+        .line-numbers {
+            width: 40px;
+            padding: 10px 5px;
+            background-color: var(--textarea-bg);
+            color: #888;
+            text-align: right;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            overflow: hidden;
+        }
+
+        textarea {
+            flex: 1;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            background: transparent;
+            color: var(--textarea-text);
+            border: none;
+            resize: none;
+            outline: none;
+            overflow: auto;
+            font-weight: 300;
+            z-index: 2;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        pre {
+            background: var(--output-bg);
+            padding: 15px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            min-height: 100px;
+        }
+
+        .btn-row {
+            margin-top: 10px;
+        }
+
+        .keyword_h{
+            color: #ff79c6;
+        }
+
+        .string_h{
+            color: #f1fa8c;
+        }
+
+        .number_h{
+            color: #8be9fd;
+        }
+
+        .operator_h{
+            color: #ff5555;
+        }
+
+        .comment_h{
+            color: #6272a4;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>💻 JavaScript 실행기</h1>
+
+    <div class="editor-container">
+        <div id="highlighted-code" class="highlighted-code"></div>
+        <div class="line-numbers" id="line-numbers">1</div>
+        <textarea id="js-code" placeholder="여기에 JavaScript 코드를 작성하세요." 
+        spellcheck="false"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"></textarea>
+    </div>
+    <div id="snippet-suggestions" style="position: absolute; background: #333; color: white; border-radius: 5px; padding: 5px; display: none; z-index: 10; font-size: 14px;"></div>
+
+    <div class="btn-row">
+        <button onclick="runCode()">▶ 코드 실행</button>
+        <button onclick="copyOutput()">📋 출력 복사</button>
+    </div>
+
+    <h3>📤 출력 결과:</h3>
+    <pre id="output"></pre>
+    <p id="execution-time" style="font-size: 0.9em; color: gray;"></p>
+
+    <script>
+        const codeArea = document.getElementById("js-code");
+        const outputEl = document.getElementById("output");
+        const highlightedCodeEl = document.getElementById("highlighted-code");
+        const execTimeEl = document.getElementById("execution-time");
+        const lineNumbers = document.getElementById("line-numbers");
+        const suggestionBox = document.getElementById("snippet-suggestions");
+        const tabChar = "  ";
+
+        const snippets = {
+            "function": `function name(params) {\n  \n}`,
+            "for": `for (let i = 0; i < length; i++) {\n  \n}`,
+            "if": `if (condition) {\n  \n}`,
+            "while": `while (condition) {\n  \n}`,
+            "switch": `switch(value) {\n  case x:\n    break;\n  default:\n    break;\n}`
+        };
+
+        // 하이라이팅을 위한 정규 표현식
+        const syntaxHighlighting = [
+            { pattern: /\b(function|var|let|const|if|else|return|for|while|try|catch|throw)\b/g, className: 'keyword_h' },
+            { pattern: /(['"`])(?:(?=(\\?))\2.)*?\1/g, className: 'string_h' },
+            { pattern: /\b\d+\b/g, className: 'number_h' },
+            { pattern: /[\+\-\*\/\=\=\=\=!\(\)\[\]\{\}]/g, className: 'operator_h' },
+            { pattern: /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)/g, className: 'comment_h' }
+        ];
+
+        // 중첩된 임시 하이라이팅을 반복적으로 <span>으로 치환
+        const TEMP_HIGHLIGHT_REGEX = /⚑([^➤]+)➤([^⚐]+)⚐/g;
+
+        // 코드 하이라이팅 함수
+        function highlightCode() {
+            let code = codeArea.value;
+
+            // 각 패턴에 대해 임시 하이라이팅 적용 (임시 구분자 사용)
+            syntaxHighlighting.forEach(({ pattern, className }) => {
+                code = code.replace(pattern, (match) => {
+                    return `⚑${className}➤${match}⚐`;  // 임시로 다른 구분자 사용
+                });
+            });
+
+            // 최대 반복 횟수 (무한루프 방지)
+            let maxIterations = 10;
+            let i = 0;
+
+            // 반복적으로 가장 안쪽부터 치환
+            while (TEMP_HIGHLIGHT_REGEX.test(code) && i < maxIterations) {
+                code = code.replace(TEMP_HIGHLIGHT_REGEX, (match, className, content) => {
+                    return `<span class="${className}">${content}</span>`;
+                });
+                i++;
+            }
+
+             // 줄 단위로 자르고, div로 감싸기
+            const lines = code.split('\n').map(line => `<div class="code-line">${line || '<br>'}</div>`);
+            highlightedCodeEl.innerHTML = lines.join('');
+            
+        }
+
+        // 줄 번호 갱신
+        function updateLineNumbers() {
+            const lines = codeArea.value.split("\n").length;
+            lineNumbers.innerHTML = Array.from({ length: lines }, (_, i) => i + 1).join("<br>");
+        }
+
+        function insertSnippet(keyword) {
+            const start = codeArea.selectionStart;
+            const value = codeArea.value;
+
+            // 커서 앞 단어 찾기
+            const beforeCursor = value.slice(0, start);
+            const match = beforeCursor.match(/(\S+)$/); // 마지막 단어
+
+            if (match) {
+                const wordStart = start - match[0].length;
+                const wordEnd = start;
+                const insertText = snippets[keyword];
+
+                // 단어를 지우고 그 자리에 스니펫 삽입
+                codeArea.value = value.slice(0, wordStart) + insertText + value.slice(wordEnd);
+                const newCursorPos = wordStart + insertText.length;
+                codeArea.selectionStart = codeArea.selectionEnd = newCursorPos;
+
+                codeArea.focus();
+                suggestionBox.style.display = "none";
+                updateLineNumbers();
+                highlightCode();
+            }
+        }
+
+        /* 커서 위치 계산 함수 추가 */
+        function getCaretCoordinates(element, position) {
+            const div = document.createElement('div');
+            const style = getComputedStyle(element);
+            const properties = [
+                "boxSizing", "width", "height", "overflowX", "overflowY",
+                "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth",
+                "paddingTop", "paddingRight", "paddingBottom", "paddingLeft",
+                "fontStyle", "fontVariant", "fontWeight", "fontStretch", "fontSize",
+                "fontSizeAdjust", "lineHeight", "fontFamily", "textAlign", "textTransform",
+                "textIndent", "textDecoration", "letterSpacing", "wordSpacing"
+            ];
+
+            div.style.position = 'absolute';
+            div.style.visibility = 'hidden';
+            div.style.whiteSpace = 'pre-wrap';
+            div.style.wordWrap = 'break-word';
+
+            // 중요! textarea 크기 반영
+            div.style.width = element.offsetWidth + 'px';
+
+            properties.forEach(prop => {
+                div.style[prop] = style[prop];
+            });
+
+            // textarea의 스크롤 반영
+            div.scrollTop = element.scrollTop;
+
+            // 커서까지 텍스트 복사
+            div.textContent = element.value.substring(0, position);
+
+            const span = document.createElement('span');
+            span.textContent = element.value.substring(position) || '.';
+            div.appendChild(span);
+
+            document.body.appendChild(div);
+
+            const top = span.offsetTop - element.scrollTop;  // 스크롤 반영
+            const left = span.offsetLeft;
+
+            document.body.removeChild(div);
+
+            return { top, left };
+        }
+
+        codeArea.addEventListener("input", (e) => {
+            const value = codeArea.value;
+            const words = value.slice(0, codeArea.selectionStart).split(/\s+/);
+            const lastWord = words[words.length - 1];
+
+            if (snippets[lastWord]) {
+                const coords = getCaretCoordinates(codeArea, codeArea.selectionStart);
+                suggestionBox.style.top = (coords.top + 134) + "px";
+                suggestionBox.style.left = (coords.left + 80) + "px";
+                suggestionBox.innerHTML = `<div onclick="insertSnippet('${lastWord}')" style="cursor:pointer;">✅ ${lastWord} 템플릿 삽입</div>`;
+                suggestionBox.style.display = "block";
+            } else {
+                suggestionBox.style.display = "none";
+            }
+            
+            localStorage.setItem("savedCode", codeArea.value);
+            updateLineNumbers();
+            highlightCode();
+            lineNumbers.scrollTop = codeArea.scrollTop;
+            highlightedCodeEl.scrollTop = codeArea.scrollTop;
+        });
+
+        codeArea.addEventListener("scroll", () => {
+            lineNumbers.scrollTop = codeArea.scrollTop;
+            highlightedCodeEl.scrollTop = codeArea.scrollTop;
+        });
+
+        // Tab 키 들여쓰기
+        codeArea.addEventListener("keydown", function (e) {
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+
+            // Tab
+            if (e.key === "Tab") {
+                e.preventDefault();
+                this.value = this.value.substring(0, start) + tabChar + this.value.substring(end);
+                this.selectionStart = this.selectionEnd = start + tabChar.length;
+
+                this.dispatchEvent(new Event("input", { bubbles: true }));
+            }
+
+            // Enter 키 자동 들여쓰기
+            else if (e.key === "Enter") {
+                const value = this.value;
+                const lineStart = value.lastIndexOf("\n", start - 1) + 1;
+                const currentLine = value.slice(lineStart, start);
+                const indent = currentLine.match(/^\s*/)[0];
+
+                e.preventDefault();
+                const insert = "\n" + indent;
+                this.value = value.slice(0, start) + insert + value.slice(end);
+                const cursor = start + insert.length;
+                this.selectionStart = this.selectionEnd = cursor;
+                updateLineNumbers();
+
+                this.dispatchEvent(new Event("input", { bubbles: true }));
+
+                this.scrollTop += 20;
+            }
+
+            // 자동 괄호 닫기
+            else if (["(", "[", "{", "'", '"'].includes(e.key)) {
+                console.log(e.key);
+                const pairs = {
+                    "(": ")",
+                    "[": "]",
+                    "{": "}",
+                    "'": "'",
+                    '"': '"'
+                };
+                e.preventDefault();
+                const closeChar = pairs[e.key];
+                this.value = this.value.substring(0, start) + e.key + closeChar + this.value.substring(end);
+                this.selectionStart = this.selectionEnd = start + 1;
+
+                this.dispatchEvent(new Event("input", { bubbles: true }));
+            }
+        });
+
+        function runCode() {
+            const code = codeArea.value;
+            let output = "";
+            const originalLog = console.log;
+            console.log = (...args) => {
+                output += args.join(" ") + "\n";
+            };
+
+            try {
+                const start = performance.now();
+                new Function(code)();
+                const end = performance.now();
+                execTimeEl.textContent = `⏱ 실행 시간: ${(end - start).toFixed(2)} ms`;
+            } catch (err) {
+                output += `❌ 오류 발생:\n${err}`;
+                execTimeEl.textContent = "";
+
+                // 오류의 위치를 추적하여 해당 줄을 하이라이트
+                const lineNumber = err.stack.match(/<anonymous>:(\d+)/);
+                if (lineNumber && lineNumber[1]) {
+                    highlightErrorLine(Number(lineNumber[1]) - 1); // 0부터 시작하므로 1을 빼서 맞춤
+                }
+            } finally {
+                console.log = originalLog;
+                outputEl.textContent = output || "(출력 없음)";
+            }
+        }
+
+        function highlightErrorLine(lineNumber) {
+            const lines = document.querySelectorAll('.code-line');
+            if (lines.length >= lineNumber - 2) {
+                const error_line = lines[lineNumber - 2]; 
+                error_line.style.backgroundColor = '#f840406e';
+            }
+        }
+
+        function copyOutput() {
+            const text = outputEl.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("출력이 복사되었습니다!");
+            });
+        }
+
+        // 초기 코드 로딩
+        codeArea.value = localStorage.getItem("savedCode") || `console.log("Hello, JavaScript!");`;
+
+        // 처음 로드 시
+        updateLineNumbers();
+        highlightCode();
+
+    </script>
+</body>
+
+</html>
