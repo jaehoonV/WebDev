@@ -108,7 +108,7 @@
             background-color: #0056b3;
         }
 
-        #output {
+        pre {
             background: var(--output-bg);
             padding: 15px;
             border-radius: 8px;
@@ -198,6 +198,7 @@
     <h1>💻 JavaScript Executor</h1>
 
     <div class="editor-container">
+        <div id="highlightCodeEl" class="highlightCodeEl"></div>
         <pre id="highlightCodePre" class="visible"><code id="highlightedCode" class="language-javascript"></code></pre>
         <div class="line-numbers" id="line-numbers">1</div>
         <textarea id="js-code" placeholder="Write your JavaScript code here." 
@@ -212,6 +213,7 @@
         <button onclick="runCode()">▶ Run</button>
         <button onclick="copyOutput()">📋 Copy Output</button>
         <button onclick="clearOutput()">❌ Clear Output</button>
+        <button id="highlightButton">✨ EL Conversion</button>
     </div>
 
     <h3>📤 출력 결과:</h3>
@@ -221,14 +223,18 @@
     <script>
         const codeArea = document.getElementById("js-code");
         const outputEl = document.getElementById("output");
+        const highlightedCodeEl = document.getElementById("highlightCodeEl");
         const execTimeEl = document.getElementById("execution-time");
         const lineNumbers = document.getElementById("line-numbers");
         const suggestionBox = document.getElementById("snippet-suggestions");
         const highlightedCodePre = document.getElementById('highlightCodePre');
         const highlightedCode = document.getElementById('highlightedCode');
+        const highlightButton = document.getElementById('highlightButton');
         const tabChar = "  ";
 
         let originalLog = console.log;
+
+        let function_name = [];
 
         const snippets = {
             "function": `function name(params) {\n  \n}`,
@@ -254,6 +260,45 @@
             { pattern: /[\{\}]/g, className: 'operator_h3' }, // {}
         ];
 
+        highlightButton.addEventListener('click', () => {
+            if (highlightedCodePre.classList.contains('visible')) {
+                // highlightCodePre 숨기고 highlightCodeEl 보이게 설정
+                highlightedCodePre.classList.remove('visible');
+                highlightedCodeEl.classList.add('visible');
+                highlightButton.textContent = '✨ Pre Conversion';
+            } else {
+                // highlightCodeEl 숨기고 highlightCodePre 보이게 설정
+                highlightedCodeEl.classList.remove('visible');
+                highlightedCodePre.classList.add('visible');
+                highlightButton.textContent = '✨ EL Conversion';
+            }
+        });
+
+        // 코드 하이라이팅 함수
+        function highlightCodeEl() {
+            let code = codeArea.value;
+            function_name.length = 0;
+            syntaxHighlighting.forEach(({ pattern, className }) => {
+                code = code.replace(pattern, (match) => {
+                    if("function_name_h" == className){
+                        function_name.push(match);
+                    }
+                    return `<span class="${className}">${match}</span>`;
+                });
+            });
+
+            function_name.forEach(fn => {
+                const match = fn.match(/function\s+(\w+)\(/);
+                if (match) {
+                    console.log(match[1]); // a, b 출력
+                }
+            });
+
+             // 줄 단위로 자르고, div로 감싸기
+            const lines = code.split('\n').map(line => `<div class="code-line">${line || '<br>'}</div>`);
+            highlightedCodeEl.innerHTML = lines.join('');
+        }
+
         // highlight 마지막 개행 처리 함수
         function normalizeTrailingNewlines(str) {
             // 모든 마지막 연속된 \n을 " \n"으로 바꾸기
@@ -262,7 +307,6 @@
             });
         }
         
-        // 코드 하이라이팅 함수
         function highlightCodePre(){
             let v = normalizeTrailingNewlines(codeArea.value);
             // 직접 highlight 처리
@@ -433,13 +477,16 @@
             
             localStorage.setItem("savedCode", codeArea.value);
             updateLineNumbers();
+            highlightCodeEl();
             highlightCodePre();
             lineNumbers.scrollTop = codeArea.scrollTop;
+            highlightedCodeEl.scrollTop = codeArea.scrollTop;
             highlightedCodePre.scrollTop = codeArea.scrollTop;
         });
 
         codeArea.addEventListener("scroll", () => {
             lineNumbers.scrollTop = codeArea.scrollTop;
+            highlightedCodeEl.scrollTop = codeArea.scrollTop;
             highlightedCodePre.scrollTop = codeArea.scrollTop;
         });
 
@@ -611,6 +658,7 @@
 
         // 처음 로드 시
         updateLineNumbers();
+        highlightCodeEl();
         highlightCodePre();
     </script>
 </body>
