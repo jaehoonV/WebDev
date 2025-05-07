@@ -190,6 +190,58 @@
             color: #1a2aff; /* {} */
         }
 
+        .modal {
+            position: fixed;
+            z-index: 999;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: var(--output-bg);
+            margin: 15% auto;
+            padding: 10px;
+            width: 320px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        #code-title{
+            padding: 10px;
+            margin-right: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        #code-title:focus{
+            outline: none;
+        }
+
+        select {
+            width: 62%;
+            padding: 8px 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .modal .close {
+        color: #aaa;
+        float: right;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        }
+
+        .modal .close:hover {
+            color: #000;
+        }
+
     </style>
 </head>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.css">
@@ -212,9 +264,33 @@
         <button onclick="runCode()">▶ Run</button>
         <button onclick="copyOutput()">📋 Copy Output</button>
         <button onclick="clearOutput()">❌ Clear Output</button>
+        <button id="save-code">💾 Save</button>
+        <button id="load-code">📂 Load</button>
     </div>
 
-    <h3>📤 출력 결과:</h3>
+    <!-- Save Modal -->
+    <div id="save-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+        <span class="close" id="close-save">&times;</span>
+        <h3>Save Code</h3>
+        <input type="text" id="code-title" placeholder="Code title" />
+        <button id="confirm-save">💾 Save</button>
+        </div>
+    </div>
+    
+    <!-- Load Modal -->
+    <div id="load-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+        <span class="close" id="close-load">&times;</span>
+        <h3>Load Saved Code</h3>
+        <select id="saved-codes">
+            <option value="">Select your code</option>
+        </select>
+        <button id="confirm-load">📂 Load</button>
+        </div>
+    </div>
+
+    <h3>📤 Output :</h3>
     <pre id="output"></pre>
     <p id="execution-time" style="font-size: 0.9em; color: gray;"></p>
 
@@ -226,7 +302,76 @@
         const suggestionBox = document.getElementById("snippet-suggestions");
         const highlightedCodePre = document.getElementById('highlightCodePre');
         const highlightedCode = document.getElementById('highlightedCode');
+        const codeTitleInput = document.getElementById("code-title");
+        const saveModal = document.getElementById("save-modal");
+        const loadModal = document.getElementById("load-modal");
+        const savedCodesSelect = document.getElementById("saved-codes");
         const tabChar = "  ";
+        
+        // 버튼
+        document.getElementById("save-code").addEventListener("click", () => {
+            saveModal.style.display = "block";
+        });
+        document.getElementById("load-code").addEventListener("click", () => {
+            updateSavedCodeList();
+            loadModal.style.display = "block";
+        });
+
+        // 모달 닫기
+        document.getElementById("close-save").onclick = () => saveModal.style.display = "none";
+        document.getElementById("close-load").onclick = () => loadModal.style.display = "none";
+        window.addEventListener("click", (event) => {
+            if (event.target === saveModal) {
+                saveModal.style.display = "none";
+            }
+        });
+        window.addEventListener("click", (event) => {
+            if (event.target === loadModal) {
+                loadModal.style.display = "none";
+            }
+        });
+
+        // 저장
+        document.getElementById("confirm-save").addEventListener("click", () => {
+            const title = codeTitleInput.value.trim();
+            const code = codeArea.value;
+            if (!title) return alert("Write your code title.");
+
+            localStorage.setItem("js_code_" + title, code);
+            alert(`"${title}" saved`);
+            codeTitleInput.value = "";
+            saveModal.style.display = "none";
+        });
+
+        // 불러오기
+        document.getElementById("confirm-load").addEventListener("click", () => {
+            const selectedTitle = savedCodesSelect.value;
+            if (!selectedTitle) return alert("Select a code to load.");
+
+            const code = localStorage.getItem("js_code_" + selectedTitle);
+            if (code !== null) {
+                codeArea.value = code;
+                codeArea.dispatchEvent(new Event("input", { bubbles: true }));
+                loadModal.style.display = "none";
+            }
+        });
+
+        // 저장된 코드 목록 갱신
+        function updateSavedCodeList() {
+            savedCodesSelect.innerHTML = '<option value="">Select your code</option>';
+            for (let key in localStorage) {
+                if (key.startsWith("js_code_")) {
+                    const title = key.replace("js_code_", "");
+                    const option = document.createElement("option");
+                    option.value = title;
+                    option.textContent = title;
+                    savedCodesSelect.appendChild(option);
+                }
+            }
+        }
+
+        // 페이지 로드 시 코드 목록 초기화
+        document.addEventListener("DOMContentLoaded", updateSavedCodeList);
 
         let originalLog = console.log;
 
@@ -299,7 +444,6 @@
                 codeArea.focus();
                 suggestionBox.style.display = "none";
                 updateLineNumbers();
-                highlightCodeEl();
                 highlightCodePre();
             }
         }
