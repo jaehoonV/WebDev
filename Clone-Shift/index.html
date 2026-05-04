@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clone Shift - Demo Stage</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <main class="app">
+    <section class="game-panel">
+      <div class="title-row">
+        <div>
+          <h1>Clone Shift</h1>
+          <p id="stageDescription">Clone이 스위치를 누르는 동안 문을 통과하세요.</p>
+
+          <div class="stage-select-box">
+            <label for="stageSelect">Stage</label>
+            <select id="stageSelect"></select>
+          </div>
+        </div>
+
+        <div class="status-box">
+          <span>Actions</span>
+          <strong id="actionText">0 / 14</strong>
+        </div>
+      </div>
+
+      <div id="board" class="board" aria-label="Clone Shift board"></div>
+
+      <div class="controls">
+        <button data-action="up">↑</button>
+        <button data-action="left">←</button>
+        <button data-action="wait">Wait</button>
+        <button data-action="right">→</button>
+        <button data-action="down">↓</button>
+      </div>
+
+      <div class="action-row">
+        <button id="cloneBtn" class="primary">Clone 생성</button>
+        <button id="resetBtn">Reset</button>
+      </div>
+    </section>
+
+    <aside class="info-panel">
+      <h2>Stage Rule</h2>
+      <ul>
+        <li>Player는 한 턴에 이동 또는 대기합니다.</li>
+        <li>Player 행동만 Actions를 1 소모합니다.</li>
+        <li>Clone 생성 시 이동 기록이 저장되고 Player는 시작점으로 돌아갑니다.</li>
+        <li>Clone은 저장된 이동 기록이 자동 재생합니다.</li>
+        <li>Clone이 스위치 위에 있으면 잠긴 문이 열립니다.</li>
+        <li>스위치는 유지형과 고정형이 있습니다.</li>
+        <li>유지형 스위치는 Player 또는 Clone이 밟고 있는 동안만 연결된 통로가 열립니다.</li>
+        <li>고정형 스위치는 한 번 작동하면 연결된 통로가 계속 열립니다.</li>
+      </ul>
+
+      <h2>Tiles</h2>
+      <div class="legend"><span class="sample player"></span>Player</div>
+      <div class="legend"><span class="sample clone"></span>Clone</div>
+      <div class="legend"><span class="sample switch hold"></span>Hold Switch</div>
+      <div class="legend"><span class="sample switch once"></span>Once Switch</div>
+      <div class="legend"><span class="sample door"></span>Locked Door</div>
+      <div class="legend"><span class="sample exit"></span>Escape Exit</div>
+
+      <h2>Message</h2>
+      <p id="message" class="message">먼저 Clone이 스위치까지 가도록 이동한 뒤 Clone을 생성해보세요.</p>
+
+      <h2>Recorded Sequence</h2>
+      <p id="sequenceText" class="sequence">없음</p>
+    </aside>
+  </main>
+
+  <script src="stages.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
