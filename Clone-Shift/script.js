@@ -181,7 +181,14 @@ function activateOnceSwitchesAt(pos) {
   if (!switchTile) return;
 
   if (getSwitchType(switchTile) === "once") {
+    const isNew = !state.openedGroups.has(switchTile.group);
     state.openedGroups.add(switchTile.group);
+
+    // 처음 열리는 순간만 문 파괴 애니메이션 예약
+    if (isNew) {
+      state.newlyOpenedGroups = state.newlyOpenedGroups || new Set();
+      state.newlyOpenedGroups.add(switchTile.group);
+    }
   }
 }
 
@@ -317,11 +324,24 @@ function render() {
       if (doorTile) {
         const doorOpen = isDoorOpenByGroup(doorTile.group);
 
-        cell.classList.add("door");
-        if (doorOpen) cell.classList.add("open");
+        // once 스위치로 열린 문인지 확인
+        const isOnceGroup = stage.switches.some(
+          s => s.group === doorTile.group && getSwitchType(s) === "once"
+        );
 
-        applyGroupTheme(cell, doorTile.group);
-        cell.textContent = doorOpen ? `OPEN ${doorTile.group}` : `LOCK ${doorTile.group}`;
+        if (isOnceGroup && doorOpen) {
+          // 이번 턴에 처음 열린 문 → 파괴 애니메이션
+          const isNewlyOpened = state.newlyOpenedGroups && state.newlyOpenedGroups.has(doorTile.group);
+          cell.classList.add("door", "door-remnant");
+          if (isNewlyOpened) cell.classList.add("door-destroy");
+          applyGroupTheme(cell, doorTile.group);
+          cell.dataset.group = doorTile.group;
+        } else {
+          cell.classList.add("door");
+          if (doorOpen) cell.classList.add("open");
+          applyGroupTheme(cell, doorTile.group);
+          cell.dataset.group = doorTile.group;
+        }
       }
 
       if (isSamePos(pos, stage.exit)) {
@@ -358,6 +378,9 @@ function render() {
   controlButtons.forEach((button) => {
     button.disabled = state.isGameOver;
   });
+
+  // 애니메이션 트리거 후 초기화
+  if (state.newlyOpenedGroups) state.newlyOpenedGroups.clear();
 }
 
 function checkGameState() {
