@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#111111">
+    <title>Wedding Invitation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="iphone-shell" aria-label="Wedding Invitation">
+        <!-- [1] 잠금 화면 -->
+        <section class="screen lock-screen" id="lockScreen" aria-label="잠금 화면">
+            <div class="wallpaper-dim"></div>
+            <div class="lock-widgets">
+                <div class="lock-date" id="lockDate">2026년 12월 19일 토요일</div>
+                <div class="lock-clock cover-title">Wedding</div>
+                <div class="lock-couple">재훈 ♥ 희은</div>
+                <div class="lock-dday" id="weddingDday">WEDDING D-DAY ♥</div>
+            </div>
+
+            <div class="notification-card" role="button" tabindex="0" id="notificationOpenBtn">
+                <div class="notification-top">
+                    <span>💌 청첩장</span>
+                    <span>now</span>
+                </div>
+                <strong>저희 결혼식에 초대합니다</strong>
+                <p>위로 쓸어올려 초대장을 열어주세요.</p>
+            </div>
+
+            <div class="lock-bottom-btns" aria-hidden="true">
+                <div class="circle-btn">🔦</div>
+                <div class="circle-btn">📷</div>
+            </div>
+
+            <div class="home-bar-wrapper lock-home-guide">
+                <div class="home-bar-hint">위로 쓸어올려서 열기</div>
+                <div class="home-bar interactive" id="lockHomeBar"></div>
+            </div>
+        </section>
+
+        <!-- [2] 홈 화면 -->
+        <section class="screen home-screen" id="homeScreen" aria-label="홈 화면">
+            <div class="wallpaper-blur"></div>
+            <div class="home-widget">
+                <span class="widget-kicker">Wedding Day</span>
+                <strong>재훈 ♥ 희은</strong>
+                <p>2026.12.19 SAT · 오후 5시</p>
+            </div>
+
+            <div class="app-container">
+                <div class="app-grid">
+                    <button class="app-icon" type="button" data-app="story">
+                        <span class="icon-shape bg-heart">❤️</span>
+                        <span class="app-label">우리 이야기</span>
+                    </button>
+                    <button class="app-icon" type="button" data-app="map">
+                        <span class="icon-shape bg-map">📍</span>
+                        <span class="app-label">오시는길</span>
+                    </button>
+                    <button class="app-icon" type="button" data-app="gallery">
+                        <span class="icon-shape bg-gallery">📸</span>
+                        <span class="app-label">갤러리</span>
+                    </button>
+                    <button class="app-icon" type="button" data-app="gift">
+                        <span class="icon-shape bg-gift">💵</span>
+                        <span class="app-label">축의금</span>
+                    </button>
+                    <button class="app-icon" type="button" data-app="schedule">
+                        <span class="icon-shape bg-calendar">📅</span>
+                        <span class="app-label">예식일정</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="dock-wrapper">
+                <div class="dock">
+                    <button class="app-icon" type="button" data-app="guestbook">
+                        <span class="icon-shape bg-guest">✍️</span>
+                        <span class="app-label">방명록</span>
+                    </button>
+                    <button class="app-icon" type="button" data-app="share">
+                        <span class="icon-shape bg-share">🔗</span>
+                        <span class="app-label">공유</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- [3] 실제 앱 구동 내부 레이어 -->
+        <section class="app-window" id="appWindow" aria-hidden="true">
+            <header class="app-header">
+                <button class="ios-back-btn" id="closeAppBtn" type="button" aria-label="홈 화면으로 돌아가기">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg>
+                    홈
+                </button>
+                <span id="appTitle">앱 이름</span>
+                <div class="header-spacer" aria-hidden="true"></div>
+            </header>
+            <div class="app-content" id="appContent" tabindex="0"></div>
+            <div class="home-bar-wrapper">
+                <div class="home-bar home-bar-dark" id="appHomeBar"></div>
+            </div>
+        </section>
+    </main>
+
+    <script src="./script.js?v=20260520-mobile-clean"></script>
+</body>
+</html>
