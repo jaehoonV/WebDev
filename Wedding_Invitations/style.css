@@ -170,6 +170,7 @@ button, a {
     backdrop-filter: blur(26px) saturate(1.2);
     -webkit-backdrop-filter: blur(26px) saturate(1.2);
     cursor: pointer;
+    margin-top: 14px;
 }
 
 .notification-card:active { transform: scale(0.985); }
@@ -182,30 +183,6 @@ button, a {
 }
 .notification-card strong { display: block; font-size: 15px; margin-bottom: 4px; }
 .notification-card p { font-size: 13px; opacity: 0.82; }
-
-.lock-bottom-btns {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: calc(58px + var(--safe-bottom));
-    display: flex;
-    justify-content: space-between;
-    padding: 0 45px;
-    z-index: 2;
-}
-
-.circle-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    color: #fff;
-    font-size: 18px;
-    background: rgba(0,0,0,0.34);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-}
 
 .home-widget {
     position: relative;
@@ -289,13 +266,331 @@ button, a {
 }
 
 .bg-heart { background: linear-gradient(135deg, #ff3b6b, #ff9f0a); }
-.bg-map { background: linear-gradient(135deg, #34c759, #0a84ff); }
-.bg-gallery { background: conic-gradient(from 180deg, #ff375f, #ff9f0a, #ffd60a, #30d158, #64d2ff, #bf5af2, #ff375f); }
-.bg-gift { background: linear-gradient(135deg, #ff453a, #ffd60a); }
 .bg-guest { background: linear-gradient(135deg, #bf5af2, #5e5ce6); }
-.bg-calendar { background: linear-gradient(180deg, #ff453a 0 28%, #fff 28%); color: #111; }
 .bg-phone { background: linear-gradient(135deg, #32d74b, #30d158); }
 .bg-share { background: linear-gradient(135deg, #64d2ff, #0a84ff); }
+
+.bg-gallery {
+	background: #fff;
+}
+
+.photo-app-icon {
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
+}
+
+.photo-rectangle {
+	width: 14px;
+    height: 24px;
+    border-radius: 999px;
+    position: absolute;
+    top: 5px;
+    left: 23px;
+}
+
+.photo-rectangle.orange {
+	background-color: rgba(243, 156, 18, 0.75);
+	z-index: 1;
+}
+
+.photo-rectangle.yellow {
+	background-color: rgba(241, 196, 15, 0.75);
+	transform-origin: 55% 100%;
+	transform: rotate(45deg);
+}
+
+.photo-rectangle.green {
+	background-color: rgba(46, 204, 113, 0.75);
+	transform-origin: 55% 105%;
+	transform: rotate(90deg);
+}
+
+.photo-rectangle.lightBlue {
+	background-color: rgba(27, 188, 155, 0.75);
+	transform-origin: 52.5% 105%;
+	transform: rotate(135deg);
+}
+
+.photo-rectangle.blue {
+	background-color: rgba(65, 131, 215, 0.75);
+	transform-origin: 50% 105%;
+	transform: rotate(180deg);
+}
+
+.photo-rectangle.purple {
+	background-color: rgba(102, 51, 153, 0.75);
+	transform-origin: 47.5% 105%;
+	transform: rotate(225deg);
+}
+
+.photo-rectangle.violet {
+	background-color: rgba(155, 89, 182, 0.75);
+	transform-origin: 45% 105%;
+	transform: rotate(270deg);
+}
+
+.photo-rectangle.red {
+	background-color: rgba(242, 38, 19, 0.75);
+	transform-origin: 45% 102.5%;
+	transform: rotate(315deg);
+}
+
+.bg-map {
+	background: #f8f8f8;
+}
+
+.map-app-icon {
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
+}
+
+.map-line,
+.map-area,
+.map-road,
+.map-navigation {
+	position: absolute;
+	display: block;
+}
+
+.map-area-green {
+	width: 70px;
+    height: 70px;
+    right: -10px;
+    top: -18px;
+    background: linear-gradient(
+		to right,
+		#7ee39a 0%,
+		#34c759 55%,
+		#34c759 100%
+	);
+    transform: rotate(22deg);
+    z-index: 1;
+}
+
+.map-area-pink {
+	width: 42px;
+	height: 32px;
+	left: -13px;
+	bottom: 5px;
+	background: #F08ACC;
+	transform: rotate(35deg);
+	z-index: 2;
+}
+
+.map-area-yellow {
+	width: 50px;
+    height: 32px;
+    right: -11px;
+    bottom: -22px;
+    background: #FECB00;
+    transform: rotate(35deg);
+    z-index: 2;
+}
+
+.map-area-gray {
+	width: 50px;
+    height: 50px;
+    right: -25px;
+    top: -24px;
+    border-radius: 50%;
+    border: 8px solid #c7c7cc;
+    z-index: 3;
+}
+
+.map-area-white {
+	width: 52px;
+    height: 52px;
+    right: -25px;
+    top: -24px;
+    border-radius: 50%;
+    border: 12px solid #FEFFFE;
+    z-index: 2;
+}
+
+.map-road-1 {
+	width: 10px;
+    height: 40px;
+    left: 15px;
+    top: -3px;
+    background: #0683FF;
+    z-index: 4;
+}
+
+.map-road-2 {
+	width: 16px;
+    height: 70px;
+    left: 12px;
+    top: -4px;
+    background: #E7E7EE;
+    z-index: 3;
+}
+
+.map-road-3 {
+    width: 15px;
+    height: 80px;
+    left: 25px;
+    top: -4px;
+    background: #E7E7EE;
+    transform: rotate(120deg);
+    z-index: 3;
+}
+
+.map-navigation {
+	width: 22px;
+    height: 22px;
+    left: 34%;
+    top: 54%;
+    transform: translate(-50%, -35%);
+    background: #0683FF;
+    border-radius: 50%;
+    z-index: 10;
+    box-shadow: 0 0 0 3px #fff;
+}
+
+.map-navigation::before {
+	content: "";
+    position: absolute;
+    left: 50%;
+    top: 47%;
+    width: 14px;
+    height: 16px;
+    background: #fff;
+    transform: translate(-50%, -50%);
+    clip-path: polygon(50% 0%, 90% 96%, 50% 75%, 10% 96%);
+}
+
+.map-navigation::after {
+	content: none;
+}
+
+.bg-mail {
+	background: linear-gradient(to bottom, #1f73f2 0%, #1c8df5 55%, #20c8ef 100%);
+}
+
+.mail-app-icon {
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
+}
+
+.mail-envelope {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 40px;
+	height: 27px;
+	transform: translate(-50%, -48%);
+	background: #fff;
+	z-index: 2;
+	overflow: hidden;
+}
+
+.mail-line {
+	position: absolute;
+	display: block;
+	background: #1c8df5;
+	height: 2px;
+	border-radius: 999px;
+	transform-origin: center;
+}
+
+.mail-line-top {
+    position: absolute;
+	display: block;
+	border: 2px solid #1c8df5;
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    left: 0px;
+    top: -27px;
+	transform: rotate(-45deg);
+    transform-origin: center;
+}
+
+.mail-line-left {
+    width: 30px;
+    left: -12px;
+    top: 23px;
+	transform: rotate(-45deg);
+}
+
+.mail-line-right {
+    width: 30px;
+    right: -12px;
+    top: 23px;
+	transform: rotate(45deg);
+}
+
+.bg-calendar {
+	background: #ffffff;
+}
+
+.calendar-app-icon {
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
+	background: #ffffff;
+	border-radius: 18px;
+}
+
+.calendar-header {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 18px;
+	background: linear-gradient(to bottom, #ff5a52 0%, #ff453a 100%);
+	border-radius: 18px 18px 0 0;
+}
+
+.calendar-row {
+	position: absolute;
+	width: 3.5px;
+	height: 3.5px;
+	border-radius: 50%;
+	background: #1f1f1f;
+	box-shadow:
+		8px 0 0 #1f1f1f,
+		16px 0 0 #1f1f1f,
+		24px 0 0 #1f1f1f,
+		32px 0 0 #1f1f1f,
+		40px 0 0 #1f1f1f,
+		48px 0 0 #1f1f1f;
+}
+
+.calendar-row.row-1 {
+	left: 5px;
+	top: 22px;
+}
+
+.calendar-row.row-2 {
+	left: 5px;
+	top: 30px;
+}
+
+.calendar-row.row-3 {
+	left: 5px;
+	top: 38px;
+}
+
+.calendar-row.row-4 {
+	left: 5px;
+	top: 46px;
+}
+
+/* 선택된 날짜(빨간 점) */
+.calendar-dot.active {
+	position: absolute;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: #ff453a;
+	left: 28px;
+	top: 38px;
+	z-index: 2;
+}
 
 .dock-wrapper {
     position: absolute;
