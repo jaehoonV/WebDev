@@ -33,14 +33,14 @@ const appContents = {
         <article class="content-card hero-card">
             <span class="section-kicker">Gallery</span>
             <h2>갤러리</h2>
-            <p class="muted">사진을 넣으면 iOS 사진 앱처럼 카드형으로 보이도록 구성했습니다.</p>
+            <p class="muted">사진</p>
         </article>
         <div class="gallery-grid">
             <div class="photo-tile">PHOTO</div><div class="photo-tile">PHOTO</div><div class="photo-tile">PHOTO</div><div class="photo-tile">PHOTO</div>
         </div>`,
-    gift: `
+    mail: `
         <article class="content-card hero-card">
-            <span class="section-kicker">Gift</span>
+            <span class="section-kicker"></span>
             <h2>마음 전하실 곳</h2>
             <p class="muted">참석이 어려우신 분들을 위해 계좌 정보를 남겨드립니다.</p>
         </article>

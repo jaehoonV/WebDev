@@ -11,7 +11,6 @@
     <main class="iphone-shell" aria-label="Wedding Invitation">
         <!-- [1] 잠금 화면 -->
         <section class="screen lock-screen" id="lockScreen" aria-label="잠금 화면">
-            <div class="wallpaper-dim"></div>
             <div class="lock-widgets">
                 <div class="lock-date" id="lockDate">2026년 12월 19일 토요일</div>
                 <div class="lock-clock cover-title">Wedding</div>
@@ -36,7 +35,6 @@
 
         <!-- [2] 홈 화면 -->
         <section class="screen home-screen" id="homeScreen" aria-label="홈 화면">
-            <div class="wallpaper-blur"></div>
             <div class="home-widget">
                 <span class="widget-kicker">Wedding Day</span>
                 <strong>재훈 ♥ 희은</strong>
@@ -45,10 +43,10 @@
 
             <div class="app-container">
                 <div class="app-grid">
-                    <button class="app-icon" type="button" data-app="story">
+                    <!-- <button class="app-icon" type="button" data-app="story">
                         <span class="icon-shape bg-heart">❤️</span>
                         <span class="app-label">우리 이야기</span>
-                    </button>
+                    </button> -->
                     <button class="app-icon" type="button" data-app="gallery">
                         <span class="icon-shape bg-gallery photo-app-icon">
                             <span class="photo-rectangle orange"></span>
@@ -99,11 +97,42 @@
                         </span>
                         <span class="app-label">예식일정</span>
                     </button>
+                    <button class="app-icon" type="button" data-app="guestbook">
+                        <span class="icon-shape bg-guest">✍️</span>
+                        <span class="app-label">방명록</span>
+                    </button>
                 </div>
             </div>
 
             <div class="dock-wrapper">
                 <div class="dock">
+                    <button class="app-icon" type="button" data-app="gallery">
+                        <span class="icon-shape bg-gallery photo-app-icon">
+                            <span class="photo-rectangle orange"></span>
+                            <span class="photo-rectangle yellow"></span>
+                            <span class="photo-rectangle green"></span>
+                            <span class="photo-rectangle lightBlue"></span>
+                            <span class="photo-rectangle blue"></span>
+                            <span class="photo-rectangle purple"></span>
+                            <span class="photo-rectangle violet"></span>
+                            <span class="photo-rectangle red"></span>
+                        </span>
+                        <span class="app-label">갤러리</span>
+                    </button>
+                    <button class="app-icon" type="button" data-app="map">
+                        <span class="icon-shape bg-map map-app-icon">
+                            <span class="map-area map-area-green"></span>
+                            <span class="map-area map-area-pink"></span>
+                            <span class="map-area map-area-yellow"></span>
+                            <span class="map-area map-area-gray"></span> 
+                            <span class="map-area map-area-white"></span>
+                            <span class="map-road map-road-1"></span>
+                            <span class="map-road map-road-2"></span>
+                            <span class="map-road map-road-3"></span>
+                            <span class="map-navigation"></span>
+                        </span>
+                        <span class="app-label">오시는길</span>
+                    </button>
                     <button class="app-icon" type="button" data-app="guestbook">
                         <span class="icon-shape bg-guest">✍️</span>
                         <span class="app-label">방명록</span>
