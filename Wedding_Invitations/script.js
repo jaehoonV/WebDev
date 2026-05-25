@@ -25,9 +25,13 @@ const appContents = {
             <p><strong>${weddingInfo.venue}</strong></p>
             <p class="muted">${weddingInfo.address}</p>
         </article>
+        <article class="content-card map-card">
+            <div id="weddingMap" class="wedding-map"></div>
+        </article>
         <div class="ios-list">
             <button type="button" class="list-row" data-copy="${weddingInfo.address}"><span>주소 복사</span><b>›</b></button>
-            <a class="list-row" href="https://map.kakao.com/link/search/${encodeURIComponent(weddingInfo.address)}" target="_blank" rel="noopener"><span>카카오맵으로 보기</span><b>›</b></a>
+            <a class="list-row" href="https://map.kakao.com/link/search/${encodeURIComponent(weddingInfo.venue)}" target="_blank" rel="noopener"><span>카카오맵으로 보기</span><b>›</b></a>
+            <a class="list-row" href="https://map.naver.com/p/search/${encodeURIComponent(weddingInfo.venue)}" target="_blank" rel="noopener"><span>네이버지도로 보기</span><b>›</b></a>
         </div>`,
     gallery: `
         <article class="content-card hero-card">
@@ -175,6 +179,10 @@ function showToast(message) {
 }
 
 function bindDynamicContentEvents(appId) {
+    if (appId === 'map') {
+        renderWeddingMap();
+    }
+    
     appContent.querySelectorAll('[data-copy]').forEach((button) => {
         button.addEventListener('click', async () => {
             try {
@@ -217,6 +225,51 @@ function bindDynamicContentEvents(appId) {
             renderGuestMessages();
         });
     }
+}
+
+function renderWeddingMap() {
+    const mapContainer = document.getElementById('weddingMap');
+
+    if (!mapContainer || !window.kakao || !kakao.maps) {
+        return;
+    }
+
+    const geocoder = new kakao.maps.services.Geocoder();
+
+    geocoder.addressSearch(weddingInfo.address, function(result, status) {
+        if (status !== kakao.maps.services.Status.OK || !result[0]) {
+            mapContainer.innerHTML = '<p class="map-error">지도를 불러오지 못했습니다.</p>';
+            return;
+        }
+
+        const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+        const map = new kakao.maps.Map(mapContainer, {
+            center: coords,
+            level: 3
+        });
+
+        const marker = new kakao.maps.Marker({
+            map: map,
+            position: coords
+        });
+
+        const infoWindow = new kakao.maps.InfoWindow({
+            content: `
+                <div class="map-info-window">
+                    <strong>${weddingInfo.venue}</strong>
+                    <span>${weddingInfo.address}</span>
+                </div>
+            `
+        });
+
+        infoWindow.open(map, marker);
+
+        setTimeout(() => {
+            map.relayout();
+            map.setCenter(coords);
+        }, 100);
+    });
 }
 
 function renderGuestMessages() {

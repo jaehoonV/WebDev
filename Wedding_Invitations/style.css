@@ -455,6 +455,47 @@ button, a {
 	content: none;
 }
 
+.map-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.wedding-map {
+    width: 100%;
+    height: 260px;
+    border-radius: 24px;
+    overflow: hidden;
+    background: #e5e5ea;
+}
+
+.map-info-window {
+    padding: 8px 10px;
+    min-width: 150px;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.map-info-window strong {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 13px;
+    color: #111;
+}
+
+.map-info-window span {
+    display: block;
+    color: #555;
+    white-space: nowrap;
+}
+
+.map-error {
+    height: 260px;
+    display: grid;
+    place-items: center;
+    color: #8e8e93;
+    font-size: 14px;
+}
+
 .bg-mail {
 	background: linear-gradient(to bottom, #1f73f2 0%, #1c8df5 55%, #20c8ef 100%);
 }
