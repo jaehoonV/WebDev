@@ -131,13 +131,16 @@ function unlockIphone() {
     clearTimeout(notificationTimer);
 
     isUnlocked = true;
-    lockScreen.classList.add('unlocked-lock');
-    homeScreen.classList.add('unlocked-home');
+
+    requestAnimationFrame(() => {
+        homeScreen.classList.add('unlocked-home');
+        lockScreen.classList.add('unlocked-lock');
+    });
 
     setTimeout(() => {
         lockScreen.setAttribute('aria-hidden', 'true');
         lockScreen.style.display = 'none';
-    }, 560);
+    }, 760);
 }
 
 function openApp(appId, appName) {

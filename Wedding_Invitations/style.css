@@ -65,7 +65,13 @@ button, a {
     position: absolute;
     inset: 0;
     overflow: hidden;
-    transition: transform 0.56s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.42s ease, filter 0.42s ease;
+    will-change: transform, opacity, filter;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    transition:
+        transform 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.48s ease,
+        filter 0.55s ease;
 }
 
 .lock-screen{
@@ -84,8 +90,8 @@ button, a {
 .lock-screen { z-index: 10; }
 .home-screen {
     z-index: 5;
-    opacity: 0;
-    transform: scale(1.12);
+    opacity: 1;
+    transform: scale(1.05);
     filter: blur(8px);
 }
 
@@ -887,13 +893,13 @@ button, a {
 }
 
 .unlocked-lock {
-    transform: translateY(-102%) scale(0.93);
-    opacity: 0;
+    transform: translate3d(0, -105%, 0);
+    opacity: 1;
 }
 
 .unlocked-home {
     opacity: 1 !important;
-    transform: scale(1) !important;
+    transform: scale(1) translateZ(0) !important;
     filter: blur(0) !important;
 }
 
