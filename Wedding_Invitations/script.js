@@ -97,6 +97,8 @@ const lockHomeBar = $('#lockHomeBar');
 const notificationOpenBtn = $('#notificationOpenBtn');
 const appHomeBar = $('#appHomeBar');
 const closeAppBtn = $('#closeAppBtn');
+let notificationTimer = null;
+let notificationSoundPlayed = false;
 
 function updateWeddingCoverInfo() {
     const weddingDate = new Date(weddingInfo.weddingDate);
@@ -125,9 +127,13 @@ function updateDday(now = new Date()) {
 
 function unlockIphone() {
     if (isUnlocked) return;
+
+    clearTimeout(notificationTimer);
+
     isUnlocked = true;
     lockScreen.classList.add('unlocked-lock');
     homeScreen.classList.add('unlocked-home');
+
     setTimeout(() => {
         lockScreen.setAttribute('aria-hidden', 'true');
         lockScreen.style.display = 'none';
@@ -322,4 +328,59 @@ document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') closeActiveApp();
 });
 
+function playNotificationSound() {
+    if (notificationSoundPlayed) return;
+    notificationSoundPlayed = true;
+
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+
+    try {
+        const audioContext = new AudioContext();
+
+        if (audioContext.state === 'suspended') {
+            audioContext.resume().catch(() => {});
+        }
+
+        const now = audioContext.currentTime;
+
+        [880, 1174].forEach((frequency, index) => {
+            const oscillator = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            const startTime = now + index * 0.13;
+
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(frequency, startTime);
+
+            gain.gain.setValueAtTime(0.0001, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.16, startTime + 0.018);
+            gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.16);
+
+            oscillator.connect(gain);
+            gain.connect(audioContext.destination);
+
+            oscillator.start(startTime);
+            oscillator.stop(startTime + 0.18);
+        });
+
+        setTimeout(() => audioContext.close().catch(() => {}), 700);
+    } catch (error) {
+        // 모바일 브라우저 자동 재생 정책에 막히면 알림 카드만 표시
+    }
+}
+
+function showInitialNotification() {
+    if (!notificationOpenBtn || isUnlocked) return;
+
+    notificationOpenBtn.classList.add('show');
+    playNotificationSound();
+}
+
+function scheduleInitialNotification() {
+    if (!notificationOpenBtn) return;
+
+    notificationTimer = setTimeout(showInitialNotification, 1500);
+}
+
 updateWeddingCoverInfo();
+scheduleInitialNotification();
