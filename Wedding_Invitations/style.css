@@ -656,6 +656,16 @@ button, a {
 	z-index: 2;
 }
 
+.venue-img{
+    width: 100%;
+    height: 300px;
+    border-radius: 15px;
+    background-image: url('img/bg3.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
 .dock-wrapper {
     position: absolute;
     left: 0;
@@ -711,8 +721,7 @@ button, a {
     align-items: center;
     justify-content: space-between;
     padding: 0 14px;
-    background: rgba(255,255,255,0.88);
-    border-bottom: 0.5px solid var(--ios-separator);
+    background: var(--ios-gray);
     backdrop-filter: blur(22px);
     -webkit-backdrop-filter: blur(22px);
     z-index: 5;

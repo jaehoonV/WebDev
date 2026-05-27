@@ -49,8 +49,8 @@ const appContents = {
             <p class="muted">참석이 어려우신 분들을 위해 계좌 정보를 남겨드립니다.</p>
         </article>
         <div class="ios-list">
-            <button type="button" class="list-row" data-copy="국민은행 111-111-1111 이재훈"><span><small>신랑측</small> 국민 111-111-1111</span><b>복사</b></button>
-            <button type="button" class="list-row" data-copy="국민은행 111-111-1111 주희은"><span><small>신부측</small> 국민 111-111-1111</span><b>복사</b></button>
+            <button type="button" class="list-row" data-copy="국민은행 639602-04-111645 이재훈"><span><small>신랑측</small> 국민은행 639602-04-111645 이재훈</span><b>복사</b></button>
+            <button type="button" class="list-row" data-copy="우리은행 1002-861-211410 주희은"><span><small>신부측</small> 우리은행 1002-861-211410 주희은</span><b>복사</b></button>
         </div>`,
     schedule: `
         <article class="content-card hero-card">
@@ -58,6 +58,9 @@ const appContents = {
             <h2>예식 일정</h2>
             <p><strong>2026년 12월 19일 토요일 오후 5시</strong></p>
             <p class="muted">${weddingInfo.venue}</p>
+        </article>
+        <article class="content-card hero-card" style="padding: 0;">
+            <div class="venue-img"></div>
         </article>`,
     guestbook: `
         <article class="content-card hero-card">
