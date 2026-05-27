@@ -102,6 +102,8 @@ const appHomeBar = $('#appHomeBar');
 const closeAppBtn = $('#closeAppBtn');
 let notificationTimer = null;
 let notificationSoundPlayed = false;
+let appGesture = null;
+let lockGesture = null;
 
 function updateWeddingCoverInfo() {
     const weddingDate = new Date(weddingInfo.weddingDate);
@@ -134,6 +136,14 @@ function unlockIphone() {
     clearTimeout(notificationTimer);
 
     isUnlocked = true;
+    lockGesture = null;
+
+    lockScreen.classList.remove('gesture-dragging');
+    lockScreen.style.transform = '';
+    lockScreen.style.opacity = '';
+    homeScreen.style.transform = '';
+    homeScreen.style.filter = '';
+    homeScreen.style.opacity = '';
 
     requestAnimationFrame(() => {
         homeScreen.classList.add('unlocked-home');
@@ -144,6 +154,100 @@ function unlockIphone() {
         lockScreen.setAttribute('aria-hidden', 'true');
         lockScreen.style.display = 'none';
     }, 760);
+}
+
+function finishLockHomeGesture() {
+    if (isUnlocked) return;
+
+    clearTimeout(notificationTimer);
+    isUnlocked = true;
+    lockGesture = null;
+
+    lockScreen.classList.remove('gesture-dragging');
+    lockScreen.classList.add('unlocked-lock');
+    homeScreen.classList.add('unlocked-home');
+
+    lockScreen.style.transform = '';
+    lockScreen.style.opacity = '';
+    homeScreen.style.transform = '';
+    homeScreen.style.filter = '';
+    homeScreen.style.opacity = '';
+
+    setTimeout(() => {
+        lockScreen.setAttribute('aria-hidden', 'true');
+        lockScreen.style.display = 'none';
+    }, 760);
+}
+
+function resetLockHomeGesture() {
+    lockScreen.classList.remove('gesture-dragging');
+    lockScreen.style.transform = '';
+    lockScreen.style.opacity = '';
+    homeScreen.style.transform = '';
+    homeScreen.style.filter = '';
+    homeScreen.style.opacity = '';
+    lockGesture = null;
+}
+
+function handleLockHomeGestureStart(event) {
+    if (isUnlocked) return;
+
+    lockGesture = {
+        pointerId: event.pointerId,
+        startY: event.clientY,
+        lastY: event.clientY,
+        startTime: performance.now(),
+        dragging: false
+    };
+
+    lockScreen.setPointerCapture?.(event.pointerId);
+}
+
+function handleLockHomeGestureMove(event) {
+    if (!lockGesture || lockGesture.pointerId !== event.pointerId || isUnlocked) return;
+
+    const dragDistance = Math.max(0, lockGesture.startY - event.clientY);
+    if (dragDistance < 4) return;
+
+    event.preventDefault();
+    lockGesture.dragging = true;
+    lockGesture.lastY = event.clientY;
+
+    const progress = Math.min(dragDistance / 220, 1);
+    const lockMoveY = -dragDistance;
+    const lockOpacity = 1 - progress * 0.12;
+    const homeScale = 1.05 - progress * 0.05;
+    const homeBlur = 8 - progress * 8;
+
+    lockScreen.classList.add('gesture-dragging');
+    lockScreen.style.transform = `translate3d(0, ${lockMoveY}px, 0)`;
+    lockScreen.style.opacity = lockOpacity;
+    homeScreen.style.transform = `scale(${homeScale}) translateZ(0)`;
+    homeScreen.style.filter = `blur(${homeBlur}px)`;
+    homeScreen.style.opacity = 1;
+}
+
+function handleLockHomeGestureEnd(event) {
+    if (!lockGesture || lockGesture.pointerId !== event.pointerId || isUnlocked) return;
+
+    const dragDistance = Math.max(0, lockGesture.startY - event.clientY);
+    const elapsed = Math.max(performance.now() - lockGesture.startTime, 1);
+    const velocity = dragDistance / elapsed;
+    const shouldUnlock = lockGesture.dragging && (dragDistance > 95 || velocity > 0.6);
+
+    lockScreen.releasePointerCapture?.(event.pointerId);
+
+    if (shouldUnlock) {
+        finishLockHomeGesture();
+        return;
+    }
+
+    resetLockHomeGesture();
+}
+
+function handleLockHomeGestureCancel(event) {
+    if (!lockGesture || lockGesture.pointerId !== event.pointerId) return;
+    resetLockHomeGesture();
 }
 
 function openApp(appId, appName) {
@@ -157,7 +261,92 @@ function openApp(appId, appName) {
 
 function closeActiveApp() {
     appWindow.classList.remove('active');
+    appWindow.classList.remove('gesture-dragging', 'home-gesture-closing');
+    appWindow.style.transform = '';
+    appWindow.style.opacity = '';
     appWindow.setAttribute('aria-hidden', 'true');
+}
+
+function closeActiveAppWithGesture() {
+    appWindow.classList.remove('gesture-dragging');
+    appWindow.style.transform = '';
+    appWindow.style.opacity = '';
+    appWindow.classList.add('home-gesture-closing');
+    appWindow.setAttribute('aria-hidden', 'true');
+
+    setTimeout(() => {
+        appWindow.classList.remove('active', 'home-gesture-closing');
+    }, 320);
+}
+
+function resetAppHomeGesture() {
+    appWindow.classList.remove('gesture-dragging');
+    appWindow.style.transform = '';
+    appWindow.style.opacity = '';
+    appGesture = null;
+}
+
+function handleAppHomeGestureStart(event) {
+    if (!appWindow.classList.contains('active')) return;
+
+    const rect = appWindow.getBoundingClientRect();
+    const gestureAreaHeight = 120;
+
+    if (event.clientY < rect.bottom - gestureAreaHeight) return;
+
+    appGesture = {
+        pointerId: event.pointerId,
+        startY: event.clientY,
+        lastY: event.clientY,
+        startTime: performance.now(),
+        dragging: false
+    };
+
+    appWindow.setPointerCapture?.(event.pointerId);
+}
+
+function handleAppHomeGestureMove(event) {
+    if (!appGesture || appGesture.pointerId !== event.pointerId) return;
+
+    const dragDistance = Math.max(0, appGesture.startY - event.clientY);
+    if (dragDistance < 4) return;
+
+    event.preventDefault();
+    appGesture.dragging = true;
+    appGesture.lastY = event.clientY;
+
+    const progress = Math.min(dragDistance / 180, 1);
+    const moveY = -dragDistance * 0.32;
+    const scale = 1 - progress * 0.12;
+    const opacity = 1 - progress * 0.28;
+
+    appWindow.classList.add('gesture-dragging');
+    appWindow.style.transform = `translate3d(0, ${moveY}px, 0) scale(${scale})`;
+    appWindow.style.opacity = opacity;
+}
+
+function handleAppHomeGestureEnd(event) {
+    if (!appGesture || appGesture.pointerId !== event.pointerId) return;
+
+    const dragDistance = Math.max(0, appGesture.startY - event.clientY);
+    const elapsed = Math.max(performance.now() - appGesture.startTime, 1);
+    const velocity = dragDistance / elapsed;
+    const shouldClose = appGesture.dragging && (dragDistance > 78 || velocity > 0.55);
+
+    appWindow.releasePointerCapture?.(event.pointerId);
+
+    if (shouldClose) {
+        appGesture = null;
+        closeActiveAppWithGesture();
+        return;
+    }
+
+    resetAppHomeGesture();
+}
+
+function handleAppHomeGestureCancel(event) {
+    if (!appGesture || appGesture.pointerId !== event.pointerId) return;
+    resetAppHomeGesture();
 }
 
 function copyText(text) {
@@ -309,10 +498,10 @@ function handlePointerEnd(event, targetAction) {
     activePointerId = null;
 }
 
-lockScreen.addEventListener('pointerdown', handlePointerStart);
-lockScreen.addEventListener('pointerup', (event) => handlePointerEnd(event, unlockIphone));
-lockHomeBar.addEventListener('click', unlockIphone);
-notificationOpenBtn.addEventListener('click', unlockIphone);
+lockScreen.addEventListener('pointerdown', handleLockHomeGestureStart);
+lockScreen.addEventListener('pointermove', handleLockHomeGestureMove, { passive: false });
+lockScreen.addEventListener('pointerup', handleLockHomeGestureEnd);
+lockScreen.addEventListener('pointercancel', handleLockHomeGestureCancel);
 notificationOpenBtn.addEventListener('keydown', (event) => {
     if (event.key === 'Enter' || event.key === ' ') unlockIphone();
 });
@@ -326,9 +515,10 @@ document.querySelectorAll('.app-icon').forEach((icon) => {
 });
 
 closeAppBtn.addEventListener('click', closeActiveApp);
-appHomeBar.addEventListener('click', closeActiveApp);
-appHomeBar.addEventListener('pointerdown', handlePointerStart);
-appHomeBar.addEventListener('pointerup', (event) => handlePointerEnd(event, closeActiveApp));
+appWindow.addEventListener('pointerdown', handleAppHomeGestureStart);
+appWindow.addEventListener('pointermove', handleAppHomeGestureMove, { passive: false });
+appWindow.addEventListener('pointerup', handleAppHomeGestureEnd);
+appWindow.addEventListener('pointercancel', handleAppHomeGestureCancel);
 
 document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') closeActiveApp();
