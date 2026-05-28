@@ -6,6 +6,15 @@ const weddingInfo = {
     address: '서울특별시 강서구 양천로 476 7층, 8층'
 };
 
+const galleryImages = [
+    { src: 'img/gallery/gallery1.jpg', alt: '웨딩 사진 1' },
+    { src: 'img/gallery/gallery2.jpg', alt: '웨딩 사진 2' },
+    { src: 'img/gallery/gallery3.jpg', alt: '웨딩 사진 3' },
+    { src: 'img/gallery/gallery4.jpg', alt: '웨딩 사진 4' },
+    { src: 'img/gallery/gallery5.jpg', alt: '웨딩 사진 5' },
+    { src: 'img/gallery/gallery6.jpg', alt: '웨딩 사진 6' }
+];
+
 const appContents = {
     story: `
         <article class="content-card hero-card">
@@ -40,7 +49,11 @@ const appContents = {
             <p class="muted">사진</p>
         </article>
         <div class="gallery-grid">
-            <div class="photo-tile">PHOTO</div><div class="photo-tile">PHOTO</div><div class="photo-tile">PHOTO</div><div class="photo-tile">PHOTO</div>
+             ${galleryImages.map((image, index) => `
+                <button class="photo-tile" type="button" data-gallery-index="${index}" aria-label="${image.alt}">
+                    <img src="${image.src}" alt="${image.alt}">
+                </button>
+            `).join('')}
         </div>`,
     mail: `
         <article class="content-card hero-card">
@@ -97,6 +110,7 @@ const appWindow = $('#appWindow');
 const appContent = $('#appContent');
 const appTitle = $('#appTitle');
 const lockHomeBar = $('#lockHomeBar');
+const lockHomeGuide = $('.lock-home-guide');
 const notificationOpenBtn = $('#notificationOpenBtn');
 const appHomeBar = $('#appHomeBar');
 const closeAppBtn = $('#closeAppBtn');
@@ -200,7 +214,7 @@ function handleLockHomeGestureStart(event) {
         dragging: false
     };
 
-    lockScreen.setPointerCapture?.(event.pointerId);
+    lockHomeGuide.setPointerCapture?.(event.pointerId);
 }
 
 function handleLockHomeGestureMove(event) {
@@ -235,7 +249,7 @@ function handleLockHomeGestureEnd(event) {
     const velocity = dragDistance / elapsed;
     const shouldUnlock = lockGesture.dragging && (dragDistance > 95 || velocity > 0.6);
 
-    lockScreen.releasePointerCapture?.(event.pointerId);
+    lockHomeGuide.releasePointerCapture?.(event.pointerId);
 
     if (shouldUnlock) {
         finishLockHomeGesture();
@@ -379,9 +393,195 @@ function showToast(message) {
     showToast.timer = setTimeout(() => toast.classList.remove('show'), 1600);
 }
 
+function bindGalleryViewer() {
+    appContent.querySelectorAll('[data-gallery-index]').forEach((button) => {
+        button.addEventListener('click', () => {
+            openGalleryViewer(Number(button.dataset.galleryIndex));
+        });
+    });
+}
+
+function openGalleryViewer(startIndex = 0) {
+    let currentIndex = startIndex;
+
+    const viewer = document.createElement('div');
+    viewer.className = 'gallery-viewer';
+    viewer.innerHTML = `
+        <div class="gallery-viewer-stage">
+            <div class="gallery-viewer-top">
+                <button type="button" class="gallery-viewer-close" aria-label="갤러리 닫기">닫기</button>
+                <span class="gallery-viewer-count"></span>
+            </div>
+
+            <div class="gallery-viewer-photo-area">
+                <div class="gallery-viewer-track">
+                    ${galleryImages.map((image) => `
+                        <div class="gallery-viewer-slide">
+                            <img src="${image.src}" alt="${image.alt}" draggable="false">
+                        </div>
+                    `).join('')}
+                </div>
+
+                <button type="button" class="gallery-viewer-nav prev" aria-label="이전 사진">‹</button>
+                <button type="button" class="gallery-viewer-nav next" aria-label="다음 사진">›</button>
+            </div>
+        </div>
+    `;
+
+    appWindow.appendChild(viewer);
+
+    const photoArea = viewer.querySelector('.gallery-viewer-photo-area');
+    const track = viewer.querySelector('.gallery-viewer-track');
+    const count = viewer.querySelector('.gallery-viewer-count');
+    const closeBtn = viewer.querySelector('.gallery-viewer-close');
+    const prevBtn = viewer.querySelector('.gallery-viewer-nav.prev');
+    const nextBtn = viewer.querySelector('.gallery-viewer-nav.next');
+
+    let viewerGesture = null;
+
+    function updateViewer() {
+        const viewerWidth = photoArea.offsetWidth;
+
+        track.style.transform = `translate3d(${-currentIndex * viewerWidth}px, 0, 0)`;
+        count.textContent = `${currentIndex + 1} / ${galleryImages.length}`;
+
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex === galleryImages.length - 1;
+    }
+
+    function closeViewer() {
+        viewer.classList.remove('active');
+        setTimeout(() => viewer.remove(), 220);
+    }
+
+    function moveViewer(direction) {
+        currentIndex = Math.min(
+            Math.max(currentIndex + direction, 0),
+            galleryImages.length - 1
+        );
+        updateViewer();
+    }
+
+    closeBtn.addEventListener('pointerdown', (event) => {
+        event.stopPropagation();
+    });
+
+    closeBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        closeViewer();
+    });
+
+    prevBtn.addEventListener('pointerdown', (event) => event.stopPropagation());
+    prevBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        moveViewer(-1);
+    });
+
+    nextBtn.addEventListener('pointerdown', (event) => event.stopPropagation());
+    nextBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        moveViewer(1);
+    });
+
+    count.addEventListener('pointerdown', (event) => event.stopPropagation());
+
+    photoArea.addEventListener('pointerdown', (event) => {
+        if (event.target.closest('.gallery-viewer-nav')) return;
+
+        viewerGesture = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startY: event.clientY,
+            diffX: 0,
+            dragging: false,
+            locked: false
+        };
+
+        photoArea.setPointerCapture?.(event.pointerId);
+    });
+
+    photoArea.addEventListener('pointermove', (event) => {
+        if (!viewerGesture || viewerGesture.pointerId !== event.pointerId) return;
+
+        const diffX = event.clientX - viewerGesture.startX;
+        const diffY = event.clientY - viewerGesture.startY;
+        const absX = Math.abs(diffX);
+        const absY = Math.abs(diffY);
+
+        // 아직 방향 판단 전
+        if (!viewerGesture.locked) {
+            if (absX < 8 && absY < 8) return;
+
+            // 세로 움직임이면 갤러리 슬라이드로 처리하지 않음
+            if (absY > absX) {
+                viewerGesture = null;
+                track.classList.remove('dragging');
+                return;
+            }
+
+            viewerGesture.locked = true;
+            viewerGesture.dragging = true;
+            track.classList.add('dragging');
+        }
+
+        event.preventDefault();
+
+        viewerGesture.diffX = diffX;
+
+        const viewerWidth = photoArea.offsetWidth;
+        const baseX = -currentIndex * viewerWidth;
+
+        let dragX = diffX;
+
+        // 첫 번째 / 마지막 사진에서 저항감
+        if (
+            (currentIndex === 0 && diffX > 0) ||
+            (currentIndex === galleryImages.length - 1 && diffX < 0)
+        ) {
+            dragX = diffX * 0.28;
+        }
+
+        track.style.transform = `translate3d(${baseX + dragX}px, 0, 0)`;
+    }, { passive: false });
+
+    photoArea.addEventListener('pointerup', (event) => {
+        if (!viewerGesture || viewerGesture.pointerId !== event.pointerId) return;
+
+        const diffX = viewerGesture.diffX;
+
+        photoArea.releasePointerCapture?.(event.pointerId);
+        track.classList.remove('dragging');
+
+        const shouldMove = Math.abs(diffX) > 38;
+
+        if (shouldMove) {
+            moveViewer(diffX < 0 ? 1 : -1);
+        } else {
+            updateViewer();
+        }
+
+        viewerGesture = null;
+    });
+
+    photoArea.addEventListener('pointercancel', () => {
+        track.classList.remove('dragging');
+        updateViewer();
+        viewerGesture = null;
+    });
+
+    requestAnimationFrame(() => {
+        viewer.classList.add('active');
+        updateViewer();
+    });
+}
+
 function bindDynamicContentEvents(appId) {
     if (appId === 'map') {
         renderWeddingMap();
+    }
+
+    if (appId === 'gallery') {
+        bindGalleryViewer();
     }
     
     appContent.querySelectorAll('[data-copy]').forEach((button) => {
@@ -498,10 +698,14 @@ function handlePointerEnd(event, targetAction) {
     activePointerId = null;
 }
 
-lockScreen.addEventListener('pointerdown', handleLockHomeGestureStart);
-lockScreen.addEventListener('pointermove', handleLockHomeGestureMove, { passive: false });
-lockScreen.addEventListener('pointerup', handleLockHomeGestureEnd);
-lockScreen.addEventListener('pointercancel', handleLockHomeGestureCancel);
+lockHomeGuide.addEventListener('pointerdown', handleLockHomeGestureStart);
+lockHomeGuide.addEventListener('pointermove', handleLockHomeGestureMove, { passive: false });
+lockHomeGuide.addEventListener('pointerup', handleLockHomeGestureEnd);
+lockHomeGuide.addEventListener('pointercancel', handleLockHomeGestureCancel);
+
+lockHomeBar.addEventListener('click', unlockIphone);
+
+notificationOpenBtn.addEventListener('click', unlockIphone);
 notificationOpenBtn.addEventListener('keydown', (event) => {
     if (event.key === 'Enter' || event.key === ' ') unlockIphone();
 });
