@@ -39,8 +39,9 @@ const appContents = {
         </article>
         <div class="ios-list">
             <button type="button" class="list-row" data-copy="${weddingInfo.address}"><span>주소 복사</span><b>›</b></button>
-            <a class="list-row" href="https://map.kakao.com/link/search/${encodeURIComponent(weddingInfo.venue)}" target="_blank" rel="noopener"><span>카카오맵으로 보기</span><b>›</b></a>
-            <a class="list-row" href="https://map.naver.com/p/search/${encodeURIComponent(weddingInfo.venue)}" target="_blank" rel="noopener"><span>네이버지도로 보기</span><b>›</b></a>
+            <a class="list-row" style="justify-content: normal;" href="https://map.kakao.com/link/search/${encodeURIComponent(weddingInfo.venue)}" target="_blank" rel="noopener"><img src="img/kakao_icon.png" alt="카카오맵 아이콘" style="width: 30px;"><span>카카오맵으로 보기</span><b style="margin-left: auto;">›</b></a>
+            <a class="list-row" style="justify-content: normal;" href="https://map.naver.com/p/search/${encodeURIComponent(weddingInfo.venue)}" target="_blank" rel="noopener"><img src="img/navermap_icon_2.png" alt="네이버지도 아이콘" style="width: 30px;"><span>네이버지도로 보기</span><b style="margin-left: auto;">›</b></a>
+            <a class="list-row" style="justify-content: normal;" href="https://maps.app.goo.gl/g6hqGHi88NvpFDeK9" target="_blank" rel="noopener"><img src="img/googlemap_icon.png" alt="구글지도 아이콘" style="width: 30px;"><span>구글지도로 보기</span><b style="margin-left: auto;">›</b></a>
         </div>`,
     gallery: `
         <article class="content-card hero-card">
