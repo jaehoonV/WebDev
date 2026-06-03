@@ -1,3 +1,5 @@
+const CHEVRON = `<svg style="margin-left: auto;" class="list-chevron" viewBox="0 0 16 16" aria-hidden="true"><polyline points="6,3 11,8 6,13"/></svg>`;
+
 const weddingInfo = {
     groom: '재훈',
     bride: '희은',
@@ -38,10 +40,9 @@ const appContents = {
             <div id="weddingMap" class="wedding-map"></div>
         </article>
         <div class="ios-list">
-            <button type="button" class="list-row" data-copy="${weddingInfo.address}"><span>주소 복사</span><b>›</b></button>
-            <a class="list-row" style="justify-content: normal;" href="https://map.kakao.com/link/search/${encodeURIComponent(weddingInfo.venue)}" target="_blank" rel="noopener"><img src="img/kakao_icon.png" alt="카카오맵 아이콘" style="width: 30px;"><span>카카오맵으로 보기</span><b style="margin-left: auto;">›</b></a>
-            <a class="list-row" style="justify-content: normal;" href="https://map.naver.com/p/search/${encodeURIComponent(weddingInfo.venue)}" target="_blank" rel="noopener"><img src="img/navermap_icon_2.png" alt="네이버지도 아이콘" style="width: 30px;"><span>네이버지도로 보기</span><b style="margin-left: auto;">›</b></a>
-            <a class="list-row" style="justify-content: normal;" href="https://maps.app.goo.gl/g6hqGHi88NvpFDeK9" target="_blank" rel="noopener"><img src="img/googlemap_icon.png" alt="구글지도 아이콘" style="width: 30px;"><span>구글지도로 보기</span><b style="margin-left: auto;">›</b></a>
+            <button type="button" class="list-row" data-copy="${weddingInfo.address}"><span>주소 복사</span>${CHEVRON}</button>
+            <a class="list-row" style="justify-content: normal;" href="https://map.kakao.com/link/search/${encodeURIComponent(weddingInfo.venue)}" target="_blank" rel="noopener"><img src="img/kakao_icon.png" alt="카카오맵 아이콘" style="width: 30px;"><span>카카오맵으로 보기</span>${CHEVRON}</a>            <a class="list-row" style="justify-content: normal;" href="https://map.naver.com/p/search/${encodeURIComponent(weddingInfo.venue)}" target="_blank" rel="noopener"><img src="img/navermap_icon_2.png" alt="네이버지도 아이콘" style="width: 30px;"><span>네이버지도로 보기</span>${CHEVRON}</a>
+            <a class="list-row" style="justify-content: normal;" href="https://maps.app.goo.gl/g6hqGHi88NvpFDeK9" target="_blank" rel="noopener"><img src="img/googlemap_icon.png" alt="구글지도 아이콘" style="width: 30px;"><span>구글지도로 보기</span>${CHEVRON}</a>
         </div>`,
     gallery: `
         <article class="content-card hero-card">
@@ -73,8 +74,61 @@ const appContents = {
             <p><strong>2026년 12월 19일 토요일 오후 5시</strong></p>
             <p class="muted">${weddingInfo.venue}</p>
         </article>
-        <article class="content-card hero-card" style="padding: 0;">
-            <div class="venue-img"></div>
+        <article class="content-card schedule-calendar-card">
+            <div class="schedule-cal-header">
+                <span class="schedule-cal-year">2026</span>
+                <span class="schedule-cal-month">12월</span>
+            </div>
+            <div class="schedule-cal-grid">
+                <span class="cal-dow sun">일</span>
+                <span class="cal-dow">월</span>
+                <span class="cal-dow">화</span>
+                <span class="cal-dow">수</span>
+                <span class="cal-dow">목</span>
+                <span class="cal-dow">금</span>
+                <span class="cal-dow sat">토</span>
+
+                <span class="cal-day empty"></span>
+                <span class="cal-day empty"></span>
+                <span class="cal-day">1</span>
+                <span class="cal-day">2</span>
+                <span class="cal-day">3</span>
+                <span class="cal-day">4</span>
+                <span class="cal-day sat">5</span>
+
+                <span class="cal-day sun">6</span>
+                <span class="cal-day">7</span>
+                <span class="cal-day">8</span>
+                <span class="cal-day">9</span>
+                <span class="cal-day">10</span>
+                <span class="cal-day">11</span>
+                <span class="cal-day sat">12</span>
+
+                <span class="cal-day sun">13</span>
+                <span class="cal-day">14</span>
+                <span class="cal-day">15</span>
+                <span class="cal-day">16</span>
+                <span class="cal-day">17</span>
+                <span class="cal-day">18</span>
+                <span class="cal-day sat wedding-day">19</span>
+
+                <span class="cal-day sun">20</span>
+                <span class="cal-day">21</span>
+                <span class="cal-day">22</span>
+                <span class="cal-day">23</span>
+                <span class="cal-day">24</span>
+                <span class="cal-day">25</span>
+                <span class="cal-day sat">26</span>
+
+                <span class="cal-day sun">27</span>
+                <span class="cal-day">28</span>
+                <span class="cal-day">29</span>
+                <span class="cal-day">30</span>
+                <span class="cal-day">31</span>
+                <span class="cal-day empty"></span>
+                <span class="cal-day empty"></span>
+            </div>
+            <div class="schedule-cal-badge">💒 결혼식 오후 5시</div>
         </article>`,
     guestbook: `
         <article class="content-card hero-card">
@@ -95,8 +149,8 @@ const appContents = {
             <p class="muted">현재 페이지 주소를 복사하거나, 지원되는 기기에서는 공유창을 열 수 있습니다.</p>
         </article>
         <div class="ios-list">
-            <button type="button" class="list-row" id="shareBtn"><span>공유하기</span><b>›</b></button>
-            <button type="button" class="list-row" data-copy="${location.href}"><span>링크 복사</span><b>복사</b></button>
+            <button type="button" class="list-row" id="shareBtn"><span>공유하기</span>${CHEVRON}</button>
+            <button type="button" class="list-row" data-copy="${location.href}"><span>링크 복사</span>${CHEVRON}</button>
         </div>`
 };
 
@@ -143,6 +197,8 @@ function updateDday(now = new Date()) {
     const ddayText = diff > 0 ? `WEDDING D-${diff} ♥` : diff === 0 ? 'WEDDING DAY ♥' : `WEDDING D+${Math.abs(diff)} ♥`;
     const dday = $('#weddingDday');
     if (dday) dday.textContent = ddayText;
+    const widgetDday = $('#widgetDday');
+    if (widgetDday) widgetDday.textContent = ddayText;
 }
 
 function unlockIphone() {
