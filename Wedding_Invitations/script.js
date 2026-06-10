@@ -9,12 +9,31 @@ const weddingInfo = {
 };
 
 const galleryImages = [
-    { src: 'img/gallery/gallery1.jpg', alt: '웨딩 사진 1' },
-    { src: 'img/gallery/gallery2.jpg', alt: '웨딩 사진 2' },
-    { src: 'img/gallery/gallery3.jpg', alt: '웨딩 사진 3' },
-    { src: 'img/gallery/gallery4.jpg', alt: '웨딩 사진 4' },
-    { src: 'img/gallery/gallery5.jpg', alt: '웨딩 사진 5' },
-    { src: 'img/gallery/gallery6.jpg', alt: '웨딩 사진 6' }
+    { src: 'img/gallery/IMGL0013.jpg', alt: '웨딩 사진 1' },
+    { src: 'img/gallery/IMGL0071.jpg', alt: '웨딩 사진 2' },
+    { src: 'img/gallery/IMGL0141.jpg', alt: '웨딩 사진 3' },
+    { src: 'img/gallery/IMGL0180.jpg', alt: '웨딩 사진 4' },
+    { src: 'img/gallery/IMGL0182.jpg', alt: '웨딩 사진 5' },
+    { src: 'img/gallery/IMGL0264.jpg', alt: '웨딩 사진 6' },
+    { src: 'img/gallery/IMGL0294.jpg', alt: '웨딩 사진 7' },
+    { src: 'img/gallery/IMGL0298.jpg', alt: '웨딩 사진 8' },
+    { src: 'img/gallery/IMGL0368.jpg', alt: '웨딩 사진 9' },
+    { src: 'img/gallery/IMGL0376.jpg', alt: '웨딩 사진 10' },
+    { src: 'img/gallery/IMGL0464.jpg', alt: '웨딩 사진 11' },
+    { src: 'img/gallery/IMGL0475.jpg', alt: '웨딩 사진 12' },
+    { src: 'img/gallery/IMGL0586.jpg', alt: '웨딩 사진 13' },
+    { src: 'img/gallery/IMGL0602.jpg', alt: '웨딩 사진 14' },
+    { src: 'img/gallery/IMGL0613.jpg', alt: '웨딩 사진 15' },
+    { src: 'img/gallery/IMGL0616.jpg', alt: '웨딩 사진 16' },
+    { src: 'img/gallery/IMGL0923.jpg', alt: '웨딩 사진 17' },
+    { src: 'img/gallery/IMGL0991.jpg', alt: '웨딩 사진 18' },
+    { src: 'img/gallery/IMGL1027.jpg', alt: '웨딩 사진 19' },
+    { src: 'img/gallery/IMGL1087.jpg', alt: '웨딩 사진 20' },
+    { src: 'img/gallery/IMGL1308.jpg', alt: '웨딩 사진 21' },
+    { src: 'img/gallery/IMGL1483.jpg', alt: '웨딩 사진 22' },
+    { src: 'img/gallery/IMGL1597.jpg', alt: '웨딩 사진 23' },
+    { src: 'img/gallery/IMGL1740.jpg', alt: '웨딩 사진 24' },
+    { src: 'img/gallery/IMGL1756.jpg', alt: '웨딩 사진 25' },
 ];
 
 const appContents = {
@@ -22,7 +41,6 @@ const appContents = {
         <article class="content-card hero-card">
             <span class="section-kicker">Our Story</span>
             <h2>신랑 신부 이야기</h2>
-            <p>만난 지 1000일이 되는 날, 저희 두 사람이 평생을 함께 걷기로 약속했습니다.</p>
             <p>소중한 분들을 모시고 첫걸음을 시작하려 합니다. 저희의 예쁜 시작을 함께 빛내주세요.</p>
         </article>
         <article class="content-card">
@@ -841,3 +859,13 @@ function scheduleInitialNotification() {
 
 updateWeddingCoverInfo();
 scheduleInitialNotification();
+
+(function updateDaysBadge() {
+    const badge = document.getElementById('days-badge');
+    if (!badge) return;
+    const start = new Date('2015-01-13T00:00:00+09:00');
+    const now = new Date();
+    const days = Math.floor((now - start) / (1000 * 60 * 60 * 24)) + 1;
+    const formatted = days >= 1000 ? (days >= 10000 ? days.toString() : days.toLocaleString()) : days.toString();
+    badge.textContent = '+' + formatted + '일';
+})();
